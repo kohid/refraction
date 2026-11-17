@@ -167,6 +167,16 @@ async function main() {
 		const withTwo = wheel( pics, { content_motion: 'fade-up', content_stagger: 'yes', content_gap: 150, content_delay: 100, content_duration: 600, content_distance: 50 } );
 		withTwo[ 0 ].elements[ 0 ].elements.forEach( ( sl, k ) => sl.elements[ 0 ].elements.push( { id: id(), elType: 'widget', widgetType: 'text-editor', settings: { editor: `<p>Text ${ k + 1 }</p>` }, elements: [] } ) );
 		const contentPage = page( 'Showcase wheel content motion', withTwo );
+		// 0.119.0: floating images, the picture moved, the shape's own style and motion, thumbnail width and height.
+		const extras = wheel( pics, { thumb_size: { unit: 'px', size: 90 }, thumb_height: { unit: 'px', size: 40 } } );
+		Object.assign( extras[ 0 ].elements[ 0 ].settings.slides[ 0 ], {
+			pic_x: { unit: '%', size: 10 },
+			deco: 'blob', sw_blob_source: 'builtin', sw_blob_pick: 'blob-2', deco_motion: 'spin', deco_color: '#FF0000', deco_x: { unit: 'px', size: 20 },
+			float_count: '2',
+			fl1_type: 'icon', fl1_icon: { value: 'fas fa-star', library: 'fa-solid' }, fl1_x: { unit: '%', size: 20 }, fl1_y: { unit: '%', size: 30 }, fl1_size: { unit: 'px', size: 40 }, fl1_motion: 'bob', fl1_color: '#00AA00',
+			fl2_type: 'image', fl2_image: { id: pics[ 1 ].id, url: pics[ 1 ].url }, fl2_x: { unit: '%', size: 80 }, fl2_y: { unit: '%', size: 70 }, fl2_size: { unit: 'px', size: 80 }, fl2_layer: 'back', fl2_motion: '',
+		} );
+		const extrasPage = page( 'Showcase wheel floating images', extras );
 		const stillPage = page( 'Showcase wheel content still', wheel( pics, { content_motion: 'none' } ) );
 		const auto = page( 'Showcase wheel auto', wheel( pics, { autoplay: 'yes', interval: 1200, duration: 300, pause_on_hover: '' } ) );
 
@@ -263,6 +273,38 @@ async function main() {
 			};
 		} );
 		check( 'options', 'thumbnails on the right, a circle behind the current one, labels under every thumbnail, both arrows', 'flex-end' === v.justify && v.nearRight && '50%' === v.circle && v.labels && 2 === v.arrows, JSON.stringify( v ) );
+		// ------------------------------------------------------------ floating images, picture position, shape style
+		await p.goto( extrasPage.url, { waitUntil: 'load' } );
+		await p.waitForSelector( '.rf-sw.is-ready' );
+		await p.waitForTimeout( 500 );
+		const fx = await p.evaluate( () => {
+			const slot = document.querySelector( '.rf-sw__slots > .rf-sw__slot' );
+			const picture = slot.querySelector( '.rf-sw__picture' );
+			const box = picture.getBoundingClientRect();
+			const at = ( el ) => {
+				const r = el.getBoundingClientRect();
+				return [ Math.round( ( ( r.left + ( r.width / 2 ) ) - box.left ) / box.width * 100 ), Math.round( ( ( r.top + ( r.height / 2 ) ) - box.top ) / box.height * 100 ) ];
+			};
+			const f1 = slot.querySelector( '.rf-sw__float--1' );
+			const f2 = slot.querySelector( '.rf-sw__float--2' );
+			const img = slot.querySelector( '.rf-sw__img' );
+			const thumb = document.querySelector( '.rf-sw__thumb-img' ).getBoundingClientRect();
+			const deco = slot.querySelector( '.rf-sw__deco' );
+			return {
+				floats: slot.querySelectorAll( '.rf-sw__float' ).length,
+				f1: at( f1 ), f1Icon: !! f1.querySelector( 'i, svg' ), f1Color: getComputedStyle( f1 ).color, f1Anim: getComputedStyle( f1.querySelector( '.rf-sw__float-in' ) ).animationName,
+				f2: at( f2 ), f2Behind: !! f2.compareDocumentPosition( img ) && ( f2.compareDocumentPosition( img ) & Node.DOCUMENT_POSITION_FOLLOWING ) && Number( getComputedStyle( f2 ).zIndex ) < Number( getComputedStyle( img ).zIndex ),
+				picMove: getComputedStyle( picture ).translate,
+				thumb: Math.round( thumb.width ) + 'x' + Math.round( thumb.height ),
+				decoColor: getComputedStyle( deco ).color, decoAnim: getComputedStyle( deco ).animationName, decoMove: getComputedStyle( deco ).translate,
+			};
+		} );
+		check( 'floating', 'a slide\'s floating images: an icon at 20% / 30% of the picture\'s space (its own color, floating up and down) and a picture at 80% / 70% behind the slide\'s picture', 2 === fx.floats && Math.abs( fx.f1[ 0 ] - 20 ) <= 2 && Math.abs( fx.f1[ 1 ] - 30 ) <= 2 && fx.f1Icon && 'rgb(0, 170, 0)' === fx.f1Color && 'rf-sw-bob' === fx.f1Anim && Math.abs( fx.f2[ 0 ] - 80 ) <= 2 && Math.abs( fx.f2[ 1 ] - 70 ) <= 2 && fx.f2Behind, JSON.stringify( fx ) );
+		check( 'picture', 'the slide\'s picture is moved 10% across (its own setting)', /^10%/.test( fx.picMove ), fx.picMove );
+		check( 'shape', 'the shape\'s Style tab (red, moved 20px) and its Content tab animation (turning) apply', 'rgb(255, 0, 0)' === fx.decoColor && 'rf-sw-deco-spin' === fx.decoAnim && /^20px/.test( fx.decoMove ), JSON.stringify( fx ) );
+		check( 'thumbs', 'thumbnail width and height: 90 x 40', '90x40' === fx.thumb, fx.thumb );
+		await shot( 'floating.png' );
+
 		// ------------------------------------------------------------ the content coming in
 		const contentAnims = () => p.evaluate( () => {
 			const slot = document.querySelectorAll( '.rf-sw__slots > .rf-sw__slot' )[ 1 ];
@@ -299,7 +341,7 @@ async function main() {
 			const arc = slots[ 0 ].querySelector( '.rf-sw__corner' );
 			const r = arc && arc.getBoundingClientRect();
 			const sr = slots[ 0 ].getBoundingClientRect();
-			const ring = arc && getComputedStyle( arc, '::before' );
+			const ring = arc && getComputedStyle( arc.querySelector( '.rf-sw__corner-ring' ) );
 			const path = ( k ) => slots[ k ].querySelector( '.rf-sw__deco--blob path' );
 			const thumb = document.querySelector( '.rf-sw__thumb.is-active' );
 			const before = getComputedStyle( thumb, '::before' );
@@ -394,7 +436,7 @@ async function main() {
 		} );
 		let ed = await edState();
 		check( 'editor', 'Edit Mode shows the same showcase: 3 slots each holding its slide container, slide 1 with its picture on the right, 3 thumbnails', 3 === ed.slots && ed.filled && 0 === ed.active && 'right' === ed.pictureSide && 3 === ed.thumbs, JSON.stringify( ed ) );
-		const w = await widget();
+		let w = await widget();
 		await p.evaluate( ( c ) => {
 			c.model.get( 'editSettings' ).set( 'activeItemIndex', 2 );
 		}, w );
@@ -447,6 +489,73 @@ async function main() {
 			}, 900 ) );
 		}, w );
 		check( 'editor', 'each slide\'s shape has the Deco Blob pickers: Built-in / Uploaded, "Upload or manage", and the uploaded shapes as tiles', /Built-in/.test( panel.tabs ) && /Uploaded/.test( panel.tabs ) && panel.upload && panel.tiles >= 1, JSON.stringify( panel ) );
+		// The panel: the shape's Content / Style tabs, its color under Style; the shape pickers show 12 and scroll.
+		const panel2 = await p.evaluate( async ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 0 ], settings: { deco: 'blob', sw_blob_source: 'builtin' } } );
+			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
+			await new Promise( ( r ) => setTimeout( r, 700 ) );
+			const row = document.querySelector( '.refraction-control-slides .refraction-repeater-row-item-title' );
+			if ( row ) {
+				row.click();
+			}
+			await new Promise( ( r ) => setTimeout( r, 800 ) );
+			const tabs = [ ...document.querySelectorAll( '.refraction-control-deco_tabs .refraction-control-type-tab, .refraction-control-deco_tabs [class*="refraction-control-deco_tab_"]' ) ].map( ( t ) => t.textContent.trim() );
+			const shown = ( n ) => { const el = document.querySelector( '.refraction-control-' + n ); return !! ( el && el.offsetParent ); };
+			// Inside the tabs each setting keeps its own condition (a shape: no Corner; Built-in: no uploaded list).
+			const conditions = { corner: shown( 'arc_corner' ), builtin: shown( 'sw_blob_pick' ), uploaded: shown( 'sw_blob_mine' ) };
+			const grid = document.querySelector( '.refraction-control-sw_blob_pick .refraction-visual-choice-choices' );
+			const tile = grid && grid.querySelector( '.refraction-visual-choice-element' );
+			const picker = {
+				tiles: grid ? grid.querySelectorAll( '.refraction-visual-choice-element' ).length : 0,
+				rowsShown: grid && tile ? Math.round( grid.clientHeight / ( tile.getBoundingClientRect().height + 8 ) * 10 ) / 10 : 0,
+				scrolls: grid ? grid.scrollHeight > grid.clientHeight + 4 : false,
+			};
+			const styleTab = document.querySelector( '.refraction-control-deco_tab_style' );
+			if ( styleTab ) {
+				styleTab.click();
+			}
+			await new Promise( ( r ) => setTimeout( r, 300 ) );
+			const color = document.querySelector( '.refraction-control-deco_color' );
+			return {
+				tabs,
+				colorShown: !! ( color && color.offsetParent ),
+				colorLabel: color ? color.querySelector( '.refraction-control-title' ).textContent.trim() : '',
+				conditions,
+				...picker,
+			};
+		}, w );
+		check( 'editor', 'each slide\'s shape has Content and Style tabs; its color (no longer "Its color") is under Style', panel2.tabs.join( '/' ).includes( 'Content' ) && panel2.tabs.join( '/' ).includes( 'Style' ) && panel2.colorShown && 'Color' === panel2.colorLabel, JSON.stringify( panel2 ) );
+		check( 'editor', 'inside the tabs each setting keeps its own condition: for a shape, no Corner; with Built-in, the built-in shapes and not the uploaded ones', ! panel2.conditions.corner && panel2.conditions.builtin && ! panel2.conditions.uploaded, JSON.stringify( panel2.conditions ) );
+		check( 'editor', 'the shape picker shows 12 shapes (3 rows) and scrolls for the rest', panel2.tiles > 12 && panel2.scrolls && panel2.rowsShown >= 2.8 && panel2.rowsShown <= 3.3, JSON.stringify( panel2 ) );
+
+		// Dragging a floating image and the picture writes the slide's own settings.
+		await p.evaluate( ( c ) => {
+			$e.run( 'document/elements/settings', { container: c.repeaters.slides.children[ 1 ], settings: { float_count: '1', fl1_type: 'icon', fl1_icon: { value: 'fas fa-star', library: 'fa-solid' }, fl1_size: { unit: 'px', size: 48 } } } );
+			c.model.get( 'editSettings' ).set( 'activeItemIndex', 2 );
+		}, w );
+		await p.waitForTimeout( 2000 );
+		const dragOf = async ( selector, dx, dy ) => {
+			// Playwright gives a frame element's box in the page's own coordinates.
+			const box = await ( await frame.$( `.rf-sw__slot.is-active ${ selector }` ) ).boundingBox();
+			const sx = box.x + ( box.width / 2 );
+			const sy = box.y + ( box.height / 2 );
+			await p.mouse.move( sx, sy );
+			await p.mouse.down();
+			await p.mouse.move( sx + ( dx / 2 ), sy + ( dy / 2 ), { steps: 4 } );
+			await p.mouse.move( sx + dx, sy + dy, { steps: 4 } );
+			await p.mouse.up();
+			await p.waitForTimeout( 1200 );
+		};
+		await dragOf( '.rf-sw__float--1', 60, 40 );
+		await dragOf( '.rf-sw__img', -50, 0 );
+		const dragged = await p.evaluate( ( c ) => {
+			const item = c.repeaters.slides.children[ 1 ].settings;
+			return { fx: item.get( 'fl1_x' ), fy: item.get( 'fl1_y' ), px: item.get( 'pic_x' ) };
+		}, w );
+		check( 'editor', 'dragging a floating image and the picture in the preview writes the slide\'s Across / Down and Move the picture settings', dragged.fx && dragged.fx.size !== 14 && dragged.fy && dragged.fy.size !== 22 && dragged.px && dragged.px.size < 0, JSON.stringify( dragged ) );
+
+		// The drags drew the widget again: find it afresh.
+		w = await widget();
 		const added = await p.evaluate( async ( c ) => {
 			$e.run( 'document/repeater/insert', { container: c, name: 'slides', model: { slide_title: 'Minibus' } } );
 			await new Promise( ( done ) => setTimeout( done, 1500 ) );

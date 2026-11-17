@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.118.0
+Stable tag: 0.119.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.119.0 =
+* Showcase Wheel: floating images. Each slide can have up to five small pictures or icons around its picture (like the ingredients around a dish), each with a Content tab (picture or icon, where, animation: float, sway, turn, pulse) and a Style tab (size, turn, in front of or behind the picture, opacity, shadow, icon color). They turn with the picture on the wheel, and in the editor they can be dragged into place.
+* Showcase Wheel: each slide's picture can be moved (across and up or down, per screen size), also by dragging it in the editor. Thumbnails have a width and a height.
+* Showcase Wheel: what is behind the picture has Content and Style tabs on each slide: its animation (float, breathe, turn, wobble) and speed under Content; its color (formerly "Its color"), opacity, size, place and turn under Style.
+* Shape pickers (Showcase Wheel, Deco Blob, Shape Mask) show 12 shapes and scroll for the rest.
+* Editor: in any list (slides, cards, items), a setting inside Content / Style tabs that have their own condition now keeps its own condition too; before, the tabs' condition replaced it, so hidden settings showed.
 
 = 0.118.0 =
 * Editor: on every widget, settings that appear only after a choice inside Normal / Hover tabs (Background > Color and Image after choosing Classic, the gradient's colors, a button's hover background...) landed inside the Normal / Hover row, squashed and hard to use. They now appear under the tabs, in order.

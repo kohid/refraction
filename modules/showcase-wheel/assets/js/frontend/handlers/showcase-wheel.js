@@ -279,6 +279,134 @@ export default class ShowcaseWheel extends Base {
 		root.classList.add( 'is-ready' );
 		this.bind();
 		this.play();
+
+		if ( this.isEdit ) {
+			this.editDrag( root );
+		}
+	}
+
+	/**
+	 * Editor preview only (0.119.0): the current slide's floating images and its picture can be dragged into place.
+	 * While dragging they follow the pointer (inline custom properties); let go, the slide's own settings are written for
+	 * the screen size shown (Across / Down of the floating image, or Move the picture), in % of the picture's space,
+	 * through $e so it can be undone like any other change.
+	 *
+	 * @param {HTMLElement} root
+	 */
+	editDrag( root ) {
+		const editor = window.parent;
+
+		if ( root.rfSwDrag || ! editor || editor === window || ! editor.$e || ! editor.refraction ) {
+			return;
+		}
+
+		root.rfSwDrag = true;
+		root.classList.add( 'rf-sw--edit' );
+
+		const widgetId = this.$element.attr( 'data-id' );
+		const itemOf = ( slot ) => {
+			const container = editor.refraction.getContainer( widgetId );
+			const index = this.own( '.rf-sw__slot' ).indexOf( slot );
+
+			return container?.repeaters?.slides?.children?.[ index ];
+		};
+		const round = ( n ) => Math.round( n * 10 ) / 10;
+
+		root.addEventListener( 'pointerdown', ( event ) => {
+			const target = event.target.closest( '.rf-sw__float, .rf-sw__img' );
+			const slot = target && target.closest( '.rf-sw__slot' );
+			const picture = target && target.closest( '.rf-sw__picture' );
+
+			if ( ! target || ! slot || ! picture || ! slot.classList.contains( 'is-active' ) || 0 !== event.button || target.closest( '.rf-sw' ) !== root ) {
+				return;
+			}
+
+			const item = itemOf( slot );
+
+			if ( ! item ) {
+				return;
+			}
+
+			const isFloat = target.classList.contains( 'rf-sw__float' );
+			const box = picture.getBoundingClientRect();
+			const x0 = event.clientX;
+			const y0 = event.clientY;
+			const mode = editor.refraction.channels.deviceMode.request( 'currentMode' ) || 'desktop';
+			const suffix = 'desktop' === mode ? '' : '_' + mode;
+			let moved = false;
+			let result = null;
+
+			// A floating image: its middle, in % of the picture's space.
+			const own = target.getBoundingClientRect();
+			const fx0 = ( ( own.left + ( own.width / 2 ) ) - box.left ) / box.width * 100;
+			const fy0 = ( ( own.top + ( own.height / 2 ) ) - box.top ) / box.height * 100;
+
+			// The picture: its move, in the unit it already has (% of the picture's space by default).
+			const current = ( key ) => {
+				const v = item.settings.get( key + suffix ) || item.settings.get( key ) || {};
+				return { unit: 'px' === v.unit ? 'px' : '%', size: Number( v.size ) || 0 };
+			};
+			const px0 = current( 'pic_x' );
+			const py0 = current( 'pic_y' );
+
+			const move = ( e ) => {
+				if ( ! moved && Math.hypot( e.clientX - x0, e.clientY - y0 ) < 4 ) {
+					return;
+				}
+
+				moved = true;
+				target.classList.add( 'is-dragging' );
+				const dx = e.clientX - x0;
+				const dy = e.clientY - y0;
+
+				if ( isFloat ) {
+					result = { x: round( fx0 + ( dx / box.width * 100 ) ), y: round( fy0 + ( dy / box.height * 100 ) ) };
+					target.style.setProperty( '--rf-sw-fx', result.x + '%' );
+					target.style.setProperty( '--rf-sw-fy', result.y + '%' );
+				} else {
+					const step = ( start, d, size ) => round( start.size + ( 'px' === start.unit ? d : d / size * 100 ) );
+					result = { x: step( px0, dx, box.width ), y: step( py0, dy, box.height ) };
+					picture.style.setProperty( '--rf-sw-pic-x', result.x + px0.unit );
+					picture.style.setProperty( '--rf-sw-pic-y', result.y + py0.unit );
+				}
+			};
+
+			const up = () => {
+				window.removeEventListener( 'pointermove', move );
+				window.removeEventListener( 'pointerup', up );
+				window.removeEventListener( 'pointercancel', up );
+
+				if ( ! moved || ! result ) {
+					return;
+				}
+
+				const settings = {};
+
+				if ( isFloat ) {
+					const n = target.dataset.float;
+					settings[ `fl${ n }_x${ suffix }` ] = { unit: '%', size: result.x, sizes: [] };
+					settings[ `fl${ n }_y${ suffix }` ] = { unit: '%', size: result.y, sizes: [] };
+				} else {
+					settings[ `pic_x${ suffix }` ] = { unit: px0.unit, size: result.x, sizes: [] };
+					settings[ `pic_y${ suffix }` ] = { unit: py0.unit, size: result.y, sizes: [] };
+				}
+
+				editor.$e.run( 'document/elements/settings', { container: item, settings, options: { external: true } } );
+
+				// The printed CSS takes over from the inline place.
+				window.setTimeout( () => {
+					[ '--rf-sw-fx', '--rf-sw-fy' ].forEach( ( v ) => target.style.removeProperty( v ) );
+					[ '--rf-sw-pic-x', '--rf-sw-pic-y' ].forEach( ( v ) => picture.style.removeProperty( v ) );
+					target.classList.remove( 'is-dragging' );
+				}, 120 );
+			};
+
+			event.preventDefault();
+			event.stopPropagation();
+			window.addEventListener( 'pointermove', move );
+			window.addEventListener( 'pointerup', up );
+			window.addEventListener( 'pointercancel', up );
+		} );
 	}
 
 	bind() {

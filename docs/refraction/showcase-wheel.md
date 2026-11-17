@@ -69,3 +69,19 @@ slide's Content container, in order; off: the slide's parts as one) with the **T
 widgets with the Web Animations API (`fill: backwards`, so they wait hidden), only when a slide changes with motion; Edit
 Mode plays it when you pick a slide.
 
+## 0.119.0: floating images, picture position, the shape's own tabs
+
+- Each slide's **picture** can be moved (`pic_x`, `pic_y`, responsive, % or px; `translate` on `.rf-sw__picture`, so the
+  wheel's own motion, which uses `transform`, is unaffected). In the editor the picture can be dragged (the script writes
+  these for the screen size shown).
+- **Behind the picture** has **Content** / **Style** tabs per slide. Content: the corner or the shape pickers, an
+  **Animation** (float, breathe, turn slowly, wobble; only while the slide shows) and its duration. Style: **Color** (was
+  "Its color"), opacity, size (% of the size in Style), move across / up or down, turn. These are CSS on the slide, by its
+  list item: the slot carries `refraction-repeater-item-{_id}` and the fields use `{{CURRENT_ITEM}}`.
+- **Floating images**: up to five per slide (`float_count`, then `fl1_` ... `fl5_`), each a picture or an icon with
+  Content (what, Across / Down in % of the picture's space, animation and duration) and Style (size, turn, layer in front
+  of / behind the picture, opacity, shadow, icon color). They sit inside `.rf-sw__picture`, so they turn with it on the
+  wheel, as in the reference (pin 621989398570754165: ingredients around a dish). In the editor they can be dragged.
+- **Thumbnails**: width and height (`thumb_size` is the width, `thumb_height`, empty: square).
+- Shape pickers show 12 shapes (3 rows of 4; a container query sizes the list) and scroll for the rest.
+

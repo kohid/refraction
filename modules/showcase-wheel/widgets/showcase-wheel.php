@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
+use Refraction\Icons_Manager;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\OrganicFx\Classes\Pure_Organic;
 use Refraction\Modules\OrganicFx\Classes\Shapes_Repository;
@@ -172,6 +173,217 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		return [ 'd' => Pure_Organic::path( $id ), 'vb' => '0 0 100 100', 'rule' => 'nonzero' ];
 	}
 
+	/** How many floating images a slide can have. */
+	const FLOATS = 5;
+
+	/** Where each floating image starts (x, y in % of the picture's space), so new ones do not cover each other. */
+	const FLOAT_PLACES = [ 1 => [ 14, 22 ], 2 => [ 86, 14 ], 3 => [ 12, 80 ], 4 => [ 88, 84 ], 5 => [ 52, 4 ] ];
+
+	/**
+	 * A slide's floating images (0.119.0): up to five small pictures or icons around the slide's picture, each with its
+	 * Content (what, where, how it moves) and Style tabs, like Phone Showcase's floating cards but only a picture or an
+	 * icon. They turn with the picture on the wheel. In the editor they can be dragged into place.
+	 *
+	 * @param Repeater $repeater The slide list's fields.
+	 */
+	private static function floating_controls( Repeater $repeater ): void {
+		$repeater->add_control( 'float_count', [
+			'label' => esc_html__( 'Floating images', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '0',
+			'options' => [ '0' => esc_html__( 'None', 'refraction' ), '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5' ],
+			'description' => esc_html__( 'Small pictures or icons around the picture, such as the ingredients around a dish. They turn with the picture.', 'refraction' ),
+			'separator' => 'before',
+		] );
+
+		for ( $n = 1; $n <= self::FLOATS; $n++ ) {
+			$p = 'fl' . $n . '_';
+			$on = [ 'float_count' => array_map( 'strval', range( $n, self::FLOATS ) ) ];
+			$el = '{{WRAPPER}} {{CURRENT_ITEM}} .rf-sw__float--' . $n;
+			[ $x, $y ] = self::FLOAT_PLACES[ $n ];
+
+			$repeater->add_control( $p . 'heading', [
+				/* translators: %d: Floating image number. */
+				'label' => sprintf( esc_html__( 'Floating image %d', 'refraction' ), $n ),
+				'type' => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => $on,
+			] );
+
+			$repeater->start_controls_tabs( $p . 'tabs', [ 'condition' => $on ] );
+			$repeater->start_controls_tab( $p . 'tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ), 'condition' => $on ] );
+
+			$repeater->add_control( $p . 'type', [
+				'label' => esc_html__( 'Show', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'options' => [
+					'image' => [ 'title' => esc_html__( 'Picture', 'refraction' ), 'icon' => 'rficon-image' ],
+					'icon' => [ 'title' => esc_html__( 'Icon', 'refraction' ), 'icon' => 'rficon-star' ],
+				],
+				'default' => 'image',
+				'toggle' => false,
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'image', [
+				'label' => esc_html__( 'Picture', 'refraction' ),
+				'type' => Controls_Manager::MEDIA,
+				'description' => esc_html__( 'A cut-out (PNG or SVG with a see-through background) looks best.', 'refraction' ),
+				'condition' => $on + [ $p . 'type!' => 'icon' ],
+			] );
+
+			$repeater->add_control( $p . 'icon', [
+				'label' => esc_html__( 'Icon', 'refraction' ),
+				'type' => Controls_Manager::ICONS,
+				'default' => [ 'value' => 'fas fa-star', 'library' => 'fa-solid' ],
+				'condition' => $on + [ $p . 'type' => 'icon' ],
+			] );
+
+			$repeater->add_responsive_control( $p . 'x', [
+				'label' => esc_html__( 'Across (%)', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ '%' ],
+				'range' => [ '%' => [ 'min' => -50, 'max' => 150 ] ],
+				'default' => [ 'unit' => '%', 'size' => $x ],
+				'selectors' => [ $el => '--rf-sw-fx: {{SIZE}}%;' ],
+				'condition' => $on,
+			] );
+
+			$repeater->add_responsive_control( $p . 'y', [
+				'label' => esc_html__( 'Down (%)', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ '%' ],
+				'range' => [ '%' => [ 'min' => -50, 'max' => 150 ] ],
+				'default' => [ 'unit' => '%', 'size' => $y ],
+				'selectors' => [ $el => '--rf-sw-fy: {{SIZE}}%;' ],
+				'description' => esc_html__( 'Of the picture\'s space, from its top left. Tip: in the editor, drag it into place (for the screen size shown).', 'refraction' ),
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'motion', [
+				'label' => esc_html__( 'Animation', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'bob',
+				'options' => [
+					'' => esc_html__( 'None', 'refraction' ),
+					'bob' => esc_html__( 'Float up and down', 'refraction' ),
+					'sway' => esc_html__( 'Sway', 'refraction' ),
+					'spin' => esc_html__( 'Turn slowly', 'refraction' ),
+					'pulse' => esc_html__( 'Pulse', 'refraction' ),
+				],
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'speed', [
+				'label' => esc_html__( 'Duration (s)', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 1, 'max' => 30, 'step' => 0.5 ] ],
+				'selectors' => [ $el => '--rf-sw-ft: {{SIZE}}s;' ],
+				'condition' => $on + [ $p . 'motion!' => '' ],
+			] );
+
+			$repeater->end_controls_tab();
+			$repeater->start_controls_tab( $p . 'tab_style', [ 'label' => esc_html__( 'Style', 'refraction' ), 'condition' => $on ] );
+
+			$repeater->add_responsive_control( $p . 'size', [
+				'label' => esc_html__( 'Size', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range' => [ 'px' => [ 'min' => 12, 'max' => 400 ], '%' => [ 'min' => 2, 'max' => 80 ] ],
+				'selectors' => [ $el => '--rf-sw-fs: {{SIZE}}{{UNIT}};' ],
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'rotate', [
+				'label' => esc_html__( 'Turn (deg)', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
+				'selectors' => [ $el => '--rf-sw-fr: {{SIZE}}deg;' ],
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'layer', [
+				'label' => esc_html__( 'Layer', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'options' => [
+					'front' => [ 'title' => esc_html__( 'In front of the picture', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
+					'back' => [ 'title' => esc_html__( 'Behind the picture', 'refraction' ), 'icon' => 'rficon-v-align-bottom' ],
+				],
+				'default' => 'front',
+				'toggle' => false,
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'opacity', [
+				'label' => esc_html__( 'Opacity', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+				'selectors' => [ $el => 'opacity: {{SIZE}};' ],
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'shadow', [
+				'label' => esc_html__( 'Shadow', 'refraction' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => 'yes',
+				'condition' => $on,
+			] );
+
+			$repeater->add_control( $p . 'color', [
+				'label' => esc_html__( 'Icon color', 'refraction' ),
+				'type' => Controls_Manager::COLOR,
+				'selectors' => [ $el => 'color: {{VALUE}}; fill: {{VALUE}};' ],
+				'condition' => $on + [ $p . 'type' => 'icon' ],
+			] );
+
+			$repeater->end_controls_tab();
+			$repeater->end_controls_tabs();
+		}
+	}
+
+	/**
+	 * A slide's floating images, for one layer (in front of or behind the picture).
+	 *
+	 * @param array  $slide The slide's item in the Slides list.
+	 * @param string $layer 'front' or 'back'.
+	 */
+	private static function floats( array $slide, string $layer ): string {
+		$count = max( 0, min( self::FLOATS, (int) ( $slide['float_count'] ?? 0 ) ) );
+		$out = '';
+
+		for ( $n = 1; $n <= $count; $n++ ) {
+			$p = 'fl' . $n . '_';
+
+			if ( ( 'back' === ( $slide[ $p . 'layer' ] ?? 'front' ) ? 'back' : 'front' ) !== $layer ) {
+				continue;
+			}
+
+			$inner = '';
+
+			if ( 'icon' === ( $slide[ $p . 'type' ] ?? 'image' ) ) {
+				$inner = (string) Icons_Manager::try_get_icon_html( (array) ( $slide[ $p . 'icon' ] ?? [] ), [ 'aria-hidden' => 'true' ] );
+			} elseif ( ! empty( $slide[ $p . 'image' ]['url'] ) ) {
+				$inner = '<img src="' . esc_url( $slide[ $p . 'image' ]['url'] ) . '" alt="" loading="lazy" decoding="async" draggable="false">';
+			}
+
+			if ( '' === $inner ) {
+				continue;
+			}
+
+			$motion = (string) ( $slide[ $p . 'motion' ] ?? 'bob' );
+			$classes = [ 'rf-sw__float', 'rf-sw__float--' . $n ];
+			$classes[] = in_array( $motion, [ 'bob', 'sway', 'spin', 'pulse' ], true ) ? 'rf-sw__float--' . $motion : 'rf-sw__float--still';
+
+			if ( 'yes' === ( $slide[ $p . 'shadow' ] ?? 'yes' ) ) {
+				$classes[] = 'has-shadow';
+			}
+
+			$out .= '<span class="' . esc_attr( implode( ' ', $classes ) ) . '" data-float="' . $n . '" style="--rf-sw-fd:' . esc_attr( (string) ( $n * -0.7 ) ) . 's"><span class="rf-sw__float-in">' . $inner . '</span></span>';
+		}
+
+		return $out;
+	}
+
 	private static function choose( array $labels_icons ): array {
 		$options = [];
 
@@ -224,6 +436,29 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'description' => esc_html__( 'Empty: the picture.', 'refraction' ),
 		] );
 
+		// Where this slide's picture sits (0.119.0): moved from its place, per screen size; in the editor the picture can
+		// be dragged (showcase-wheel.js writes these for the screen size shown).
+		$item = '{{WRAPPER}} {{CURRENT_ITEM}}';
+		$repeater->add_responsive_control( 'pic_x', [
+			'label' => esc_html__( 'Move the picture across', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'default' => [ 'unit' => '%', 'size' => '' ],
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'min' => -100, 'max' => 100 ], 'px' => [ 'min' => -600, 'max' => 600 ] ],
+			'selectors' => [ $item => '--rf-sw-pic-x: {{SIZE}}{{UNIT}};' ],
+			'separator' => 'before',
+		] );
+
+		$repeater->add_responsive_control( 'pic_y', [
+			'label' => esc_html__( 'Move the picture up or down', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'default' => [ 'unit' => '%', 'size' => '' ],
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'min' => -100, 'max' => 100 ], 'px' => [ 'min' => -600, 'max' => 600 ] ],
+			'selectors' => [ $item => '--rf-sw-pic-y: {{SIZE}}{{UNIT}};' ],
+			'description' => esc_html__( 'Tip: in the editor, drag the picture to place it (for the screen size shown).', 'refraction' ),
+		] );
+
 		$repeater->add_control( 'side', [
 			'label' => esc_html__( 'Content on the', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
@@ -247,6 +482,11 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'arc' => esc_html__( 'A ring behind the picture', 'refraction' ),
 			],
 		] );
+
+		// What is behind the picture: its Content (which, where, how it moves) and its Style (0.119.0).
+		$on_deco = [ 'deco!' => '' ];
+		$repeater->start_controls_tabs( 'deco_tabs', [ 'condition' => $on_deco ] );
+		$repeater->start_controls_tab( 'deco_tab_content', [ 'label' => esc_html__( 'Content', 'refraction' ), 'condition' => $on_deco ] );
 
 		$repeater->add_control( 'arc_corner', [
 			'label' => esc_html__( 'Corner', 'refraction' ),
@@ -311,12 +551,88 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'default' => '',
 		] );
 
+		$repeater->add_control( 'deco_motion', [
+			'label' => esc_html__( 'Animation', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'None', 'refraction' ),
+				'float' => esc_html__( 'Float gently', 'refraction' ),
+				'breathe' => esc_html__( 'Breathe (grow and shrink)', 'refraction' ),
+				'spin' => esc_html__( 'Turn slowly', 'refraction' ),
+				'wobble' => esc_html__( 'Wobble', 'refraction' ),
+			],
+			'separator' => 'before',
+			'condition' => $on_deco,
+		] );
+
+		$repeater->add_control( 'deco_speed', [
+			'label' => esc_html__( 'Duration (s)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 40, 'step' => 0.5 ] ],
+			'selectors' => [ $item => '--rf-sw-deco-t: {{SIZE}}s;' ],
+			'condition' => $on_deco + [ 'deco_motion!' => '' ],
+		] );
+
+		$repeater->end_controls_tab();
+		$repeater->start_controls_tab( 'deco_tab_style', [ 'label' => esc_html__( 'Style', 'refraction' ), 'condition' => $on_deco ] );
+
 		$repeater->add_control( 'deco_color', [
-			'label' => esc_html__( 'Its color', 'refraction' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '#FFFFFFB3',
-			'condition' => [ 'deco!' => '' ],
+			'selectors' => [ $item => '--rf-sw-deco-color: {{VALUE}};' ],
+			'condition' => $on_deco,
 		] );
+
+		$repeater->add_control( 'deco_opacity', [
+			'label' => esc_html__( 'Opacity', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+			'selectors' => [ $item . ' .rf-sw__deco, ' . $item . ' .rf-sw__corner' => 'opacity: {{SIZE}};' ],
+			'condition' => $on_deco,
+		] );
+
+		$repeater->add_responsive_control( 'deco_scale', [
+			'label' => esc_html__( 'Size (%)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%' ],
+			'range' => [ '%' => [ 'min' => 20, 'max' => 250 ] ],
+			'description' => esc_html__( 'Of the size set in Style > Picture (or Arc in a corner). Empty: 100%.', 'refraction' ),
+			'selectors' => [ $item => '--rf-sw-deco-k: calc({{SIZE}} / 100);' ],
+			'condition' => $on_deco,
+		] );
+
+		$repeater->add_responsive_control( 'deco_x', [
+			'label' => esc_html__( 'Move across', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => -400, 'max' => 400 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ $item => '--rf-sw-deco-x: {{SIZE}}{{UNIT}};' ],
+			'condition' => $on_deco,
+		] );
+
+		$repeater->add_responsive_control( 'deco_y', [
+			'label' => esc_html__( 'Move up or down', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => -400, 'max' => 400 ], '%' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ $item => '--rf-sw-deco-y: {{SIZE}}{{UNIT}};' ],
+			'condition' => $on_deco,
+		] );
+
+		$repeater->add_control( 'deco_rotate', [
+			'label' => esc_html__( 'Turn (deg)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
+			'selectors' => [ $item => '--rf-sw-deco-r: {{SIZE}}deg;' ],
+			'condition' => $on_deco + [ 'deco' => [ 'blob', 'corner' ] ],
+		] );
+
+		$repeater->end_controls_tab();
+		$repeater->end_controls_tabs();
+
+		self::floating_controls( $repeater );
 
 		$this->add_control( 'slides', [
 			'label' => esc_html__( 'Slides', 'refraction' ),
@@ -721,12 +1037,21 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		] );
 
 		$this->add_responsive_control( 'thumb_size', [
-			'label' => esc_html__( 'Size', 'refraction' ),
+			'label' => esc_html__( 'Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,
 			'size_units' => [ 'px' ],
-			'range' => [ 'px' => [ 'min' => 24, 'max' => 160 ] ],
+			'range' => [ 'px' => [ 'min' => 24, 'max' => 240 ] ],
 			'default' => [ 'unit' => 'px', 'size' => 64 ],
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-thumb: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'thumb_height', [
+			'label' => esc_html__( 'Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 16, 'max' => 240 ] ],
+			'description' => esc_html__( 'Empty: the same as the width. Wide pictures such as cars look best wider than tall.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-thumb-h: {{SIZE}}px;' ],
 		] );
 
 		$this->add_responsive_control( 'thumb_gap', [
@@ -879,28 +1204,42 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		return [ 'image' => $image, 'thumb' => '' !== $thumb ? $thumb : $image, 'alt' => $alt ];
 	}
 
-	/** What sits behind a slide's picture: an arc, a shape, or nothing (the arc in a corner is drawn on the slide). */
+	/** What sits behind a slide's picture: an arc, a shape, or nothing (the arc in a corner is drawn on the slide). Its
+	 * color, size, place and turn come from the slide's Style tab (CSS on the slide, by its list item). */
 	private static function deco( array $slide ): string {
 		$deco = (string) ( $slide['deco'] ?? '' );
-		$style = self::deco_style( $slide );
 
 		if ( 'arc' === $deco ) {
-			return '<span class="rf-sw__deco rf-sw__deco--arc"' . $style . ' aria-hidden="true"></span>';
+			return '<span class="rf-sw__deco rf-sw__deco--arc" aria-hidden="true"></span>';
 		}
 
 		if ( 'blob' === $deco ) {
 			$shape = self::blob_data( $slide );
 
-			return '<span class="rf-sw__deco rf-sw__deco--blob"' . $style . ' aria-hidden="true"><svg viewBox="' . esc_attr( $shape['vb'] ) . '" preserveAspectRatio="none"><path fill-rule="' . esc_attr( $shape['rule'] ) . '" d="' . esc_attr( $shape['d'] ) . '"/></svg></span>';
+			return '<span class="rf-sw__deco rf-sw__deco--blob" aria-hidden="true"><svg viewBox="' . esc_attr( $shape['vb'] ) . '" preserveAspectRatio="none"><path fill-rule="' . esc_attr( $shape['rule'] ) . '" d="' . esc_attr( $shape['d'] ) . '"/></svg></span>';
 		}
 
 		return '';
 	}
 
-	private static function deco_style( array $slide ): string {
-		$color = (string) ( $slide['deco_color'] ?? '' );
+	/** The slide's own classes: its list item (for its own CSS), its side, how its decoration moves. */
+	private static function slot_classes( array $slide, string $side, int $index ): string {
+		$motion = (string) ( $slide['deco_motion'] ?? '' );
+		$classes = [ 'rf-sw__slot', 'rf-sw__slot--' . $side ];
 
-		return '' !== $color ? ' style="--rf-sw-deco-color:' . esc_attr( $color ) . '"' : '';
+		if ( ! empty( $slide['_id'] ) ) {
+			$classes[] = 'refraction-repeater-item-' . $slide['_id'];
+		}
+
+		if ( in_array( $motion, [ 'float', 'breathe', 'spin', 'wobble' ], true ) ) {
+			$classes[] = 'rf-sw-deco-' . $motion;
+		}
+
+		if ( 0 === $index ) {
+			$classes[] = 'is-active';
+		}
+
+		return implode( ' ', $classes );
 	}
 
 	/** An arc in a corner of the slide: a quarter of a circle (ring) around that corner; at the top on the picture's side unless set. */
@@ -912,7 +1251,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		$corner = (string) ( $slide['arc_corner'] ?? 'auto' );
 		$corner = in_array( $corner, [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ], true ) ? $corner : ( 'left' === $side ? 'top-right' : 'top-left' );
 
-		return '<span class="rf-sw__corner rf-sw__corner--' . $corner . '"' . self::deco_style( $slide ) . ' aria-hidden="true"></span>';
+		return '<span class="rf-sw__corner rf-sw__corner--' . $corner . '" aria-hidden="true"><span class="rf-sw__corner-ring"></span></span>';
 	}
 
 	private static function arrow( string $which ): string {
@@ -943,13 +1282,17 @@ class Showcase_Wheel extends Widget_Nested_Base {
 					$pic = self::picture( $slide );
 					$side = 'right' === ( $slide['side'] ?? 'left' ) ? 'right' : 'left';
 					?>
-					<div class="rf-sw__slot rf-sw__slot--<?php echo esc_attr( $side ); ?><?php echo 0 === $index ? ' is-active' : ''; ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( '%d / %d%s', $index + 1, $total, '' !== trim( (string) ( $slide['slide_title'] ?? '' ) ) ? ' - ' . wp_strip_all_tags( $slide['slide_title'] ) : '' ) ); ?>"<?php echo 0 === $index ? '' : ' aria-hidden="true"'; ?>>
+					<div class="<?php echo esc_attr( self::slot_classes( $slide, $side, $index ) ); ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( '%d / %d%s', $index + 1, $total, '' !== trim( (string) ( $slide['slide_title'] ?? '' ) ) ? ' - ' . wp_strip_all_tags( $slide['slide_title'] ) : '' ) ); ?>"<?php echo 0 === $index ? '' : ' aria-hidden="true"'; ?>>
 						<?php $child->print_element(); ?>
 						<?php echo self::corner( $slide, $side ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 						<div class="rf-sw__visual" aria-hidden="<?php echo '' === $pic['alt'] ? 'true' : 'false'; ?>">
 							<?php echo self::deco( $slide ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
-							<?php if ( '' !== $pic['image'] ) : ?>
-								<span class="rf-sw__picture"><img src="<?php echo esc_url( $pic['image'] ); ?>" alt="<?php echo esc_attr( $pic['alt'] ); ?>" loading="<?php echo 0 === $index ? 'eager' : 'lazy'; ?>" decoding="async"></span>
+							<?php
+							$back = self::floats( $slide, 'back' );
+							$front = self::floats( $slide, 'front' );
+							if ( '' !== $pic['image'] || '' !== $back . $front ) :
+								?>
+								<span class="rf-sw__picture"><?php echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?><?php if ( '' !== $pic['image'] ) : ?><img class="rf-sw__img" src="<?php echo esc_url( $pic['image'] ); ?>" alt="<?php echo esc_attr( $pic['alt'] ); ?>" loading="<?php echo 0 === $index ? 'eager' : 'lazy'; ?>" decoding="async" draggable="false"><?php endif; ?><?php echo $front; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?></span>
 							<?php endif; ?>
 						</div>
 					</div>
@@ -1022,8 +1365,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				return '';
 			}
 			const at = [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ].includes( slide.arc_corner ) ? slide.arc_corner : ( 'right' === slide.side ? 'top-left' : 'top-right' );
-			const style = slide.deco_color ? ' style="--rf-sw-deco-color:' + _.escape( slide.deco_color ) + '"' : '';
-			return '<span class="rf-sw__corner rf-sw__corner--' + at + '"' + style + ' aria-hidden="true"></span>';
+			return '<span class="rf-sw__corner rf-sw__corner--' + at + '" aria-hidden="true"><span class="rf-sw__corner-ring"></span></span>';
 		};
 		const pic = ( slide ) => {
 			const image = slide.image && slide.image.url ? slide.image.url : '';
@@ -1031,7 +1373,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			return { image, thumb };
 		};
 		const deco = ( slide ) => {
-			const style = slide.deco_color ? ' style="--rf-sw-deco-color:' + _.escape( slide.deco_color ) + '"' : '';
+			const style = '';
 			if ( 'arc' === slide.deco ) {
 				return '<span class="rf-sw__deco rf-sw__deco--arc"' + style + ' aria-hidden="true"></span>';
 			}
@@ -1041,17 +1383,45 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			}
 			return '';
 		};
+		const floats = ( slide, layer ) => {
+			let out = '';
+			const count = Math.max( 0, Math.min( 5, parseInt( slide.float_count, 10 ) || 0 ) );
+			for ( let n = 1; n <= count; n++ ) {
+				const p = 'fl' + n + '_';
+				if ( ( 'back' === slide[ p + 'layer' ] ? 'back' : 'front' ) !== layer ) {
+					continue;
+				}
+				let inner = '';
+				if ( 'icon' === slide[ p + 'type' ] ) {
+					const icon = refraction.helpers.renderIcon( view, slide[ p + 'icon' ], { 'aria-hidden': true }, 'i', 'object' );
+					inner = icon && icon.rendered ? icon.value : '';
+				} else if ( slide[ p + 'image' ] && slide[ p + 'image' ].url ) {
+					inner = '<img src="' + _.escape( slide[ p + 'image' ].url ) + '" alt="" draggable="false">';
+				}
+				if ( ! inner ) {
+					continue;
+				}
+				const motion = [ 'bob', 'sway', 'spin', 'pulse' ].includes( slide[ p + 'motion' ] ) ? slide[ p + 'motion' ] : 'still';
+				const shadow = 'yes' === slide[ p + 'shadow' ] ? ' has-shadow' : '';
+				out += '<span class="rf-sw__float rf-sw__float--' + n + ' rf-sw__float--' + motion + shadow + '" data-float="' + n + '" style="--rf-sw-fd:' + ( n * -0.7 ) + 's"><span class="rf-sw__float-in">' + inner + '</span></span>';
+			}
+			return out;
+		};
+		const slotClass = ( slide, index ) => {
+			const motion = [ 'float', 'breathe', 'spin', 'wobble' ].includes( slide.deco_motion ) ? ' rf-sw-deco-' + slide.deco_motion : '';
+			return 'rf-sw__slot rf-sw__slot--' + ( 'right' === slide.side ? 'right' : 'left' ) + ' refraction-repeater-item-' + slide._id + motion + ( 0 === index ? ' is-active' : '' );
+		};
 		const arrows = settings.arrows || 'next';
 		const thumbs = 'yes' === settings.show_thumbs && total > 1;
 		#>
 		<div class="rf-sw {{ thumbs || ( 'none' !== arrows && total > 1 ) ? 'has-nav' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.wheel_label }}" tabindex="0">
 			<div class="rf-sw__slots">
 				<# _.each( slides, ( slide, index ) => { const p = pic( slide ); #>
-					<div class="rf-sw__slot rf-sw__slot--{{ 'right' === slide.side ? 'right' : 'left' }}{{ 0 === index ? ' is-active' : '' }}" role="group" aria-roledescription="slide" aria-label="{{ index + 1 }} / {{ total }}">
+					<div class="{{ slotClass( slide, index ) }}" role="group" aria-roledescription="slide" aria-label="{{ index + 1 }} / {{ total }}">
 						{{{ corner( slide ) }}}
 						<div class="rf-sw__visual" aria-hidden="true">
 							{{{ deco( slide ) }}}
-							<# if ( p.image ) { #><span class="rf-sw__picture"><img src="{{ p.image }}" alt=""></span><# } #>
+							<# const back = floats( slide, 'back' ), front = floats( slide, 'front' ); if ( p.image || back || front ) { #><span class="rf-sw__picture">{{{ back }}}<# if ( p.image ) { #><img class="rf-sw__img" src="{{ p.image }}" alt="" draggable="false"><# } #>{{{ front }}}</span><# } #>
 						</div>
 					</div>
 				<# } ); #>
