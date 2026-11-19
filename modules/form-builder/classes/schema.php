@@ -542,6 +542,10 @@ class Schema {
 			'address_strict' => 'address' === $type && ! empty( $raw['address_strict'] ),
 			'address_min' => 'address' === $type ? max( 1, min( 5, (int) ( $raw['address_min'] ?? 2 ) ) ) : 2,
 			'address_max' => 'address' === $type ? max( 3, min( 20, (int) ( $raw['address_max'] ?? 8 ) ) ) : 8,
+			// Real addresses from OpenStreetMap (0.125.0), asked by the site: near a place, in some countries.
+			'address_source' => 'address' === $type && 'osm' === ( $raw['address_source'] ?? '' ) ? 'osm' : '',
+			'address_near' => 'address' === $type && Address::near( (string) ( $raw['address_near'] ?? '' ) ) ? implode( ', ', Address::near( (string) $raw['address_near'] ) ) : '',
+			'address_country' => 'address' === $type ? implode( ', ', Address::countries( (string) ( $raw['address_country'] ?? '' ) ) ) : '',
 			// Field extras (0.93.0): an icon in the box, a growing long text, a phone pattern, the country's flag.
 			'icon' => in_array( $type, self::ICON_TYPES, true ) ? self::option_icon( $raw['icon'] ?? null ) : null,
 			'icon_last' => 'name' === $type ? self::option_icon( $raw['icon_last'] ?? null ) : null,

@@ -53,21 +53,26 @@ function fillFieldList( model ) {
 	const type = model && ( model.get( 'widgetType' ) || model.get( 'elType' ) );
 	const cache = ( type && refraction.widgetsCache && refraction.widgetsCache[ type ] ) || ( type && refraction.config.elements && refraction.config.elements[ type ] );
 	const controls = cache && cache.controls;
-	const fields = controls && controls[ DC_ITEMS ] && controls[ DC_ITEMS ].fields;
-	// The repeater's fields come as a list (or keyed by name).
-	const field = fields && ( Array.isArray( fields ) ? fields.find( ( f ) => 'dc_field' === f.name ) : Object.values( fields ).find( ( f ) => 'dc_field' === f.name ) );
+	const lists = formFields( refraction.documents.getCurrent() );
 
-	if ( ! field ) {
-		return;
-	}
+	// Display Conditions > Field, and Changes with the answers > When field (0.125.0).
+	[ [ DC_ITEMS, 'dc_field' ], [ 'rfb_swap_rows', 'field' ] ].forEach( ( [ repeater, name ] ) => {
+		const fields = controls && controls[ repeater ] && controls[ repeater ].fields;
+		// The repeater's fields come as a list (or keyed by name).
+		const field = fields && ( Array.isArray( fields ) ? fields : Object.values( fields ) ).find( ( f ) => name === f.name );
 
-	const options = { '': field.options[ '' ] || '' };
+		if ( ! field ) {
+			return;
+		}
 
-	formFields( refraction.documents.getCurrent() ).forEach( ( [ key, label ] ) => {
-		options[ key ] = label + ' (' + key + ')';
+		const options = { '': field.options[ '' ] || '' };
+
+		lists.forEach( ( [ key, label ] ) => {
+			options[ key ] = label + ' (' + key + ')';
+		} );
+
+		field.options = options;
 	} );
-
-	field.options = options;
 }
 
 /**
@@ -82,13 +87,34 @@ function toggleElementConditions( model ) {
 	const ownSection = !! ( cache && cache.controls && cache.controls.section_conditions );
 
 	window.document.body.classList.toggle( 'rfb-hide-el-cond', ! formPage || ownSection );
+	window.document.body.classList.toggle( 'rfb-not-form', ! formPage );
 }
 
 export function watchDisplayFields() {
 	const style = window.document.createElement( 'style' );
 
-	style.textContent = '.rfb-hide-el-cond .refraction-control-section_rfb_conditions{display:none!important}';
+	style.textContent = '.rfb-hide-el-cond .refraction-control-section_rfb_conditions,.rfb-not-form .refraction-control-section_rfb_swap{display:none!important}';
 	window.document.head.appendChild( style );
+
+	// Before the panel draws the element: its Content tab (Changes with the answers) is drawn at once.
+	class FillFormFields extends $e.modules.hookUI.Before {
+		getCommand() {
+			return 'panel/editor/open';
+		}
+
+		getId() {
+			return 'rfb-fill-form-fields';
+		}
+
+		apply( args ) {
+			const model = args.model || ( args.view && args.view.model );
+
+			fillFieldList( model );
+			toggleElementConditions( model );
+		}
+	}
+
+	$e.hooks.registerUIBefore( new FillFormFields() );
 
 	[ 'widget', 'container', 'section', 'column' ].forEach( ( type ) => {
 		refraction.hooks.addAction( 'panel/open_editor/' + type, ( panel, model ) => {

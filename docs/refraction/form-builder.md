@@ -302,3 +302,26 @@ Check: `scripts/check-address-conditions.mjs`.
   card.
 
 Check: `scripts/check-form-conditions.mjs`.
+
+## Text that changes with the answers, real addresses, focus ring (0.125.0)
+
+- **Changes with the answers** (`Classes\Answer_Text`). Heading, Text Editor, Button, Alert, Icon Box, Image Box, Icon
+  List, Image and Icon get a Content section after their first one (shown on Form pages only): rows of When field
+  (the form's fields, filled by `display-fields.js`), Answer, Value, and what to show (title, description, text, an
+  Icon List item's text, a picture, an icon). On the site the rows ride after the widget's content as
+  `<template data-rfb-swap>` (texts through `wp_kses_post`, pictures as URLs, icons as their HTML); `applyConditions()`
+  swaps the parts (`swapContent()`): the first row whose answer matches wins, by value or by the choice's name; none
+  restores the widget's own content. These widgets draw their editor preview themselves, so in Edit Mode
+  `previewSwaps()` reads the rows from the widget's settings and shows the row set in "Show in the editor" (0: the
+  widget as set).
+- **Address > Suggestions come from > Real addresses (OpenStreetMap)**. Owner-requested exception to "offline" (see
+  CLAUDE.md): off by default, chosen per field. `Address::lookup()` asks Photon (`photon.komoot.io/api`) from the
+  site's server through `admin-ajax.php?action=refraction_fb_address`, with Near (latitude, longitude) as a bias
+  and Only in these countries as a filter, labels each place as name, house number and street, district, town,
+  county, postcode (`Address::labels()`), and keeps each answer for a week (transients). The field's own addresses
+  that match come first. In the editor the lookup is tried with the field's settings (editors only, nonce). "Only
+  addresses from the list" asks the lookup again on submit.
+- **Style > Input > Focus > Focus ring**: the form's ring, None (`--rfb-focus-ring: none`, border back to the box's
+  own), or My own color and width.
+
+Check: `scripts/check-answer-text.mjs`.

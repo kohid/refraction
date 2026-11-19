@@ -232,9 +232,11 @@ $rfb-widths: (
 			filter: brightness(0.97);
 		}
 
-		&:focus {
-			border-color: var(--rfb-focus);
-			box-shadow: 0 0 0 3px color-mix(in srgb, var(--rfb-focus) 22%, transparent);
+		// Style > Input > Focus > Focus ring (0.125.0) sets --rfb-focus-ring (none, or its own color and width).
+		&:focus,
+		&:focus-visible {
+			border-color: var(--rfb-focus-border, var(--rfb-focus));
+			box-shadow: var(--rfb-focus-ring, 0 0 0 var(--rfb-focus-ring-width, 3px) var(--rfb-focus-ring-color, color-mix(in srgb, var(--rfb-focus) 22%, transparent)));
 			outline: 0;
 		}
 

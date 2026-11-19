@@ -57,6 +57,21 @@ class Shortcodes {
 		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
 		$field = $definition && $definition['public_form'] && '' !== $key ? Schema::field( $definition, $key ) : null;
 
+		// The editor's preview tries a field that is not saved yet: its settings come with the question (editors only).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checked just below.
+		if ( ! $field && isset( $_GET['preview'] ) && current_user_can( 'edit_posts' ) && check_ajax_referer( self::ACTION_ADDRESS, 'nonce', false ) ) {
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+			$field = Schema::clean_field( [
+				'type' => 'address',
+				'label' => 'Preview',
+				'address_source' => sanitize_key( wp_unslash( $_GET['source'] ?? '' ) ),
+				'address_near' => sanitize_text_field( wp_unslash( $_GET['near'] ?? '' ) ),
+				'address_country' => sanitize_text_field( wp_unslash( $_GET['country'] ?? '' ) ),
+				'address_max' => absint( $_GET['max'] ?? 8 ),
+			] );
+			// phpcs:enable
+		}
+
 		if ( ! $field || 'address' !== $field['type'] ) {
 			wp_send_json_error( null, 404 );
 		}
@@ -65,7 +80,7 @@ class Shortcodes {
 			wp_send_json_success( [ 'items' => [] ] );
 		}
 
-		wp_send_json_success( [ 'items' => Address::search( Address::lines( $field ), $typed, (int) $field['address_max'] ) ] );
+		wp_send_json_success( [ 'items' => Address::suggest( $field, $typed ) ] );
 	}
 
 	/**

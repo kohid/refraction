@@ -35,11 +35,36 @@ class Field_Address extends Field_Widget {
 
 	protected function register_extra_controls(): void {
 		$this->add_control( 'address_heading', [ 'label' => esc_html__( 'Suggested addresses', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
+		$this->add_control( 'address_source', [
+			'label' => esc_html__( 'Suggestions come from', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Your own list (works offline)', 'refraction' ),
+				'osm' => esc_html__( 'Real addresses (OpenStreetMap)', 'refraction' ),
+			],
+			'description' => esc_html__( 'Real addresses: as visitors type, your site asks OpenStreetMap\'s address search (photon.komoot.io) and shows its matches, after any of your own addresses that match. What is typed is sent to that service from your server, not the visitor\'s browser; answers are kept for a week.', 'refraction' ),
+		] );
+		$this->add_control( 'address_near', [
+			'label' => esc_html__( 'Near (latitude, longitude)', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => '57.48, -4.22',
+			'description' => esc_html__( 'Places near here come first, for example your town. Empty: no preference.', 'refraction' ),
+			'condition' => [ 'address_source' => 'osm' ],
+		] );
+		$this->add_control( 'address_country', [
+			'label' => esc_html__( 'Only in these countries', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'GB',
+			'description' => esc_html__( 'Two-letter codes, with commas (GB, IE). Empty: anywhere.', 'refraction' ),
+			'condition' => [ 'address_source' => 'osm' ],
+		] );
 		$this->add_control( 'address_list', [
 			'label' => esc_html__( 'Addresses', 'refraction' ),
 			'type' => Controls_Manager::TEXTAREA,
 			'rows' => 8,
 			'default' => "Inverness, Highland, IV1 1AN\nInverness Airport, Old Military Road, Ardersier, Highland\nInvergordon, Highland, IV18 0DT\nInverarnie, Highland, IV2 6XA\nNairn, Highland, IV12 4AU",
+			'label_block' => true,
 			'description' => esc_html__( 'One per line: addresses, places, postcodes, hotels. Visitors see the ones that match what they type, and can still type their own.', 'refraction' ),
 		] );
 		$this->add_control( 'address_file', [
@@ -102,6 +127,9 @@ class Field_Address extends Field_Widget {
 			'address_strict' => 'yes' === ( $s['address_strict'] ?? '' ),
 			'address_min' => $s['address_min'] ?? 2,
 			'address_max' => $s['address_max'] ?? 8,
+			'address_source' => (string) ( $s['address_source'] ?? '' ),
+			'address_near' => (string) ( $s['address_near'] ?? '' ),
+			'address_country' => (string) ( $s['address_country'] ?? '' ),
 		] + parent::raw_field();
 	}
 
