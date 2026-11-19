@@ -214,6 +214,9 @@ async function main() {
 		await page.waitForTimeout( 1500 );
 		const stored = await page.evaluate( () => { const c = refraction.selection.getElements()[ 0 ]; return c.settings.get( 'rfb_swap_rows' ).at( 0 ).get( 'items' ).map( ( i ) => i.text ).join( '|' ); } );
 		check( 'panel', 'Add item adds a third item to the row, kept in its settings', stored === '**Seats:** 8|Wi-Fi on board|Free water', stored );
+		const afterAdd = await widget( 'icon-list' ).evaluate( ( el ) => [ ...el.querySelectorAll( '.refraction-icon-list-text' ) ].map( ( t ) => t.textContent.trim() ).join( '|' ) );
+		check( 'edit mode', 'the preview follows the row\'s items as they are edited (Free water added)', afterAdd === 'Seats: 8|Wi-Fi on board|Free water', afterAdd );
+		await widget( 'icon-list' ).scrollIntoViewIfNeeded();
 		await page.screenshot( { path: join( SHOTS, 'panel-list-items.png' ) } );
 		await page.locator( '.refraction-control-rfb_swap_rows .rfb-list-items__item:visible button[title="Remove"]' ).last().click();
 		await page.waitForTimeout( 800 );
