@@ -98,7 +98,7 @@ abstract class Nested_Field extends Widget_Nested_Base implements Form_Field {
 	abstract protected function box_selector(): string;
 
 	public function raw_field(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 
 		return $this->shared_raw() + [
 			'type' => $this->field_type(),

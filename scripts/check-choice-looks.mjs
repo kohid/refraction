@@ -138,7 +138,7 @@ async function main() {
 		const tabs = await page.$$eval( '.refraction-control-ch_states .refraction-control-type-tab', ( els ) => els.map( ( e ) => e.textContent.trim() ) );
 		check( 'panel', 'Style > Choices has Normal, Hover and Selected for the look', tabs.join( '|' ) === 'Normal|Hover|Selected', tabs.join( '|' ) );
 		const groups = await page.$$eval( '.rf-section-groups__tab', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.textContent.trim() ) );
-		check( 'panel', 'Style > Choices is grouped into General, Options, Selection mark and Badge', groups.join( '|' ) === 'General|Options|Selection mark|Badge', groups.join( '|' ) );
+		check( 'panel', 'Style > Choices is grouped into General, Options, Selection mark, Price (0.122.0) and Badge', groups.join( '|' ) === 'General|Options|Selection mark|Price|Badge', groups.join( '|' ) );
 		await page.locator( '.rf-section-groups__tab:has-text("Options")' ).click();
 		await page.waitForTimeout( 300 );
 		check( 'panel', 'the plain list\'s own controls are hidden for a look', ( await page.locator( '.refraction-control-choice_inline:visible' ).count() ) === 0 && ( await page.locator( '.refraction-control-ch_radius:visible' ).count() ) === 1 );

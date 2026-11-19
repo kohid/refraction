@@ -219,3 +219,34 @@ Check: `node scripts/check-new-wizard.mjs --site DIR --port N`.
   `refraction/form_builder/collection_group_headings` (group => [ title, text with links ]). The Events module uses
   them for **Events** (an event type) and the **Event forms** group; see `docs/refraction/events.md`.
 - `data-rf-show-if` takes several rules joined by commas, all of which must hold (`kind!=starter:*,kind!=events`).
+
+## Dynamic Tags, choice prices, field currency, required text (0.122.0)
+
+- **Dynamic Tags.** `Field_Settings::add_control()` turns Dynamic Tags on for every TEXT, TEXTAREA, NUMBER, URL, MEDIA
+  and WYSIWYG setting of the form widgets (Choice details rows too). Settings read as code stay typed
+  (`typed_controls()`: field key, formula, the Total's field list, phone pattern, opening hours, closed dates, custom
+  symbol). The widgets read `get_settings_for_display()`, so the tags are worked out when the Form page is saved (the
+  collection) and, for the words a visitor reads (label, description, help, placeholder, default, Total's text,
+  required mark, choice names), again on every page view (`Field_Widget::with_live_text()`). Keys, choice values and
+  prices stay the saved ones, so what is checked and counted on submit matches the stored form.
+- **Choice prices.** Choice details (Radio / Checkbox) show for every Look, List included, and each row has a Price.
+  `Schema::clean_field()` keeps it in `option_extras[value].price` and, unless `value|Label|number` gave one, as the
+  option's `number`, which formulas already count. `priced` marks a field with prices (`data-rfb-priced` on the page).
+  Show the prices (`choice_prices`, on by default) writes the price inside the choice's name
+  (`.rfb-opt-price`, so the Summary reads "Car Tours £55.00"); Style > Choices > Price colours it.
+- **Total amount > Works out.** "A formula" (as before) or "The prices of the picked choices" (`sum_prices`, with
+  `sum_keys` from Choice fields to add up; empty: every priced field). `Schema::sum_prices()` and `sumPrices()` in
+  `frontend.js` add the picked choices' prices; nothing picked gives no price (the Total's text). Rules still win.
+- **Currency per field.** Amount, Total amount and Choice fields have Currency: the form's (Form settings > Currency) or
+  a symbol of their own (`Money::symbols()`, or Other). Stored as the field's `currency`; `Money::for_field()` swaps the
+  symbol and keeps the form's position and separators, on the page, in records, emails and when an amount is parsed.
+- **Currency in Edit Mode.** The preview draws each field from the Form settings saved when the editor opened, so a
+  changed Currency did not show until the page was saved and opened again. Amounts
+  that follow the form carry `data-rfb-cur`; in the editor `refreshEditor()` (`frontend.js`) reads Form settings from
+  the editor's page settings model as they are now and writes the symbol, its side and the separators again on every
+  change and after every field is drawn. Totals are worked out over the whole preview as choices are picked.
+- **Required mark.** Every field with Required (and Choice cards) has Required mark: text such as "(Required)"
+  written after the label (`data-rfb-mark`, `content: attr(data-rfb-mark)`); empty keeps `*`. Style > Label > Required
+  mark has its color, typography and space before.
+
+Check: `scripts/check-form-prices.mjs`.

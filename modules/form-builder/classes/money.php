@@ -43,6 +43,40 @@ class Money {
 		return isset( $short[ $per ] ) ? '/ ' . $short[ $per ] : '';
 	}
 
+	/** Common currency symbols a field can pick instead of the form's own (0.122.0): symbol => name. */
+	public static function symbols(): array {
+		return [
+			'£' => Schema::t( '£ Pound' ),
+			'$' => Schema::t( '$ Dollar' ),
+			'€' => Schema::t( '€ Euro' ),
+			'¥' => Schema::t( '¥ Yen / Yuan' ),
+			'₹' => Schema::t( '₹ Rupee' ),
+			'₱' => Schema::t( '₱ Peso' ),
+			'₩' => Schema::t( '₩ Won' ),
+			'₦' => Schema::t( '₦ Naira' ),
+			'₺' => Schema::t( '₺ Lira' ),
+			'R' => Schema::t( 'R Rand' ),
+			'R$' => Schema::t( 'R$ Real' ),
+			'A$' => Schema::t( 'A$ Australian dollar' ),
+			'C$' => Schema::t( 'C$ Canadian dollar' ),
+			'CHF' => Schema::t( 'CHF Swiss franc' ),
+			'kr' => Schema::t( 'kr Krona / Krone' ),
+			'zł' => Schema::t( 'zł Złoty' ),
+			'AED' => Schema::t( 'AED Dirham' ),
+		];
+	}
+
+	/** The format of a collection with a field's own symbol in place of the form's ('' keeps the form's). */
+	public static function for_field( array $cfg, array $field ): array {
+		$own = (string) ( $field['currency'] ?? '' );
+
+		if ( '' !== $own ) {
+			$cfg['currency_symbol'] = $own;
+		}
+
+		return $cfg;
+	}
+
 	public static function defaults(): array {
 		return [ 'currency_symbol' => '$', 'currency_position' => 'before', 'thousands_sep' => ',', 'decimal_sep' => '.', 'decimals' => 2 ];
 	}

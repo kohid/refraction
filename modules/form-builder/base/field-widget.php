@@ -76,6 +76,13 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 
 		if ( $this->has( 'required' ) ) {
 			$this->add_control( 'field_required', [ 'label' => esc_html__( 'Required', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
+			$this->add_control( 'required_mark', [
+				'label' => esc_html__( 'Required mark', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'placeholder' => '*',
+				'description' => esc_html__( 'Shown after the label, for example (Required). Empty: *', 'refraction' ),
+				'condition' => [ 'field_required' => 'yes' ],
+			] );
 		}
 
 		if ( $this->has( 'placeholder' ) ) {
@@ -242,8 +249,9 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			$this->add_control( 'currency_symbol', [
 				'label' => esc_html__( 'Currency symbol beside the box', 'refraction' ),
 				'type' => Controls_Manager::SWITCHER,
-				'description' => esc_html__( 'The form\'s currency symbol (Form settings > Currency) next to the box. Off: use an icon in the box instead, or nothing.', 'refraction' ),
+				'description' => esc_html__( 'The currency symbol next to the box (Currency below). Off: use an icon in the box instead, or nothing.', 'refraction' ),
 			] );
+			$this->register_currency_choice();
 		}
 
 		if ( in_array( $type, [ 'date', 'time', 'datetime' ], true ) ) {
@@ -301,6 +309,34 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 				'description' => esc_html__( 'The chosen country\'s flag at the left of the box.', 'refraction' ),
 			] );
 		}
+	}
+
+	/**
+	 * Content (0.122.0): the currency this field's amounts are written in. "The form's" follows Form settings > Currency;
+	 * any other choice is this field's own symbol (the form's position and separators stay).
+	 */
+	protected function register_currency_choice( array $condition = [] ): void {
+		$this->add_control( 'currency_choice', [
+			'label' => esc_html__( 'Currency', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'The form\'s (Form settings > Currency)', 'refraction' ) ] + Money::symbols() + [ 'custom' => esc_html__( 'Other symbol', 'refraction' ) ],
+			'condition' => $condition,
+		] );
+		$this->add_control( 'currency_custom', [
+			'label' => esc_html__( 'Symbol', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'CHF',
+			'condition' => $condition + [ 'currency_choice' => 'custom' ],
+		] );
+	}
+
+	/** The symbol chosen on the field, '' for the form's own. */
+	protected function own_currency(): string {
+		$s = $this->get_settings_for_display();
+		$choice = (string) ( $s['currency_choice'] ?? '' );
+
+		return 'custom' === $choice ? (string) ( $s['currency_custom'] ?? '' ) : ( isset( Money::symbols()[ $choice ] ) ? $choice : '' );
 	}
 
 	/** Dates and times also load the calendar (flatpickr), in the editor's preview too. */
@@ -395,10 +431,12 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => esc_html__( 'By order', 'refraction' ),
 			'description' => esc_html__( 'Its label or value from Choices. Empty: the rows follow the order of the choices (the first row is the first choice).', 'refraction' ),
+			'dynamic' => [ 'active' => true ],
 		] );
 		$details->add_control( 'image', [
 			'label' => esc_html__( 'Picture', 'refraction' ),
 			'type' => Controls_Manager::MEDIA,
+			'dynamic' => [ 'active' => true ],
 			'condition' => [ '@choice_look' => 'images' ],
 		] );
 		$details->add_control( 'icon', [
@@ -415,18 +453,34 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => esc_html__( 'Unlimited projects', 'refraction' ),
 			'condition' => [ '@choice_look' => [ 'tiles', 'cards', 'images' ] ],
+			'dynamic' => [ 'active' => true ],
 		] );
-		$details->add_control( 'badge', [ 'label' => esc_html__( 'Badge', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Save 28%', 'refraction' ) ] );
+		$details->add_control( 'badge', [ 'label' => esc_html__( 'Badge', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Save 28%', 'refraction' ), 'dynamic' => [ 'active' => true ], 'condition' => [ '@choice_look!' => 'list' ] ] );
+		$details->add_control( 'price', [
+			'label' => esc_html__( 'Price', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'step' => 0.01,
+			'placeholder' => '55',
+			'description' => esc_html__( 'What this choice costs. A Total amount adds up the prices of the picked choices (Total amount > Works out).', 'refraction' ),
+			'dynamic' => [ 'active' => true ],
+		] );
 		$this->add_control( 'option_extras', [
 			'label' => esc_html__( 'Choice details', 'refraction' ),
 			'type' => Controls_Manager::REPEATER,
 			'fields' => $details->get_controls(),
 			'default' => [],
 			'prevent_empty' => false,
-			'title_field' => '{{{ choice || text || badge || "' . esc_js( __( 'Next choice', 'refraction' ) ) . '" }}}',
-			'description' => esc_html__( 'What this Look shows with each choice. Add one row per choice, in the same order.', 'refraction' ),
-			'condition' => [ 'choice_look!' => 'list' ],
+			'title_field' => '{{{ ( choice || text || badge || "' . esc_js( __( 'Next choice', 'refraction' ) ) . '" ) + ( "" !== String( price || "" ) ? " (" + price + ")" : "" ) }}}',
+			'description' => esc_html__( 'Each choice\'s price, and what this Look shows with it. Add one row per choice, in the same order.', 'refraction' ),
 		] );
+		$this->add_control( 'choice_prices', [
+			'label' => esc_html__( 'Show the prices', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'Each choice\'s price beside its name, in the field\'s currency.', 'refraction' ),
+		] );
+		$this->register_currency_choice( [ 'choice_prices' => 'yes' ] );
 	}
 
 	/** Style tab: label, input (normal, hover, focus), description and help, and the choices of a choice field. */
@@ -441,7 +495,16 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
 			'selectors' => [ '{{WRAPPER}} .rfb-label' => 'margin-bottom: {{SIZE}}{{UNIT}};' ],
 		] );
-		$this->add_control( 'required_color', [ 'label' => esc_html__( 'Required mark', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-label.is-required::after' => 'color: {{VALUE}};' ] ] );
+		$mark = '{{WRAPPER}} .rfb-label.is-required::after';
+		$this->add_control( 'required_heading', [ 'label' => esc_html__( 'Required mark', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'required_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $mark => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'required_typography', 'selector' => $mark ] );
+		$this->add_responsive_control( 'required_gap', [
+			'label' => esc_html__( 'Space before', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+			'selectors' => [ $mark => 'margin-left: {{SIZE}}{{UNIT}};' ],
+		] );
 		$this->end_controls_section();
 
 		if ( $this->has( 'input' ) || $this->has( 'placeholder' ) ) {
@@ -664,6 +727,10 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'condition' => [ 'choice_look' => 'images' ],
 		] );
 
+		$this->add_control( 'ch_price_heading', [ 'label' => esc_html__( 'Price', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => [ 'choice_prices' => 'yes' ] ] );
+		$this->add_control( 'ch_price_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-ch-price' ), 'condition' => [ 'choice_prices' => 'yes' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'ch_price_typography', 'selector' => '{{WRAPPER}} .rfb-opt-price', 'condition' => [ 'choice_prices' => 'yes' ] ] );
+
 		$this->add_control( 'ch_badge_heading', [ 'label' => esc_html__( 'Badge', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category' ] );
 		$this->add_control( 'ch_badge_color', [ 'label' => esc_html__( 'Text color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-ch-badge-color' ) ] );
 		$this->add_control( 'ch_badge_bg', [ 'label' => esc_html__( 'Background color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-ch-badge-bg' ) ] );
@@ -712,7 +779,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 
 	/** The field as the Form Builder sees it, before cleaning (Schema::clean_field cleans it). */
 	public function raw_field(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 		$yes = static function ( $key ) use ( $s ): bool {
 			return 'yes' === ( $s[ $key ] ?? '' );
 		};
@@ -761,7 +828,43 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'choice_full' => $yes( 'choice_full' ),
 			'choice_columns' => $s['choice_columns'] ?? 0,
 			'option_extras' => (array) ( $s['option_extras'] ?? [] ),
+			'choice_prices' => $yes( 'choice_prices' ),
+			'currency' => $this->own_currency(),
+			'required_mark' => (string) ( $s['required_mark'] ?? '' ),
 		];
+	}
+
+	/**
+	 * Dynamic Tags (0.122.0) are worked out again on every page view for the words a visitor reads (label, texts, the
+	 * choices' names). What is checked and counted on submit (keys, choice values, prices) is the saved form's: it
+	 * changes when the Form page is saved again.
+	 */
+	private function with_live_text( array $field ): array {
+		if ( empty( $this->get_settings( '__dynamic__' ) ) ) {
+			return $field;
+		}
+
+		$raw = $this->raw_field();
+		$raw['key'] = $field['key'];
+		$live = Schema::clean_field( $raw );
+
+		if ( ! $live || $live['type'] !== $field['type'] ) {
+			return $field;
+		}
+
+		foreach ( [ 'label', 'description', 'help', 'placeholder', 'default', 'no_price', 'required_mark' ] as $part ) {
+			$field[ $part ] = $live[ $part ] ?? $field[ $part ] ?? null;
+		}
+
+		$labels = array_column( $live['options'], null, 'value' );
+
+		foreach ( $field['options'] as &$option ) {
+			if ( isset( $labels[ $option['value'] ] ) ) {
+				$option['label'] = $labels[ $option['value'] ]['label'];
+			}
+		}
+
+		return $field;
 	}
 
 	/**
@@ -780,6 +883,8 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			if ( ! $field ) {
 				return;
 			}
+
+			$field = $this->with_live_text( $field );
 		}
 
 		if ( ! $field ) {
@@ -793,7 +898,9 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		}
 
 		if ( ! $state ) {
-			$document = Plugin::$instance->documents->get( (int) get_the_ID() );
+			// The document being drawn: when the editor redraws one field, the page's post is not set up (get_the_ID() is
+			// empty) and the amounts fell back to $ (0.122.0).
+			$document = Form_Document::current() ?? Plugin::$instance->documents->get( (int) get_the_ID() );
 			$money = $document instanceof Form_Document ? $document->form_settings()['settings'] : [];
 			$state = [ 'values' => [], 'errors' => [], 'ctx' => [ 'money' => $money ] ];
 			Shortcodes::enqueue();

@@ -150,7 +150,8 @@ async function main() {
 		check( 'panel', 'Choice details show what the Look uses: picture only for Image cards, text for cards, not for the bar', images === 'image,icon,text,badge' && segmented === 'icon,badge' && cards === 'icon,text,badge', `${ images } | ${ segmented } | ${ cards }` );
 		await set( 'list' );
 		await page.waitForTimeout( 400 );
-		check( 'panel', 'the plain List look hides Choice details', ( await page.locator( '.refraction-control-option_extras:not(.refraction-hidden-control)' ).count() ) === 0 );
+		// 0.122.0: Choice details show for the List look too (each choice's Price); the looks' own parts stay hidden there.
+		check( 'panel', 'the plain List look shows Choice details (for the prices)', ( await page.locator( '.refraction-control-option_extras:not(.refraction-hidden-control)' ).count() ) === 1 );
 		await set( 'images' );
 		// The preview draws the field again on the server: wait for it.
 		const back = await preview.locator( '[data-rfb-key="choice"].rfb-look-images .rfb-check' ).first().locator( '.rfb-opt-media img' ).waitFor( { timeout: 15000 } ).then( () => true, () => false );

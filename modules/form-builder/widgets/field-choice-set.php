@@ -101,6 +101,13 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 		$this->add_control( 'field_label', [ 'label' => esc_html__( 'Label', 'refraction' ), 'type' => Controls_Manager::TEXT, 'default' => esc_html__( 'Choose one', 'refraction' ), 'label_block' => true ] );
 		$this->add_control( 'hide_label', [ 'label' => esc_html__( 'Hide the label', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
 		$this->add_control( 'field_required', [ 'label' => esc_html__( 'Required', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
+		$this->add_control( 'required_mark', [
+			'label' => esc_html__( 'Required mark', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => '*',
+			'description' => esc_html__( 'Shown after the label, for example (Required). Empty: *', 'refraction' ),
+			'condition' => [ 'field_required' => 'yes' ],
+		] );
 		$this->add_control( 'multiple', [ 'label' => esc_html__( 'Visitors can pick several cards', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
 
 		$card = new Repeater();
@@ -176,11 +183,12 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 
 	/** The set and its cards (without the fields inside them, which Editor_Forms::collect() adds). */
 	public function raw_field(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 
 		return $this->shared_raw() + [
 			'type' => 'choice_set',
 			'required' => 'yes' === ( $s['field_required'] ?? '' ),
+			'required_mark' => (string) ( $s['required_mark'] ?? '' ),
 			'multiple' => 'yes' === ( $s['multiple'] ?? '' ),
 			'card_columns' => $s['card_columns'] ?? 1,
 			'card_gap' => $s['card_gap'] ?? 10,
@@ -263,7 +271,7 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 		$error = (string) ( $state['errors'][ $field['key'] ] ?? '' );
 
 		echo '<div class="rfb-field rfb-w-full rfb-t-choice_set' . ( '' !== $error ? ' has-error' : '' ) . '" data-rfb-key="' . esc_attr( $field['key'] ) . '" data-rfb-type="choice_set"' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '">' . esc_html( $field['label'] ) . '</legend>' . Field_Renderer::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . Field_Renderer::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . Field_Renderer::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">';
 
 		foreach ( $field['children'] as $i => $card ) {
@@ -309,7 +317,7 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 		#>
 		<div class="rfb-field rfb-w-full rfb-t-choice_set">
 			<fieldset class="rfb-choice rfb-cards<# if ( 'yes' === settings.multiple ) { #> is-multiple<# } #>">
-				<legend class="rfb-label<# if ( 'yes' === settings.field_required ) { #> is-required<# } #>">{{{ settings.field_label }}}</legend>
+				<legend class="rfb-label<# if ( 'yes' === settings.field_required ) { #> is-required<# } #>"<# if ( 'yes' === settings.field_required && settings.required_mark ) { #> data-rfb-mark="{{ settings.required_mark }}"<# } #>>{{{ settings.field_label }}}</legend>
 				<# if ( settings.field_description ) { #><p class="rfb-description">{{{ settings.field_description }}}</p><# } #>
 				<div class="rfb-cc-list" style="--rfb-cc-gap:{{ gap }}px">
 					<# _.each( settings.cards, function( card, index ) {

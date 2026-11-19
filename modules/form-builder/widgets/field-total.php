@@ -34,12 +34,31 @@ class Field_Total extends Field_Widget {
 	}
 
 	protected function register_extra_controls(): void {
+		$this->add_control( 'total_source', [
+			'label' => esc_html__( 'Works out', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'separator' => 'before',
+			'options' => [
+				'' => esc_html__( 'A formula', 'refraction' ),
+				'prices' => esc_html__( 'The prices of the picked choices', 'refraction' ),
+			],
+			'description' => esc_html__( 'The prices come from each Choice field\'s Choice details > Price. Rules below can still give another formula.', 'refraction' ),
+		] );
+		$this->add_control( 'total_fields', [
+			'label' => esc_html__( 'Choice fields to add up', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'vehicle, extras',
+			'label_block' => true,
+			'description' => esc_html__( 'Their field keys (Advanced > Records table), with commas. Empty: every Choice field that has prices.', 'refraction' ),
+			'condition' => [ 'total_source' => 'prices' ],
+		] );
 		$this->add_control( 'total_formula', [
 			'label' => esc_html__( 'Formula', 'refraction' ),
 			'type' => Controls_Manager::TEXTAREA,
 			'rows' => 2,
 			'placeholder' => '{vehicle} * {hours}',
-			'separator' => 'before',
+			'condition' => [ 'total_source' => '' ],
 			'description' => esc_html__( 'Field keys in braces, numbers, + - * / ( ) and min( ), max( ), round( ), ceil( ), floor( ). A field counts as: its number; a choice\'s own number (value|Label|number); the price of the picked choice cards; 1 for a switched-on Yes / No.', 'refraction' ),
 		] );
 
@@ -66,10 +85,12 @@ class Field_Total extends Field_Widget {
 			'default' => esc_html__( 'We will confirm the price', 'refraction' ),
 			'label_block' => true,
 		] );
+
+		$this->register_currency_choice();
 	}
 
 	public function raw_field(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 		$rules = [];
 
 		foreach ( (array) ( $s['total_rules'] ?? [] ) as $row ) {
@@ -84,8 +105,12 @@ class Field_Total extends Field_Widget {
 			$rules[] = [ 'conditions' => [ 'enabled' => true, 'action' => 'show', 'match' => 'all', 'rules' => $conditions ], 'formula' => (string) ( $row['formula'] ?? '' ) ];
 		}
 
+		$prices = 'prices' === ( $s['total_source'] ?? '' );
+
 		return [
-			'formula' => (string) ( $s['total_formula'] ?? '' ),
+			'formula' => $prices ? '' : (string) ( $s['total_formula'] ?? '' ),
+			'sum_prices' => $prices,
+			'sum_keys' => $prices ? (string) ( $s['total_fields'] ?? '' ) : '',
 			'rules' => $rules,
 			'no_price' => (string) ( $s['total_none'] ?? '' ),
 		] + parent::raw_field();

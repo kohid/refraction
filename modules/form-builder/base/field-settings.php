@@ -19,6 +19,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait Field_Settings {
 
+	/**
+	 * Every text, number, link and picture setting of a form widget takes Dynamic Tags (0.122.0): the tag button beside
+	 * the box, as on the editor's own widgets. Keys, formulas and patterns stay typed: they are read as code.
+	 */
+	public function add_control( $id, array $args, $options = [] ) {
+		if ( ! isset( $args['dynamic'] ) && ! in_array( $id, self::typed_controls(), true ) && in_array( $args['type'] ?? '', [ Controls_Manager::TEXT, Controls_Manager::TEXTAREA, Controls_Manager::NUMBER, Controls_Manager::URL, Controls_Manager::MEDIA, Controls_Manager::WYSIWYG ], true ) ) {
+			$args['dynamic'] = [ 'active' => true ];
+		}
+
+		return parent::add_control( $id, $args, $options );
+	}
+
+	/** Settings read as code, not as text: no Dynamic Tags. */
+	protected static function typed_controls(): array {
+		return [ 'field_key', 'total_formula', 'total_fields', 'phone_pattern', 'time_min', 'time_max', 'unavailable', 'currency_custom' ];
+	}
+
 	public function get_categories() {
 		return [ Editor_Forms::CATEGORY ];
 	}
@@ -96,7 +113,7 @@ trait Field_Settings {
 
 	/** The parts of a Builder field the shared sections hold. */
 	protected function shared_raw(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 		$rules = [];
 
 		foreach ( (array) ( $s['cond_rules'] ?? [] ) as $rule ) {
