@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
+use Refraction\Modules\FormBuilder\Classes\Answer_Text;
 use Refraction\Modules\FormBuilder\Classes\Conditions;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Classes\Field_Renderer;
@@ -217,6 +218,10 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 		$this->add_control( 'field_help', [ 'label' => esc_html__( 'Help text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'label_block' => true, 'description' => esc_html__( 'Shown under the field.', 'refraction' ) ] );
 
 		$this->end_controls_section();
+
+		if ( $this->is_choice() ) {
+			$this->register_choice_swaps();
+		}
 
 		$this->register_style_controls();
 		$this->register_condition_controls();
@@ -501,6 +506,48 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'description' => esc_html__( 'Each choice\'s price beside its name, in the field\'s currency.', 'refraction' ),
 		] );
 		$this->register_currency_choice( [ 'choice_prices' => 'yes' ] );
+	}
+
+	/**
+	 * Content > Changes with the answers (0.126.0): a choice shows another name, picture, icon, line of text, badge or
+	 * price while other answers match (one rule, or two with AND / OR). A changed price is what Total amount counts.
+	 */
+	private function register_choice_swaps(): void {
+		$row = new Repeater();
+		Answer_Text::condition_controls( $row );
+		$row->add_control( 'choice', [
+			'label' => esc_html__( 'Then change the choice', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Car Tours, or 1', 'refraction' ),
+			'separator' => 'before',
+			'description' => esc_html__( 'Its name, its value, or its place in the list (1 is the first).', 'refraction' ),
+		] );
+		$dynamic = [ 'dynamic' => [ 'active' => true ] ];
+		$row->add_control( 'name', [ 'label' => esc_html__( 'Name', 'refraction' ), 'type' => Controls_Manager::TEXT ] + $dynamic );
+		$row->add_control( 'image', [ 'label' => esc_html__( 'Picture', 'refraction' ), 'type' => Controls_Manager::MEDIA, 'condition' => [ '@choice_look' => 'images' ] ] + $dynamic );
+		$row->add_control( 'icon', [ 'label' => esc_html__( 'Icon', 'refraction' ), 'type' => Controls_Manager::ICONS, 'skin' => 'inline', 'label_block' => false, 'exclude_inline_options' => [ 'svg' ], 'condition' => [ '@choice_look' => [ 'segmented', 'pill', 'tiles', 'cards', 'images' ] ] ] );
+		$row->add_control( 'text', [ 'label' => esc_html__( 'Line of text', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ '@choice_look' => [ 'tiles', 'cards', 'images' ] ] ] + $dynamic );
+		$row->add_control( 'badge', [ 'label' => esc_html__( 'Badge', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ '@choice_look!' => 'list' ] ] + $dynamic );
+		$row->add_control( 'price', [ 'label' => esc_html__( 'Price', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'step' => 0.01, 'description' => esc_html__( 'Total amount counts this price while the row matches.', 'refraction' ) ] + $dynamic );
+
+		$this->start_controls_section( 'section_choice_swaps', [ 'label' => esc_html__( 'Changes with the answers', 'refraction' ) ] );
+		$this->add_control( 'rfb_choice_swaps', [
+			'label' => esc_html__( 'Other details for other answers', 'refraction' ),
+			'type' => Controls_Manager::REPEATER,
+			'fields' => $row->get_controls(),
+			'default' => [],
+			'prevent_empty' => false,
+			'title_field' => Answer_Text::title_field( __( 'Choose a field', 'refraction' ) ),
+			'description' => esc_html__( 'For each choice, the first row whose answers match shows instead of its Choice details (empty parts keep them).', 'refraction' ),
+		] );
+		$this->add_control( 'rfb_choice_swap_preview', [
+			'label' => esc_html__( 'Show in the editor', 'refraction' ),
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'default' => 0,
+			'description' => esc_html__( 'Editor only: 0 shows the choices as set, 1 with the first row, 2 the second...', 'refraction' ),
+		] );
+		$this->end_controls_section();
 	}
 
 	/** Style tab: label, input (normal, hover, focus), description and help, and the choices of a choice field. */
@@ -941,6 +988,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'choice_prices' => $yes( 'choice_prices' ),
 			'currency' => $this->own_currency(),
 			'required_mark' => (string) ( $s['required_mark'] ?? '' ),
+			'swaps' => (array) ( $s['rfb_choice_swaps'] ?? [] ),
 		];
 	}
 
@@ -1014,6 +1062,13 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			$money = $document instanceof Form_Document ? $document->form_settings()['settings'] : [];
 			$state = [ 'values' => [], 'errors' => [], 'ctx' => [ 'money' => $money ] ];
 			Shortcodes::enqueue();
+		}
+
+		// The editor's preview shows the choices with the row picked in Show in the editor (0.126.0).
+		$preview = Plugin::$instance->editor->is_edit_mode() ? (int) $this->get_settings( 'rfb_choice_swap_preview' ) : 0;
+
+		if ( $preview > 0 && isset( $field['swaps'][ $preview - 1 ] ) ) {
+			$field = Schema::apply_swap( $field, $field['swaps'][ $preview - 1 ] );
 		}
 
 		// Inside a Group or a Repeater row the names, paths and answers are that container's (see Editor_Forms::scope()).

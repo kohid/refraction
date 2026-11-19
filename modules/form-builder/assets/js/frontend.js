@@ -162,6 +162,23 @@
 			}
 		} );
 
+		// Choice fields whose choices change with the answers (0.126.0).
+		form.querySelectorAll( '[data-rfb-choice-swaps]' ).forEach( ( wrapper ) => {
+			let rows;
+
+			try {
+				rows = JSON.parse( wrapper.dataset.rfbChoiceSwaps );
+			} catch ( e ) {
+				return;
+			}
+
+			const scope = wrapper.closest( '[data-rfb-scope]' );
+			const picked = new Map();
+
+			rows.forEach( ( row ) => ! picked.has( row.value ) && rowMatches( form, scope, row ) && picked.set( row.value, row ) );
+			wrapper.querySelectorAll( '.rfb-check > input' ).forEach( ( input ) => swapChoice( input.parentElement, input, picked.get( input.value ) || null ) );
+		} );
+
 		// Widgets whose content changes with the answers (0.125.0).
 		form.querySelectorAll( 'template[data-rfb-swap]' ).forEach( ( template ) => {
 			let data;
@@ -173,9 +190,8 @@
 			}
 
 			const scope = template.closest( '[data-rfb-scope]' );
-			const row = ( data.rows || [] ).find( ( r ) => answerMatches( form, scope, r ) );
 
-			swapContent( template.closest( '.refraction-widget' ) || template.parentElement, data.rows || [], row );
+			applySwaps( template.closest( '.refraction-widget' ) || template.parentElement, data, ( r ) => rowMatches( form, scope, r ) );
 		} );
 
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( ( host ) => host.rfbSync && host.rfbSync() );
@@ -205,6 +221,222 @@
 		return names.length > 0 && 'not_equals' !== rule.op && 'not_contains' !== rule.op && matches( rule, names );
 	}
 
+	/**
+	 * Whether a row's condition matches: one rule, or two joined by AND (match all) or OR (match any) (0.126.0).
+	 *
+	 * @param {Element}      form  The form.
+	 * @param {Element|null} scope The group or row around.
+	 * @param {Object}       row   { match, rules } (or an older single { field, op, value }).
+	 * @return {boolean} Whether it matches.
+	 */
+	function rowMatches( form, scope, row ) {
+		const rules = row.rules || [ row ];
+		const results = rules.map( ( rule ) => answerMatches( form, scope, rule ) );
+
+		return results.length > 0 && ( 'any' === row.match ? results.includes( true ) : ! results.includes( false ) );
+	}
+
+	/**
+	 * Shows the rows that match in a widget: the first one for most widgets; for an Icon List, every matching row with
+	 * Item to change 0 makes a new list, and the first matching row for each item number changes that item.
+	 *
+	 * @param {Element}  widget The widget.
+	 * @param {Object}   data   { type, rows }.
+	 * @param {Function} test   Whether a row matches.
+	 */
+	function applySwaps( widget, data, test ) {
+		const rows = data.rows || [];
+
+		if ( ! widget ) {
+			return;
+		}
+
+		if ( 'icon-list' === data.type ) {
+			const listRows = rows.filter( ( r ) => ! r.item );
+
+			if ( listRows.length ) {
+				swapList( widget, listRows.filter( test ) );
+			}
+
+			const itemRows = rows.filter( ( r ) => r.item > 0 );
+			const chosen = [];
+
+			itemRows.forEach( ( r ) => ! chosen.some( ( c ) => c.item === r.item ) && test( r ) && chosen.push( r ) );
+			swapContent( widget, itemRows, chosen );
+			widget.classList.toggle( 'rfb-swapped', chosen.length > 0 || widget.classList.contains( 'rfb-list-swapped' ) );
+			return;
+		}
+
+		const row = rows.find( test );
+
+		swapContent( widget, rows, row ? [ row ] : [] );
+	}
+
+	/**
+	 * An Icon List made of the matching rows (each an item with its text and icon; no icon: the list's own), or its own
+	 * items again when none matches.
+	 *
+	 * @param {Element}  widget The Icon List widget.
+	 * @param {Object[]} rows   The rows that match.
+	 */
+	function swapList( widget, rows ) {
+		const list = widget.querySelector( '.refraction-icon-list-items' );
+
+		if ( ! list ) {
+			return;
+		}
+
+		// Remembered once per list element: the editor draws a new one when the list's own items change.
+		if ( widget.rfbListEl !== list ) {
+			widget.rfbListEl = list;
+			widget.rfbListOwn = list.innerHTML;
+			widget.rfbListKey = undefined;
+		}
+
+		const key = JSON.stringify( rows );
+
+		// Built again only when the matching rows change (every keystroke runs this).
+		if ( widget.rfbListKey === key ) {
+			return;
+		}
+
+		widget.rfbListKey = key;
+		list.innerHTML = widget.rfbListOwn;
+		widget.classList.toggle( 'rfb-list-swapped', rows.length > 0 );
+
+		if ( ! rows.length ) {
+			return;
+		}
+
+		const model = list.querySelector( '.refraction-icon-list-item' );
+
+		list.textContent = '';
+		rows.forEach( ( row ) => {
+			const item = model ? model.cloneNode( true ) : document.createElement( 'li' );
+
+			item.classList.add( 'refraction-icon-list-item' );
+			row.set.forEach( ( part ) => {
+				const target = item.querySelector( part.sel );
+
+				if ( target ) {
+					target.innerHTML = part.html;
+				}
+			} );
+
+			list.appendChild( item );
+		} );
+	}
+
+	/**
+	 * One choice as a row shows it (another name, price, line of text, badge, picture or icon), or as it was set when
+	 * no row matches. Parts the choice did not have are added, and taken away again.
+	 *
+	 * @param {Element}          label The choice's label (.rfb-check).
+	 * @param {HTMLInputElement} input Its input.
+	 * @param {Object|null}      row   The row to show.
+	 */
+	function swapChoice( label, input, row ) {
+		const name = label.querySelector( '.rfb-opt-label' );
+
+		if ( ! name ) {
+			return;
+		}
+
+		if ( ! label.rfbOwn ) {
+			const first = name.firstChild && 3 === name.firstChild.nodeType ? name.firstChild : null;
+			const price = name.querySelector( '.rfb-opt-price' );
+			const img = label.querySelector( '.rfb-opt-media img' );
+
+			label.rfbOwn = {
+				name: first ? first.textContent : '',
+				n: input.dataset.rfbN,
+				price: price ? price.textContent : null,
+				text: label.querySelector( '.rfb-opt-text' ) ? label.querySelector( '.rfb-opt-text' ).textContent : null,
+				badge: label.querySelector( '.rfb-opt-badge' ) ? label.querySelector( '.rfb-opt-badge' ).textContent : null,
+				icon: label.querySelector( '.rfb-opt-icon' ) ? label.querySelector( '.rfb-opt-icon' ).innerHTML : null,
+				img: img ? { src: img.getAttribute( 'src' ), srcset: img.getAttribute( 'srcset' ) } : null,
+			};
+		}
+
+		const own = label.rfbOwn;
+		const key = row ? JSON.stringify( row ) : '';
+
+		// Done again only when the row changes (this runs on every keystroke).
+		if ( label.rfbSwapKey === key ) {
+			return;
+		}
+
+		label.rfbSwapKey = key;
+		label.querySelectorAll( '[data-rfb-added]' ).forEach( ( el ) => el.remove() );
+
+		const part = ( selector, cls, tag, parent ) => {
+			let el = label.querySelector( selector );
+
+			if ( ! el ) {
+				el = document.createElement( tag );
+				el.className = cls;
+				el.dataset.rfbAdded = '';
+				( parent || label ).appendChild( el );
+			}
+
+			return el;
+		};
+		const text = ( selector, cls, ownText, value ) => {
+			if ( undefined !== value ) {
+				part( selector, cls, 'span' ).textContent = value;
+			} else if ( null !== ownText && label.querySelector( selector ) ) {
+				label.querySelector( selector ).textContent = ownText;
+			}
+		};
+
+		// The name (its first words; the price stays beside it).
+		if ( name.firstChild && 3 === name.firstChild.nodeType ) {
+			name.firstChild.textContent = row && row.label ? row.label + ( name.querySelector( '.rfb-opt-price' ) ? ' ' : '' ) : own.name;
+		}
+
+		// The price: what a Total counts, and what shows beside the name.
+		if ( row && undefined !== row.price ) {
+			input.dataset.rfbN = String( row.price );
+
+			if ( row.priceText ) {
+				const price = part( '.rfb-opt-price', 'rfb-opt-price', 'span', name );
+
+				price.textContent = row.priceText;
+			}
+		} else {
+			if ( undefined === own.n ) {
+				delete input.dataset.rfbN;
+			} else {
+				input.dataset.rfbN = own.n;
+			}
+
+			if ( null !== own.price && name.querySelector( '.rfb-opt-price' ) ) {
+				name.querySelector( '.rfb-opt-price' ).textContent = own.price;
+			}
+		}
+
+		text( '.rfb-opt-text', 'rfb-opt-text', own.text, row ? row.text : undefined );
+		text( '.rfb-opt-badge', 'rfb-opt-badge', own.badge, row ? row.badge : undefined );
+
+		if ( row && row.icon ) {
+			part( '.rfb-opt-icon', 'rfb-opt-icon', 'span' ).innerHTML = row.icon;
+		} else if ( null !== own.icon && label.querySelector( '.rfb-opt-icon' ) ) {
+			label.querySelector( '.rfb-opt-icon' ).innerHTML = own.icon;
+		}
+
+		const img = label.querySelector( '.rfb-opt-media img' );
+
+		if ( img ) {
+			const to = row && row.img ? row.img : own.img;
+
+			img.setAttribute( 'src', to.src );
+			img.removeAttribute( 'sizes' );
+			img[ to.srcset ? 'setAttribute' : 'removeAttribute' ]( 'srcset', to.srcset || '' );
+		}
+
+		label.classList.toggle( 'rfb-swapped', !! row );
+	}
+
 	/** Where a row's part goes inside a widget: an Icon List item, or the widget's own content box for a Text Editor. */
 	function swapTarget( widget, row, part ) {
 		const base = row.item ? widget.querySelectorAll( '.refraction-icon-list-item' )[ row.item - 1 ] : widget;
@@ -230,36 +462,52 @@
 	}
 
 	/**
-	 * Shows a row's content in a widget, or its own content when no row matches (remembered the first time).
+	 * Shows rows' content in a widget, or its own content where no row applies (remembered the first time).
 	 *
-	 * @param {Element}     widget The widget.
-	 * @param {Object[]}    rows   All its rows.
-	 * @param {Object|null} row    The row to show.
+	 * @param {Element}  widget The widget.
+	 * @param {Object[]} rows   All its rows.
+	 * @param {Object[]} chosen The rows to show (one per part, or per Icon List item).
 	 */
-	function swapContent( widget, rows, row ) {
+	function swapContent( widget, rows, chosen ) {
 		if ( ! widget ) {
 			return;
 		}
 
 		widget.rfbSwapOwn = widget.rfbSwapOwn || new Map();
 
+		// Parts drawn again (an Icon List rebuilt, the editor's preview) leave their old entries behind.
+		widget.rfbSwapOwn.forEach( ( own, target ) => ! target.isConnected && widget.rfbSwapOwn.delete( target ) );
+
 		rows.forEach( ( r ) => r.set.forEach( ( part ) => {
 			const target = swapTarget( widget, r, part );
 
 			if ( target && ! widget.rfbSwapOwn.has( target ) ) {
-				widget.rfbSwapOwn.set( target, part.src ? { src: target.getAttribute( 'src' ), srcset: target.getAttribute( 'srcset' ), alt: target.getAttribute( 'alt' ) } : { html: target.innerHTML } );
+				let own = { html: target.innerHTML };
+
+				if ( part.src ) {
+					own = { src: target.getAttribute( 'src' ), srcset: target.getAttribute( 'srcset' ), alt: target.getAttribute( 'alt' ) };
+				} else if ( undefined !== part.value ) {
+					own = { value: target.value };
+				}
+
+				widget.rfbSwapOwn.set( target, own );
 			}
 		} ) );
 
 		widget.rfbSwapOwn.forEach( ( own, target ) => {
-			if ( own.src !== undefined ) {
+			if ( undefined !== own.src ) {
 				[ 'src', 'srcset', 'alt' ].forEach( ( name ) => ( null === own[ name ] ? target.removeAttribute( name ) : target.setAttribute( name, own[ name ] ) ) );
+			} else if ( undefined !== own.value ) {
+				// An Amount the visitor has typed in is theirs: only a value the rows put there goes back.
+				if ( target.rfbSwapValue === target.value ) {
+					target.value = own.value;
+				}
 			} else {
 				target.innerHTML = own.html;
 			}
 		} );
 
-		( row ? row.set : [] ).forEach( ( part ) => {
+		chosen.forEach( ( row ) => row.set.forEach( ( part ) => {
 			const target = swapTarget( widget, row, part );
 
 			if ( ! target ) {
@@ -271,12 +519,20 @@
 				target.removeAttribute( 'sizes' );
 				target[ part.srcset ? 'setAttribute' : 'removeAttribute' ]( 'srcset', part.srcset );
 				target.setAttribute( 'alt', part.alt || '' );
+			} else if ( undefined !== part.value ) {
+				const own = widget.rfbSwapOwn.get( target );
+
+				// Only into a box the visitor has not typed in (its own value, or one the rows put there).
+				if ( ! own || target.value === own.value || target.value === target.rfbSwapValue ) {
+					target.value = part.value;
+					target.rfbSwapValue = part.value;
+				}
 			} else {
 				target.innerHTML = part.html;
 			}
-		} );
+		} ) );
 
-		widget.classList.toggle( 'rfb-swapped', !! row );
+		widget.classList.toggle( 'rfb-swapped', chosen.length > 0 );
 	}
 
 	/**
@@ -2861,9 +3117,11 @@
 		alert: { text: '.refraction-alert-title', text2: '.refraction-alert-description' },
 		'icon-box': { text: '.refraction-icon-box-title', text2: '.refraction-icon-box-description' },
 		'image-box': { text: '.refraction-image-box-title', text2: '.refraction-image-box-description' },
-		'icon-list': { text: '.refraction-icon-list-text' },
+		'icon-list': { text: '.refraction-icon-list-text', icon: '.refraction-icon-list-icon' },
 		image: { image: 'img' },
 		icon: { icon: '.refraction-icon' },
+		'rfb-price': { price: '.rfb-price-amount' },
+		'rfb-field-currency': { amount: 'input[data-rfb-amount]' },
 	};
 
 	/**
@@ -2889,10 +3147,23 @@
 			}
 
 			const list = settings.get( 'rfb_swap_rows' );
+			const type = container.model.get( 'widgetType' );
+			const money = editorMoney();
 			const rows = ( list.toJSON ? list.toJSON() : list ).map( ( raw ) => ( {
 				item: Number( raw.item ) || 0,
+				cond: [ raw.field, raw.op, raw.value, raw.logic, raw.field2, raw.op2, raw.value2 ].join( '|' ),
 				set: Object.keys( parts ).map( ( name ) => {
 					const value = raw[ name ];
+
+					if ( 'price' === name || 'amount' === name ) {
+						if ( '' === String( value ?? '' ).trim() || Number.isNaN( Number( value ) ) ) {
+							return null;
+						}
+
+						const cfg = money ? { t: money.t, d: money.d, n: money.n } : { t: ',', d: '.', n: 2 };
+
+						return 'amount' === name ? { sel: parts[ name ], value: formatMoney( Number( value ), cfg, {} ) } : { sel: parts[ name ], html: formatMoney( Number( value ), cfg, money ? { symbol: money.symbol, after: money.after } : {} ) };
+					}
 
 					if ( 'image' === name ) {
 						return value && value.url ? { sel: parts[ name ], src: value.url, srcset: '', alt: '' } : null;
@@ -2907,9 +3178,10 @@
 					return value && String( value ).trim() ? { sel: parts[ name ], html: 'text-editor' === container.model.get( 'widgetType' ) ? String( value ) : String( value ).replace( /\n/g, '<br>' ) } : null;
 				} ).filter( Boolean ),
 			} ) );
-			const index = Number( settings.get( 'rfb_swap_preview' ) ) || 0;
+			const picked = rows[ ( Number( settings.get( 'rfb_swap_preview' ) ) || 0 ) - 1 ] || null;
 
-			swapContent( widget, rows, rows[ index - 1 ] || null );
+			// The row to show, and for an Icon List's new list the rows with the same condition (the items it would have).
+			applySwaps( widget, { type, rows }, ( r ) => r === picked || ( !! picked && 'icon-list' === type && ! picked.item && ! r.item && r.cond === picked.cond ) );
 		} );
 	}
 

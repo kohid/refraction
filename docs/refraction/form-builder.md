@@ -325,3 +325,21 @@ Check: `scripts/check-form-conditions.mjs`.
   own), or My own color and width.
 
 Check: `scripts/check-answer-text.mjs`.
+
+## More changes with the answers (0.126.0)
+
+- **AND / OR.** Every row (widgets' and Choice fields') has And another field: No, AND (both match) or OR (either
+  one). `Answer_Text::condition_controls()` / `condition_of()` give `{ match: all | any, rules }`; `rowMatches()` in
+  `frontend.js` checks it, by value or by the choice's name.
+- **Choice fields** (Radio / Checkbox): Content > Changes with the answers (`rfb_choice_swaps`): the choice to change
+  (name, value or place in the list) and its Name, Picture, Icon, Line of text, Badge or Price. Cleaned into the
+  field's `swaps` (`Schema::choice_swaps()`); the wrapper carries them as `data-rfb-choice-swaps` and `swapChoice()`
+  changes one choice at a time (parts it did not have are added and taken away). For each choice the first matching
+  row wins. `Schema::totals()` counts the changed price (`with_swaps()`, matching a choice by value or name), so the
+  stored total is the one shown. Show in the editor previews a row (server side, `Schema::apply_swap()`).
+- **Price** (`rfb-price`): another price, written in the form's currency. **Amount** (`rfb-field-currency`): another
+  amount put in the box, only while the visitor has not typed in it.
+- **Icon List**: rows with Item to change 0 make a new list (each matching row an item with its text and icon, the
+  list's own icon when empty; `swapList()`); 1, 2... change one item as before.
+
+Check: `scripts/check-answer-text.mjs` (extended).

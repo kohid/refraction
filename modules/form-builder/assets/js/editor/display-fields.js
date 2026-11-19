@@ -56,7 +56,7 @@ function fillFieldList( model ) {
 	const lists = formFields( refraction.documents.getCurrent() );
 
 	// Display Conditions > Field, and Changes with the answers > When field (0.125.0).
-	[ [ DC_ITEMS, 'dc_field' ], [ 'rfb_swap_rows', 'field' ] ].forEach( ( [ repeater, name ] ) => {
+	[ [ DC_ITEMS, 'dc_field' ], [ 'rfb_swap_rows', 'field' ], [ 'rfb_swap_rows', 'field2' ], [ 'rfb_choice_swaps', 'field' ], [ 'rfb_choice_swaps', 'field2' ] ].forEach( ( [ repeater, name ] ) => {
 		const fields = controls && controls[ repeater ] && controls[ repeater ].fields;
 		// The repeater's fields come as a list (or keyed by name).
 		const field = fields && ( Array.isArray( fields ) ? fields : Object.values( fields ) ).find( ( f ) => name === f.name );
