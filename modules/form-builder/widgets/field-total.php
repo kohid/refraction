@@ -40,17 +40,17 @@ class Field_Total extends Field_Widget {
 			'default' => '',
 			'separator' => 'before',
 			'options' => [
-				'' => esc_html__( 'A formula', 'refraction' ),
-				'prices' => esc_html__( 'The prices of the picked choices', 'refraction' ),
+				'' => esc_html__( 'A formula (empty: add everything up)', 'refraction' ),
+				'prices' => esc_html__( 'Add up the picked prices and amounts', 'refraction' ),
 			],
-			'description' => esc_html__( 'The prices come from each Choice field\'s Choice details > Price. Rules below can still give another formula.', 'refraction' ),
+			'description' => esc_html__( 'Adds the prices of the picked choices (Choice details > Price), the picked choice cards and the Amount fields. It is shown, not typed: visitors can not change it. Rules below can still give another formula.', 'refraction' ),
 		] );
 		$this->add_control( 'total_fields', [
-			'label' => esc_html__( 'Choice fields to add up', 'refraction' ),
+			'label' => esc_html__( 'Fields to add up', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
 			'placeholder' => 'vehicle, extras',
 			'label_block' => true,
-			'description' => esc_html__( 'Their field keys (Advanced > Records table), with commas. Empty: every Choice field that has prices.', 'refraction' ),
+			'description' => esc_html__( 'Their field keys (Advanced > Records table), with commas. Empty: every Choice field with prices, Choice cards and Amount.', 'refraction' ),
 			'condition' => [ 'total_source' => 'prices' ],
 		] );
 		$this->add_control( 'total_formula', [

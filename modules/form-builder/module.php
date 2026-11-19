@@ -79,6 +79,8 @@ class Module extends BaseModule {
 			}
 		} );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ], 1 );
+		// Conditional visibility on every element of a Form page (0.124.0).
+		Classes\Element_Conditions::boot();
 		// Group, Repeater and Steps hold containers; the editor learns them as nested element types.
 		add_action( 'refraction/editor/before_enqueue_scripts', static function () {
 			$min = \Refraction\Utils::is_script_debug() ? '' : '.min';

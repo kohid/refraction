@@ -70,8 +70,30 @@ function fillFieldList( model ) {
 	field.options = options;
 }
 
+/**
+ * Advanced > Conditional visibility of any element (0.124.0) is for Form pages, and fields keep their own: the
+ * element's section is hidden on other pages and on a widget that has the field one.
+ */
+function toggleElementConditions( model ) {
+	const type = model && ( model.get( 'widgetType' ) || model.get( 'elType' ) );
+	const cache = type && refraction.widgetsCache && refraction.widgetsCache[ type ];
+	const document = refraction.documents.getCurrent();
+	const formPage = !! ( document && document.config && 'rfb-form' === document.config.type );
+	const ownSection = !! ( cache && cache.controls && cache.controls.section_conditions );
+
+	window.document.body.classList.toggle( 'rfb-hide-el-cond', ! formPage || ownSection );
+}
+
 export function watchDisplayFields() {
+	const style = window.document.createElement( 'style' );
+
+	style.textContent = '.rfb-hide-el-cond .refraction-control-section_rfb_conditions{display:none!important}';
+	window.document.head.appendChild( style );
+
 	[ 'widget', 'container', 'section', 'column' ].forEach( ( type ) => {
-		refraction.hooks.addAction( 'panel/open_editor/' + type, ( panel, model ) => fillFieldList( model ) );
+		refraction.hooks.addAction( 'panel/open_editor/' + type, ( panel, model ) => {
+			fillFieldList( model );
+			toggleElementConditions( model );
+		} );
 	} );
 }

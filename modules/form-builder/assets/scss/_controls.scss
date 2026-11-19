@@ -2331,11 +2331,18 @@ $rfb-widths: (
 			display: none;
 		}
 
+		// The name and its price share the row; a long name wraps and the price keeps to the right (0.124.0).
 		.rfb-opt-label {
 			display: flex;
+			flex-wrap: wrap;
 			align-items: center;
-			gap: 10px;
+			gap: 4px 10px;
+			min-width: 0;
 			padding: 0 4px;
+
+			.rfb-opt-price {
+				margin-left: auto;
+			}
 			font-weight: 600;
 
 			// The small radio beside the name.
@@ -2962,7 +2969,8 @@ $rfb-widths: (
 	.rfb-count {
 		display: flex;
 		align-items: stretch;
-		max-width: 180px;
+		max-width: var(--rfb-count-max, 180px);
+		min-height: var(--rfb-step-h, auto);
 
 		.rfb-input {
 			min-width: 0;
@@ -2979,13 +2987,14 @@ $rfb-widths: (
 	}
 
 	.rfb-count-btn {
-		flex: 0 0 42px;
+		flex: 0 0 var(--rfb-step-w, 42px);
 		border: 1px solid var(--rfb-input-border);
-		background: var(--rfb-input-bg);
-		color: var(--rfb-ink);
-		font-size: 20px;
+		background: var(--rfb-step-bg, var(--rfb-input-bg));
+		color: var(--rfb-step-color, var(--rfb-ink));
+		font-size: var(--rfb-step-sign, 20px);
 		line-height: 1;
 		cursor: pointer;
+		transition: background-color 0.15s, color 0.15s;
 
 		&:first-child {
 			border-right: 0;
@@ -2998,7 +3007,68 @@ $rfb-widths: (
 		}
 
 		&:hover {
-			color: var(--rfb-primary);
+			background: var(--rfb-step-hover-bg, var(--rfb-step-bg, var(--rfb-input-bg)));
+			color: var(--rfb-step-hover-color, var(--rfb-primary));
+		}
+
+		&:focus-visible {
+			position: relative;
+			outline: 2px solid var(--rfb-focus, var(--rfb-primary));
+			outline-offset: -2px;
+		}
+	}
+
+	// Grey buttons, full width (0.124.0): − and + in grey squares at the ends of the box, the number centred.
+	.rfb-count--boxed {
+		max-width: var(--rfb-count-max, 100%);
+		min-height: var(--rfb-step-h, 48px);
+
+		.rfb-count-btn {
+			flex-basis: var(--rfb-step-w, 46px);
+			border-color: var(--rfb-step-bg, #eef0f4);
+			background: var(--rfb-step-bg, #eef0f4);
+			color: var(--rfb-step-color, var(--rfb-ink));
+		}
+
+		.rfb-input {
+			flex: 1 1 auto;
+			background: var(--rfb-form-bg, #fff);
+			font-weight: 500;
+		}
+	}
+
+	// A field or element disabled by its rules (0.124.0): in view, greyed, not answerable.
+	.rfb-is-disabled {
+		opacity: 0.45;
+		pointer-events: none;
+		filter: grayscale(0.6);
+	}
+
+	// A choice that is not available for these answers (0.124.0): greyed, dashed, its note in place of the price.
+	.rfb-check.is-off {
+		border-style: dashed;
+		cursor: not-allowed;
+		opacity: 0.55;
+
+		.rfb-opt-media img {
+			filter: grayscale(1);
+			opacity: 0.6;
+		}
+
+		.rfb-opt-price {
+			display: none;
+		}
+	}
+
+	.rfb-opt-off {
+		display: block;
+		margin-top: 2px;
+		color: var(--rfb-ch-off, var(--rfb-muted));
+		font-size: 1.05em;
+		font-weight: 700;
+
+		&[hidden] {
+			display: none;
 		}
 	}
 
