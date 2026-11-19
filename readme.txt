@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.122.0
+Stable tag: 0.123.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.123.0 =
+* Form Builder: new Address field. As the visitor types, a list under the box shows the matching addresses (arrow keys and Enter, or a click, pick one). The addresses are your own: typed in the field, or a .txt / .csv file from the Media Library for long lists (up to 50,000), searched by your own site; no outside address service. Only addresses from the list, letters before suggesting and how many show are settings; Style > Suggestions styles the list, which stays open in the editor while you style it.
+* Display Conditions: new condition "Form field's answer" for elements on a Form page. Pick one of the form's fields (the list follows the fields on the page as you edit), how the answer compares (is, is not, contains, is empty, greater...) and the value; the element shows or hides as the visitor answers.
+* Form Builder: Choice fields with Image cards have Card width, Picture width and height, Picture fit (crop, whole picture, stretch), Space around the picture and Picture corners in Style > Choices.
 
 = 0.122.0 =
 * Form Builder: every field's text, number, link and picture settings take Dynamic Tags (the tag button beside the box). Labels, descriptions, help, placeholders and choice names are worked out on each page view.

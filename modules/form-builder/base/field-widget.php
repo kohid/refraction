@@ -727,6 +727,57 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'condition' => [ 'choice_look' => 'images' ],
 		] );
 
+		// Picture size (0.123.0): as wide and tall as wanted, cropped or whole, with room around it.
+		$images = [ 'choice_look' => 'images' ];
+		$this->add_responsive_control( 'ch_card_width', [
+			'label' => esc_html__( 'Card width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'min' => 80, 'max' => 600 ], 'em' => [ 'min' => 5, 'max' => 40 ] ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-ch-card-cols: repeat(auto-fill, minmax(min({{SIZE}}{{UNIT}}, 100%), {{SIZE}}{{UNIT}}));' ],
+			'description' => esc_html__( 'Each card this wide, as many to a row as fit. Empty: Columns decides.', 'refraction' ),
+			'condition' => $images,
+		] );
+		$this->add_responsive_control( 'ch_pic_width', [
+			'label' => esc_html__( 'Picture width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'min' => 10, 'max' => 100 ], 'px' => [ 'min' => 20, 'max' => 600 ] ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-pic-w: {{SIZE}}{{UNIT}};' ],
+			'condition' => $images,
+		] );
+		$this->add_responsive_control( 'ch_pic_height', [
+			'label' => esc_html__( 'Picture height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'em' ],
+			'range' => [ 'px' => [ 'min' => 20, 'max' => 600 ], 'em' => [ 'min' => 1, 'max' => 40 ] ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-pic-h: {{SIZE}}{{UNIT}}; --rfb-pic-ratio: auto;' ],
+			'description' => esc_html__( 'Set: this height instead of the Picture shape.', 'refraction' ),
+			'condition' => $images,
+		] );
+		$this->add_responsive_control( 'ch_pic_fit', [
+			'label' => esc_html__( 'Picture fit', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'Fill the frame (crop)', 'refraction' ), 'contain' => esc_html__( 'Whole picture', 'refraction' ), 'fill' => esc_html__( 'Stretch', 'refraction' ) ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-pic-fit: {{VALUE}};' ],
+			'condition' => $images,
+		] );
+		$this->add_responsive_control( 'ch_pic_pad', [
+			'label' => esc_html__( 'Space around the picture', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-pic-pad: {{SIZE}}px;' ],
+			'condition' => $images,
+		] );
+		$this->add_responsive_control( 'ch_pic_radius', [
+			'label' => esc_html__( 'Picture corners', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-pic-radius: {{SIZE}}px; --rfb-pic-img-radius: max(0px, calc({{SIZE}}px - var(--rfb-pic-pad, 0px)));' ],
+			'condition' => $images,
+		] );
+
 		$this->add_control( 'ch_price_heading', [ 'label' => esc_html__( 'Price', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => [ 'choice_prices' => 'yes' ] ] );
 		$this->add_control( 'ch_price_color', [ 'label' => esc_html__( 'Color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-ch-price' ), 'condition' => [ 'choice_prices' => 'yes' ] ] );
 		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'ch_price_typography', 'selector' => '{{WRAPPER}} .rfb-opt-price', 'condition' => [ 'choice_prices' => 'yes' ] ] );

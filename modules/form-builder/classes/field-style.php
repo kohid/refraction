@@ -104,7 +104,7 @@ class Field_Style {
 
 	/** Types a group applies to: '*' = every type. */
 	private static function applies(): array {
-		$inputs = [ 'text', 'textarea', 'name', 'number', 'currency', 'email', 'phone', 'url', 'country', 'date', 'time', 'datetime', 'select', 'rating', 'file', 'signature' ];
+		$inputs = [ 'text', 'address', 'textarea', 'name', 'number', 'currency', 'email', 'phone', 'url', 'country', 'date', 'time', 'datetime', 'select', 'rating', 'file', 'signature' ];
 		$labelled = array_merge( $inputs, [ 'radio', 'checkbox', 'toggle', 'step', 'group', 'repeater', 'heading', 'paragraph', 'accordion', 'tabs', 'choice_set' ] );
 		$described = array_merge( $inputs, [ 'radio', 'checkbox', 'toggle', 'step', 'group', 'repeater', 'accordion', 'tabs', 'choice_set' ] );
 		$applies = [

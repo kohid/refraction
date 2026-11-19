@@ -10,6 +10,7 @@ use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Modules\FormBuilder\Classes\Records;
 use Refraction\Modules\FormBuilder\Classes\Shortcodes;
+use Refraction\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -85,6 +86,15 @@ class Module extends BaseModule {
 		} );
 		add_filter( 'template_include', [ $this, 'canvas_for_form_preview' ], 20 );
 
+		// The field keys a Form page already gave its fields, for Display Conditions > Form field's answer (0.123.0).
+		add_filter( 'refraction/document/config', static function ( $config, $post_id ) {
+			if ( Plugin::$instance->documents->get( (int) $post_id ) instanceof Form_Document ) {
+				$config['rfbFieldKeys'] = (object) (array) get_post_meta( (int) $post_id, Editor_Forms::META_KEYS, true );
+			}
+
+			return $config;
+		}, 10, 2 );
+
 		// Any page can show a form: the Form Canvas widget, and "Form Builder form" under the Shortcode widget's shortcode.
 		add_action( 'refraction/element/shortcode/section_shortcode/before_section_end', [ $this, 'add_shortcode_form_control' ] );
 		add_filter( 'refraction/widgets/shortcode/content', [ $this, 'shortcode_form_content' ], 10, 2 );
@@ -153,7 +163,7 @@ class Module extends BaseModule {
 
 	protected function get_widgets() {
 		return [
-			'Field_Text', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
+			'Field_Text', 'Field_Address', 'Field_Textarea', 'Field_Name', 'Field_Email', 'Field_Phone', 'Field_Website', 'Field_Number', 'Field_Amount',
 			'Field_Country', 'Field_Date', 'Field_Time', 'Field_Datetime', 'Field_Select', 'Field_Radio', 'Field_Checkbox', 'Field_Toggle',
 			'Field_Rating', 'Field_Hidden', 'Field_Total', 'Field_File', 'Field_Signature', 'Field_Group', 'Field_Repeater', 'Field_Choice_Set', 'Steps', 'Badge', 'Price', 'Summary', 'Submit_Button', 'Form_Canvas',
 		];

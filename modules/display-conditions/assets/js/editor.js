@@ -37,7 +37,10 @@ function boot() {
 			return;
 		}
 
-		refraction.$previewContents.find( 'body' ).toggleClass( 'refraction-dc-hide', 'yes' !== settings.get( SHOW ) );
+		// Pages that do not have the setting (a Form page, a template) always show their conditioned elements.
+		const hasSetting = !! ( settings.controls && settings.controls[ SHOW ] );
+
+		refraction.$previewContents.find( 'body' ).toggleClass( 'refraction-dc-hide', hasSetting && 'yes' !== settings.get( SHOW ) );
 	}
 
 	class ConditionsToggle extends $e.modules.hookUI.After {

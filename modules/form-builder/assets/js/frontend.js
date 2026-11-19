@@ -142,7 +142,8 @@
 		}
 
 		form.querySelectorAll( '.refraction-widget' ).forEach( ( widget ) => {
-			const field = widget.querySelector( ':scope > [data-rfb-cond], :scope > .refraction-widget-container > [data-rfb-cond]' );
+			// The widget's own Display Conditions on a form field (0.123.0), or the rules of the field inside it.
+			const field = widget.matches( '[data-rfb-cond]' ) ? widget : widget.querySelector( ':scope > [data-rfb-cond], :scope > .refraction-widget-container > [data-rfb-cond]' );
 
 			widget.classList.toggle( 'rfb-off', !! field && field.hidden );
 		} );
@@ -151,7 +152,7 @@
 		Array.from( form.querySelectorAll( '.e-con' ) ).reverse().forEach( ( box ) => {
 			const items = Array.from( box.querySelectorAll( ':scope > .refraction-element, :scope > .e-con-inner > .refraction-element' ) );
 
-			box.classList.toggle( 'rfb-off', items.length > 0 && items.every( ( item ) => item.classList.contains( 'rfb-off' ) ) );
+			box.classList.toggle( 'rfb-off', items.length > 0 && items.every( ( item ) => item.classList.contains( 'rfb-off' ) || item.hidden ) );
 		} );
 	}
 
@@ -2267,9 +2268,218 @@
 		root.querySelectorAll( 'textarea[data-rfb-autogrow]' ).forEach( ( el ) => once( el ) && initAutogrow( el ) );
 		root.querySelectorAll( '[data-rfb-flags]' ).forEach( ( el ) => once( el ) && initCountry( el ) );
 		root.querySelectorAll( 'input[data-rfb-picker]' ).forEach( ( el ) => once( el ) && initPicker( el ) );
+		root.querySelectorAll( '[data-rfb-address]' ).forEach( ( el ) => once( el ) && initAddress( el ) );
 
 		// The Steps widget's layout in the editor's preview (0.100.0).
 		( root.matches && root.matches( '[data-rfb-steps-preview]' ) ? [ root ] : Array.from( root.querySelectorAll( '[data-rfb-steps-preview]' ) ) ).forEach( previewSteps );
+	}
+
+	// ---------------------------------------------------------------- address (0.123.0)
+
+	const foldAddress = ( text ) => String( text ).toLowerCase().replace( /[\s,]+/g, ' ' ).trim();
+
+	/**
+	 * The addresses that match what was typed, best first (mirrors Classes\Address::search): every word typed starts a
+	 * word of the address; those that start with what was typed come first, then shorter ones.
+	 *
+	 * @param {string[]} lines The addresses.
+	 * @param {string}   typed What was typed.
+	 * @param {number}   max   How many to give.
+	 * @return {string[]} The matches.
+	 */
+	function searchAddresses( lines, typed, max ) {
+		const folded = foldAddress( typed );
+
+		if ( ! folded ) {
+			return [];
+		}
+
+		const words = folded.split( ' ' );
+
+		return lines
+			.map( ( line ) => [ foldAddress( line ), line ] )
+			.filter( ( [ f ] ) => words.every( ( word ) => ( ' ' + f ).includes( ' ' + word ) ) )
+			.map( ( [ f, line ] ) => [ f.startsWith( folded ) ? 0 : 1, line.length, line ] )
+			.sort( ( a, b ) => a[ 0 ] - b[ 0 ] || a[ 1 ] - b[ 1 ] || ( a[ 2 ] < b[ 2 ] ? -1 : ( a[ 2 ] > b[ 2 ] ? 1 : 0 ) ) )
+			.slice( 0, Math.max( 1, max ) )
+			.map( ( item ) => item[ 2 ] );
+	}
+
+	/**
+	 * An Address box: a combobox whose list shows the matching addresses as the visitor types (from the list sent with
+	 * the page, or asked of this site for a long list). Arrow keys move, Enter or a click picks, Escape closes.
+	 *
+	 * @param {HTMLElement} box The .rfb-address wrapper.
+	 */
+	function initAddress( box ) {
+		const input = box.querySelector( 'input' );
+		const list = box.querySelector( '.rfb-address-list' );
+		let cfg = {};
+
+		try {
+			cfg = JSON.parse( box.dataset.rfbAddress || '{}' );
+		} catch ( e ) {}
+
+		if ( ! input || ! list ) {
+			return;
+		}
+
+		const min = Math.max( 1, Number( cfg.min ) || 2 );
+		const max = Number( cfg.max ) || 8;
+		let items = [];
+		let active = -1;
+		let timer = 0;
+		let asked = 0;
+
+		const open = ( on ) => {
+			list.hidden = ! on;
+			input.setAttribute( 'aria-expanded', on ? 'true' : 'false' );
+
+			if ( ! on ) {
+				input.removeAttribute( 'aria-activedescendant' );
+				active = -1;
+			}
+		};
+
+		const mark = ( index ) => {
+			const options = list.querySelectorAll( '.rfb-address-option' );
+
+			active = index;
+			options.forEach( ( option, i ) => option.classList.toggle( 'is-active', i === index ) );
+
+			if ( options[ index ] ) {
+				input.setAttribute( 'aria-activedescendant', options[ index ].id );
+				options[ index ].scrollIntoView( { block: 'nearest' } );
+			} else {
+				input.removeAttribute( 'aria-activedescendant' );
+			}
+		};
+
+		const show = ( found, typed ) => {
+			items = found;
+			list.textContent = '';
+
+			found.forEach( ( text, i ) => {
+				const option = document.createElement( 'li' );
+
+				option.className = 'rfb-address-option';
+				option.id = list.id + '-' + i;
+				option.setAttribute( 'role', 'option' );
+				option.textContent = text;
+				list.appendChild( option );
+			} );
+
+			if ( ! found.length && typed && cfg.none ) {
+				const empty = document.createElement( 'li' );
+
+				empty.className = 'rfb-address-empty';
+				empty.setAttribute( 'role', 'presentation' );
+				empty.textContent = cfg.none;
+				list.appendChild( empty );
+			}
+
+			open( !! found.length || ( !! typed && !! cfg.none ) );
+			active = -1;
+		};
+
+		const pick = ( index ) => {
+			if ( undefined === items[ index ] ) {
+				return;
+			}
+
+			input.value = items[ index ];
+			input.setCustomValidity( '' );
+			open( false );
+			input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+			input.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+		};
+
+		const lookup = () => {
+			const typed = input.value.trim();
+
+			if ( typed.length < min ) {
+				show( [], '' );
+				return;
+			}
+
+			if ( Array.isArray( cfg.list ) ) {
+				show( searchAddresses( cfg.list, typed, max ), typed );
+				return;
+			}
+
+			if ( ! cfg.url || ! window.fetch ) {
+				return;
+			}
+
+			const ticket = ++asked;
+
+			clearTimeout( timer );
+			timer = setTimeout( () => {
+				fetch( cfg.url + '&q=' + encodeURIComponent( typed ), { credentials: 'same-origin' } )
+					.then( ( r ) => r.json() )
+					.then( ( r ) => {
+						// Only the answer to what is in the box now.
+						if ( ticket === asked && r && r.success ) {
+							show( r.data.items || [], typed );
+						}
+					} )
+					.catch( () => {} );
+			}, 160 );
+		};
+
+		input.addEventListener( 'input', ( event ) => {
+			if ( event.isTrusted ) {
+				input.setCustomValidity( '' );
+				lookup();
+			}
+		} );
+		input.addEventListener( 'focus', () => input.value.trim().length >= min && lookup() );
+		input.addEventListener( 'keydown', ( event ) => {
+			const count = list.querySelectorAll( '.rfb-address-option' ).length;
+
+			if ( 'ArrowDown' === event.key || 'ArrowUp' === event.key ) {
+				event.preventDefault();
+
+				if ( list.hidden ) {
+					lookup();
+					return;
+				}
+
+				if ( count ) {
+					mark( ( active + ( 'ArrowDown' === event.key ? 1 : count - 1 ) + ( active < 0 && 'ArrowUp' === event.key ? 1 : 0 ) ) % count );
+				}
+			} else if ( 'Enter' === event.key && ! list.hidden && active >= 0 ) {
+				event.preventDefault();
+				pick( active );
+			} else if ( 'Escape' === event.key && ! list.hidden ) {
+				event.preventDefault();
+				open( false );
+			}
+		} );
+		// mousedown keeps the focus in the box, so the list does not close before the click lands.
+		list.addEventListener( 'mousedown', ( event ) => event.preventDefault() );
+		list.addEventListener( 'click', ( event ) => {
+			const option = event.target.closest( '.rfb-address-option' );
+
+			if ( option ) {
+				pick( Array.prototype.indexOf.call( list.children, option ) );
+			}
+		} );
+		input.addEventListener( 'blur', () => {
+			open( false );
+
+			// "Only addresses from the list": the browser says so before sending (the server checks again).
+			if ( cfg.strict && input.value.trim() && ! ( cfg.list || items ).some( ( line ) => foldAddress( line ) === foldAddress( input.value ) ) ) {
+				input.setCustomValidity( cfg.strict );
+			}
+		} );
+
+		// The editor keeps the list open under the box while it is styled (Style > Suggestions).
+		if ( box.closest( '.rfb-address-preview' ) && Array.isArray( cfg.list ) ) {
+			show( cfg.list.slice( 0, max ), '' );
+			list.querySelector( '.rfb-address-option' )?.classList.add( 'is-active' );
+			input.addEventListener( 'blur', () => show( cfg.list.slice( 0, max ), '' ) );
+		}
 	}
 
 	/** Closed weekdays and opening hours of a date or time box (min, max and step are the browser's own). */
