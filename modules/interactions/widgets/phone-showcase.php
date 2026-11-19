@@ -693,6 +693,44 @@ class Phone_Showcase extends Widget_Base {
 			'prefix_class' => 'rf-showcase-stack-',
 		] );
 
+		// Each screen size its own (0.128.0): set them on 480px for phones.
+		$this->add_responsive_control( 'parts_order', [
+			'label' => esc_html__( 'Order Of The Parts', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'As on the bigger screen', 'refraction' ),
+				'beside' => esc_html__( 'Text and steps beside the phone', 'refraction' ),
+				'text-phone-steps' => esc_html__( 'One under another: text above, phone, steps', 'refraction' ),
+				'phone-text-steps' => esc_html__( 'One under another: phone, text above, steps', 'refraction' ),
+				'text-steps-phone' => esc_html__( 'One under another: text above, steps, phone', 'refraction' ),
+				'steps-text-phone' => esc_html__( 'One under another: steps, text above, phone', 'refraction' ),
+			],
+			'selectors_dictionary' => [
+				'beside' => '--rf-ps-cols: initial; --rf-ps-side: initial; --rf-ps-row-gap: initial; --rf-ps-o-intro: initial; --rf-ps-o-steps: initial; --rf-ps-o-buttons: initial; --rf-ps-o-device: initial;',
+				'text-phone-steps' => '--rf-ps-cols: minmax(0, 1fr); --rf-ps-side: contents; --rf-ps-row-gap: 24px; --rf-ps-o-intro: 1; --rf-ps-o-device: 2; --rf-ps-o-steps: 3; --rf-ps-o-buttons: 4;',
+				'phone-text-steps' => '--rf-ps-cols: minmax(0, 1fr); --rf-ps-side: contents; --rf-ps-row-gap: 24px; --rf-ps-o-device: 1; --rf-ps-o-intro: 2; --rf-ps-o-steps: 3; --rf-ps-o-buttons: 4;',
+				'text-steps-phone' => '--rf-ps-cols: minmax(0, 1fr); --rf-ps-side: contents; --rf-ps-row-gap: 24px; --rf-ps-o-intro: 1; --rf-ps-o-steps: 2; --rf-ps-o-buttons: 3; --rf-ps-o-device: 4;',
+				'steps-text-phone' => '--rf-ps-cols: minmax(0, 1fr); --rf-ps-side: contents; --rf-ps-row-gap: 24px; --rf-ps-o-steps: 1; --rf-ps-o-intro: 2; --rf-ps-o-buttons: 3; --rf-ps-o-device: 4;',
+			],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase' => '{{VALUE}}' ],
+			'description' => esc_html__( 'Pick a screen size at the top of the editor (for example 480px) and choose the order of the text above the steps, the phone and the steps there.', 'refraction' ),
+		] );
+
+		$this->add_responsive_control( 'steps_display', [
+			'label' => esc_html__( 'Steps', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'As on the bigger screen', 'refraction' ),
+				'show' => esc_html__( 'Shown', 'refraction' ),
+				'hide' => esc_html__( 'Hidden', 'refraction' ),
+			],
+			'selectors_dictionary' => [ 'show' => 'flex', 'hide' => 'none' ],
+			'selectors' => [ '{{WRAPPER}} .rf-showcase__steps' => 'display: {{VALUE}};' ],
+			'description' => esc_html__( 'Hidden: the phone still goes through every step\'s screen.', 'refraction' ),
+		] );
+
 		$this->add_responsive_control( 'phone_width', [
 			'label' => esc_html__( 'Phone Width', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,

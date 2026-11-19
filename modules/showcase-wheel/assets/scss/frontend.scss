@@ -23,6 +23,10 @@
 	--rf-sw-easing: cubic-bezier(0.65, 0, 0.35, 1);
 
 	position: relative;
+	// Arrangement (0.128.0): "one under another" makes the box a column whose parts take the chosen order.
+	display: var(--rf-sw-display, block);
+	flex-direction: column;
+	gap: var(--rf-sw-stack-gap, 0px);
 	overflow: hidden;
 	isolation: isolate;
 	border-radius: 24px;
@@ -36,18 +40,23 @@
 
 .rf-sw__slots {
 	display: grid;
+	order: var(--rf-sw-o-slides, 0);
 }
 
 // Every slide in the same cell; the current one shows.
 .rf-sw__slot {
 	position: relative;
 	grid-area: 1 / 1;
+	display: var(--rf-sw-slot-display, block);
+	flex-direction: column;
+	gap: var(--rf-sw-stack-gap, 0px);
 	min-width: 0;
 	opacity: 0;
 	visibility: hidden;
 
 	> .e-con {
-		height: 100%;
+		order: var(--rf-sw-o-content, 0);
+		height: var(--rf-sw-con-h, 100%);
 	}
 
 	&.is-active {
@@ -80,25 +89,28 @@
 // The picture and what is behind it, on the side away from the content: a band from near the top to above the
 // thumbnails, the picture fitting inside it (never cut, whatever the slide's height).
 .rf-sw__visual {
-	position: absolute;
-	top: 5%;
-	bottom: 5%;
-	right: var(--rf-sw-picture-edge);
+	position: var(--rf-sw-v-pos, absolute);
+	top: var(--rf-sw-v-top, 5%);
+	bottom: var(--rf-sw-v-bottom, 5%);
+	right: var(--rf-sw-v-right, var(--rf-sw-picture-edge));
 	z-index: 2;
+	order: var(--rf-sw-o-picture, 0);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: var(--rf-sw-picture-w);
+	width: var(--rf-sw-v-width, var(--rf-sw-picture-w));
+	height: var(--rf-sw-v-height, auto);
+	margin-inline: var(--rf-sw-v-margin, 0px);
 	isolation: isolate;
 	pointer-events: none;
 
 	.rf-sw__slot--right > & {
-		right: auto;
-		left: var(--rf-sw-picture-edge);
+		right: var(--rf-sw-v-right, auto);
+		left: var(--rf-sw-v-left, var(--rf-sw-picture-edge));
 	}
 
 	.rf-sw.has-nav & {
-		bottom: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + 20px);
+		bottom: var(--rf-sw-v-bottom, calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + 20px));
 	}
 }
 
@@ -375,11 +387,13 @@
 
 // ---------------------------------------------------------------- thumbnails and arrows
 .rf-sw__nav {
-	position: absolute;
-	right: var(--rf-sw-nav-inset);
-	bottom: var(--rf-sw-nav-inset);
-	left: var(--rf-sw-nav-inset);
+	position: var(--rf-sw-nav-pos, absolute);
+	right: var(--rf-sw-nav-side, var(--rf-sw-nav-inset));
+	bottom: var(--rf-sw-nav-end, var(--rf-sw-nav-inset));
+	left: var(--rf-sw-nav-side, var(--rf-sw-nav-inset));
 	z-index: 3;
+	order: var(--rf-sw-o-nav, 1);
+	padding: var(--rf-sw-nav-pad, 0px);
 	display: flex;
 	align-items: flex-end;
 	gap: var(--rf-sw-thumb-gap);
@@ -540,29 +554,35 @@
 
 	.rf-sw.rf-sw .rf-sw__visual,
 	.rf-sw.rf-sw .rf-sw__slot--right > .rf-sw__visual {
-		top: 24px;
+		top: var(--rf-sw-v-top, 24px);
 		right: auto;
-		bottom: auto;
-		left: 50%;
-		width: 70%;
-		height: var(--rf-sw-phone-picture);
-		transform: translateX(-50%);
+		bottom: var(--rf-sw-v-bottom, auto);
+		left: var(--rf-sw-v-left, 50%);
+		width: var(--rf-sw-v-width, 70%);
+		height: var(--rf-sw-v-height, var(--rf-sw-phone-picture));
+		transform: var(--rf-sw-v-transform, translateX(-50%));
 	}
 
 	// The slide's own content starts under the picture, and ends above the thumbnails (the current one raised, with its
 	// label and badge).
 	.rf-sw .rf-sw__slot > .e-con.e-con {
-		--padding-top: calc(var(--rf-sw-phone-picture) + 48px);
-		--padding-block-start: calc(var(--rf-sw-phone-picture) + 48px);
+		--padding-top: var(--rf-sw-room-top, calc(var(--rf-sw-phone-picture) + 48px));
+		--padding-block-start: var(--rf-sw-room-top, calc(var(--rf-sw-phone-picture) + 48px));
 	}
 
 	.rf-sw.has-nav .rf-sw__slot > .e-con.e-con {
-		--padding-bottom: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
-		--padding-block-end: calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px);
+		--padding-bottom: var(--rf-sw-room-bottom, calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px));
+		--padding-block-end: var(--rf-sw-room-bottom, calc(var(--rf-sw-thumb-h, var(--rf-sw-thumb)) + var(--rf-sw-nav-inset) + var(--rf-sw-lift) + 64px));
 	}
 
+	// The thumbnails scroll sideways without a scroll bar (0.128.0), with room for the current one's label.
 	.rf-sw__nav {
 		overflow-x: auto;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 }
 

@@ -127,3 +127,11 @@ and `.rf-showcase__chevron`) and **Description Color** (`own_text_color_<state>`
 **Title / Arrow Color** too (same setting, `step_title_color_<state>`, now also on the arrow): the Style tab is the
 unified style of all steps, the step's own tabs override it for that step. Check: `node scripts/check-showcase-step-style.mjs`.
 
+
+## Order of the parts and hiding the steps per screen size (0.128.0)
+
+Layout > Order Of The Parts (responsive): As on the bigger screen, Text and steps beside the phone, or one under
+another (text above, phone, steps; phone, text above, steps; text above, steps, phone; steps, text above, phone). The
+side's box steps aside (`display: contents` through `--rf-ps-side`) so the text above, the steps, the buttons and the
+phone each take an `order` (`--rf-ps-o-*`) in a single column (`--rf-ps-cols`). Layout > Steps (responsive): shown or
+hidden; hidden steps still let the phone go through every screen. Check: `scripts/check-phone-showcase.mjs`.
