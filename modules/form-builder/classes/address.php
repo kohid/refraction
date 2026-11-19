@@ -136,9 +136,131 @@ class Address {
 		return array_column( array_slice( $found, 0, max( 1, $max ) ), 2 );
 	}
 
+	/** Photon, OpenStreetMap's address search (0.125.0): asked by this site's server, never by the visitor's browser. */
+	const PHOTON = 'https://photon.komoot.io/api/';
+
+	/** Whether the field looks addresses up in OpenStreetMap (Address source > Real addresses). */
+	public static function is_online( array $field ): bool {
+		return 'osm' === ( $field['address_source'] ?? '' );
+	}
+
+	/**
+	 * The suggestions for what was typed: the field's own addresses that match, then (when the field looks real
+	 * addresses up) OpenStreetMap's, each once, at most the field's "Suggestions shown".
+	 */
+	public static function suggest( array $field, string $typed ): array {
+		$max = max( 1, (int) ( $field['address_max'] ?? 8 ) );
+		$found = self::search( self::lines( $field ), $typed, $max );
+
+		if ( self::is_online( $field ) && count( $found ) < $max ) {
+			$found = array_values( array_unique( array_merge( $found, self::lookup( $field, $typed, $max ) ) ) );
+		}
+
+		return array_slice( $found, 0, $max );
+	}
+
+	/**
+	 * OpenStreetMap addresses for what was typed, labelled as a person writes them ("Inverness Museum & Art Gallery,
+	 * Castle Wynd, Crown and City Centre, Inverness, Highland, IV2 3EB"), near the field's place first and only in its
+	 * countries. Kept for a week per question, so the service is asked once for a common search.
+	 */
+	public static function lookup( array $field, string $typed, int $max = 8 ): array {
+		$typed = trim( preg_replace( '/\s+/u', ' ', $typed ) );
+
+		if ( ( function_exists( 'mb_strlen' ) ? mb_strlen( $typed ) : strlen( $typed ) ) < 2 || ! function_exists( 'wp_remote_get' ) ) {
+			return [];
+		}
+
+		$query = [ 'q' => $typed, 'limit' => min( 20, $max * 2 ), 'lang' => 'en' ];
+		$near = self::near( (string) ( $field['address_near'] ?? '' ) );
+
+		if ( $near ) {
+			$query['lat'] = $near[0];
+			$query['lon'] = $near[1];
+		}
+
+		$countries = self::countries( (string) ( $field['address_country'] ?? '' ) );
+		$cache = 'rfb_osm_' . md5( wp_json_encode( [ $query, $countries ] ) );
+		$labels = get_transient( $cache );
+
+		if ( ! is_array( $labels ) ) {
+			$response = wp_remote_get( add_query_arg( array_map( 'rawurlencode', $query ), self::PHOTON ), [ 'timeout' => 5, 'user-agent' => 'Refraction Form Builder address field' ] );
+
+			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+				return [];
+			}
+
+			$labels = self::labels( (array) json_decode( (string) wp_remote_retrieve_body( $response ), true ), $countries );
+			set_transient( $cache, $labels, WEEK_IN_SECONDS );
+		}
+
+		return array_slice( $labels, 0, $max );
+	}
+
+	/**
+	 * Photon's places as address lines: name, house number and street, district, town (when not the name), county,
+	 * postcode; each part once.
+	 *
+	 * @param array    $geo       Photon's answer (GeoJSON).
+	 * @param string[] $countries Two-letter codes to keep (none: all).
+	 */
+	public static function labels( array $geo, array $countries = [] ): array {
+		$labels = [];
+
+		foreach ( (array) ( $geo['features'] ?? [] ) as $feature ) {
+			$p = (array) ( $feature['properties'] ?? [] );
+
+			if ( $countries && ! in_array( strtoupper( (string) ( $p['countrycode'] ?? '' ) ), $countries, true ) ) {
+				continue;
+			}
+
+			$street = trim( ( (string) ( $p['housenumber'] ?? '' ) ) . ' ' . ( (string) ( $p['street'] ?? '' ) ) );
+			$parts = [];
+
+			foreach ( [ $p['name'] ?? '', $street, $p['district'] ?? '', $p['city'] ?? '', $p['county'] ?? '', $p['postcode'] ?? '' ] as $part ) {
+				$part = self::line( (string) $part );
+
+				if ( '' !== $part && ! in_array( strtolower( $part ), array_map( 'strtolower', $parts ), true ) ) {
+					$parts[] = $part;
+				}
+			}
+
+			$label = implode( ', ', $parts );
+
+			if ( '' !== $label && ! in_array( $label, $labels, true ) ) {
+				$labels[] = $label;
+			}
+		}
+
+		return $labels;
+	}
+
+	/** "57.48, -4.22" as [ lat, lng ], or null. */
+	public static function near( string $text ): ?array {
+		return 1 === preg_match( '/^\s*(-?\d{1,2}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)\s*$/', $text, $m ) && abs( (float) $m[1] ) <= 90 && abs( (float) $m[2] ) <= 180 ? [ (float) $m[1], (float) $m[2] ] : null;
+	}
+
+	/** "GB, IE" as [ 'GB', 'IE' ]. */
+	public static function countries( string $text ): array {
+		return array_values( array_filter( array_map( 'strtoupper', preg_split( '/[\s,]+/', $text ) ), static function ( $code ) {
+			return 1 === preg_match( '/^[A-Z]{2}$/', $code );
+		} ) );
+	}
+
 	/** Whether an answer is one of the field's addresses (for "Only addresses from the list"). */
 	public static function allows( array $field, string $value ): bool {
 		$value = self::fold( $value );
+
+		// Looked up: the answer must be one OpenStreetMap gives for itself.
+		if ( self::is_online( $field ) ) {
+			$first = trim( (string) strtok( $value, ',' ) );
+
+			foreach ( array_merge( self::lookup( $field, $value, 20 ), self::lookup( $field, $first, 20 ) ) as $label ) {
+				if ( self::fold( $label ) === $value ) {
+					return true;
+				}
+			}
+		}
 
 		foreach ( self::lines( $field ) as $line ) {
 			if ( self::fold( $line ) === $value ) {

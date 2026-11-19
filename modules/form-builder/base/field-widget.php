@@ -862,6 +862,23 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			$this->add_control( 'input_bg_' . $state, [ 'label' => esc_html__( 'Background color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $selector => 'background-color: {{VALUE}};' ] ] );
 			$this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'input_border_' . $state, 'selector' => $selector ] );
 			$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'input_shadow_' . $state, 'selector' => $selector ] );
+
+			// The ring around the box while typing (0.125.0): the form's, none, or its own color and width.
+			if ( 'focus' === $state ) {
+				$this->add_control( 'input_focus_ring', [
+					'label' => esc_html__( 'Focus ring', 'refraction' ),
+					'type' => Controls_Manager::SELECT,
+					'default' => '',
+					'options' => [ '' => esc_html__( 'The form\'s', 'refraction' ), 'none' => esc_html__( 'None', 'refraction' ), 'custom' => esc_html__( 'My own', 'refraction' ) ],
+					'selectors_dictionary' => [ 'none' => '--rfb-focus-ring: none; --rfb-focus-border: var(--rfb-input-border);', 'custom' => '--rfb-focus-ring-mode: custom;' ],
+					'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
+					'description' => esc_html__( 'None: no glow and no colored border while the box is in use (the text cursor still shows where you type).', 'refraction' ),
+					'separator' => 'before',
+				] );
+				$this->add_control( 'input_focus_ring_color', [ 'label' => esc_html__( 'Ring color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-focus-ring-color: {{VALUE}}; --rfb-focus-border: {{VALUE}};' ], 'condition' => [ 'input_focus_ring' => 'custom' ] ] );
+				$this->add_responsive_control( 'input_focus_ring_width', [ 'label' => esc_html__( 'Ring width', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0, 'max' => 10 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-focus-ring-width: {{SIZE}}px;' ], 'condition' => [ 'input_focus_ring' => 'custom' ] ] );
+			}
+
 			$this->end_controls_tab();
 		}
 

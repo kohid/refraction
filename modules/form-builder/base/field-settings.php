@@ -32,7 +32,7 @@ trait Field_Settings {
 
 	/** Settings read as code, not as text: no Dynamic Tags. */
 	protected static function typed_controls(): array {
-		return [ 'field_key', 'total_formula', 'total_fields', 'phone_pattern', 'time_min', 'time_max', 'unavailable', 'currency_custom' ];
+		return [ 'field_key', 'total_formula', 'total_fields', 'phone_pattern', 'time_min', 'time_max', 'unavailable', 'currency_custom', 'address_near', 'address_country' ];
 	}
 
 	public function get_categories() {

@@ -538,8 +538,13 @@ class Field_Renderer {
 		$slug = (string) ( $ctx['collection'] ?? '' );
 		$config = [ 'min' => $field['address_min'], 'max' => $field['address_max'], 'none' => __( 'No address matches. Keep typing, or check the spelling.', 'refraction' ) ];
 
-		if ( count( $lines ) > Address::INLINE && '' !== $slug && function_exists( 'admin_url' ) ) {
+		if ( ( count( $lines ) > Address::INLINE || Address::is_online( $field ) ) && '' !== $slug && function_exists( 'admin_url' ) ) {
 			$config['url'] = add_query_arg( [ 'action' => Shortcodes::ACTION_ADDRESS, 'collection' => $slug, 'field' => $field['key'] ], admin_url( 'admin-ajax.php' ) );
+		} elseif ( Address::is_online( $field ) && function_exists( 'current_user_can' ) && current_user_can( 'edit_posts' ) ) {
+			// The editor's preview: the lookup is tried with the field's settings as they are (editors only).
+			$config['url'] = add_query_arg( [ 'action' => Shortcodes::ACTION_ADDRESS, 'preview' => 1, 'nonce' => wp_create_nonce( Shortcodes::ACTION_ADDRESS ), 'source' => 'osm', 'near' => $field['address_near'], 'country' => $field['address_country'], 'max' => $field['address_max'] ], admin_url( 'admin-ajax.php' ) );
+			$config['list'] = null;
+			$config['hint'] = __( 'Type in the box to try the address lookup.', 'refraction' );
 		} else {
 			// The editor's preview has no saved form to ask: it searches the first addresses of the list.
 			$config['list'] = array_slice( $lines, 0, Address::INLINE );

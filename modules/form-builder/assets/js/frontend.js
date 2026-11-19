@@ -162,8 +162,121 @@
 			}
 		} );
 
+		// Widgets whose content changes with the answers (0.125.0).
+		form.querySelectorAll( 'template[data-rfb-swap]' ).forEach( ( template ) => {
+			let data;
+
+			try {
+				data = JSON.parse( template.dataset.rfbSwap );
+			} catch ( e ) {
+				return;
+			}
+
+			const scope = template.closest( '[data-rfb-scope]' );
+			const row = ( data.rows || [] ).find( ( r ) => answerMatches( form, scope, r ) );
+
+			swapContent( template.closest( '.refraction-widget' ) || template.parentElement, data.rows || [], row );
+		} );
+
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( ( host ) => host.rfbSync && host.rfbSync() );
 		collapseEmpty( form );
+	}
+
+	/**
+	 * Whether a field's answer matches a rule, by value or, for a choice, by the name the visitor sees ("Minibus Tours").
+	 *
+	 * @param {Element}      form  The form.
+	 * @param {Element|null} scope The group or row around.
+	 * @param {Object}       rule  { field, op, value }.
+	 * @return {boolean} Whether it matches.
+	 */
+	function answerMatches( form, scope, rule ) {
+		if ( matches( rule, fieldValue( form, scope, rule.field ) ) ) {
+			return true;
+		}
+
+		const wrapper = ( scope || form ).querySelector( `[data-rfb-key="${ CSS.escape( rule.field ) }"]` );
+		const names = wrapper ? Array.from( wrapper.querySelectorAll( 'input:checked' ) ).map( ( input ) => {
+			const name = input.parentElement && input.parentElement.querySelector( '.rfb-opt-label' );
+
+			return name ? ( name.firstChild && 3 === name.firstChild.nodeType ? name.firstChild.textContent : name.textContent ).trim() : '';
+		} ).filter( Boolean ) : [];
+
+		return names.length > 0 && 'not_equals' !== rule.op && 'not_contains' !== rule.op && matches( rule, names );
+	}
+
+	/** Where a row's part goes inside a widget: an Icon List item, or the widget's own content box for a Text Editor. */
+	function swapTarget( widget, row, part ) {
+		const base = row.item ? widget.querySelectorAll( '.refraction-icon-list-item' )[ row.item - 1 ] : widget;
+
+		if ( ! base ) {
+			return null;
+		}
+
+		let target = part.sel ? base.querySelector( part.sel ) : base;
+
+		// A Text Editor prints its text straight into the widget on the site: gather it in a box once.
+		if ( ! target && '.refraction-text-editor' === part.sel ) {
+			target = document.createElement( 'div' );
+			target.className = 'refraction-text-editor rfb-swap-box';
+			Array.from( widget.querySelector( '.refraction-widget-container' ) ? widget.querySelector( '.refraction-widget-container' ).childNodes : widget.childNodes )
+				.filter( ( node ) => ! ( node.nodeType === 1 && node.matches( 'template, .ui-resizable-handle, .refraction-element-overlay' ) ) )
+				.forEach( ( node ) => target.appendChild( node ) );
+			( widget.querySelector( '.refraction-widget-container' ) || widget ).prepend( target );
+		}
+
+		// A linked heading or box title keeps its link.
+		return target && target.firstElementChild && 'A' === target.firstElementChild.tagName && ! part.src ? target.firstElementChild : target;
+	}
+
+	/**
+	 * Shows a row's content in a widget, or its own content when no row matches (remembered the first time).
+	 *
+	 * @param {Element}     widget The widget.
+	 * @param {Object[]}    rows   All its rows.
+	 * @param {Object|null} row    The row to show.
+	 */
+	function swapContent( widget, rows, row ) {
+		if ( ! widget ) {
+			return;
+		}
+
+		widget.rfbSwapOwn = widget.rfbSwapOwn || new Map();
+
+		rows.forEach( ( r ) => r.set.forEach( ( part ) => {
+			const target = swapTarget( widget, r, part );
+
+			if ( target && ! widget.rfbSwapOwn.has( target ) ) {
+				widget.rfbSwapOwn.set( target, part.src ? { src: target.getAttribute( 'src' ), srcset: target.getAttribute( 'srcset' ), alt: target.getAttribute( 'alt' ) } : { html: target.innerHTML } );
+			}
+		} ) );
+
+		widget.rfbSwapOwn.forEach( ( own, target ) => {
+			if ( own.src !== undefined ) {
+				[ 'src', 'srcset', 'alt' ].forEach( ( name ) => ( null === own[ name ] ? target.removeAttribute( name ) : target.setAttribute( name, own[ name ] ) ) );
+			} else {
+				target.innerHTML = own.html;
+			}
+		} );
+
+		( row ? row.set : [] ).forEach( ( part ) => {
+			const target = swapTarget( widget, row, part );
+
+			if ( ! target ) {
+				return;
+			}
+
+			if ( part.src ) {
+				target.setAttribute( 'src', part.src );
+				target.removeAttribute( 'sizes' );
+				target[ part.srcset ? 'setAttribute' : 'removeAttribute' ]( 'srcset', part.srcset );
+				target.setAttribute( 'alt', part.alt || '' );
+			} else {
+				target.innerHTML = part.html;
+			}
+		} );
+
+		widget.classList.toggle( 'rfb-swapped', !! row );
 	}
 
 	/**
@@ -2516,6 +2629,19 @@
 			show( cfg.list.slice( 0, max ), '' );
 			list.querySelector( '.rfb-address-option' )?.classList.add( 'is-active' );
 			input.addEventListener( 'blur', () => show( cfg.list.slice( 0, max ), '' ) );
+		} else if ( box.closest( '.rfb-address-preview' ) && cfg.hint ) {
+			// Real addresses: the editor shows how to try them (typing asks the lookup as on the site).
+			const hint = () => {
+				list.textContent = '';
+				const li = document.createElement( 'li' );
+				li.className = 'rfb-address-empty';
+				li.textContent = cfg.hint;
+				list.appendChild( li );
+				open( true );
+			};
+
+			hint();
+			input.addEventListener( 'blur', () => setTimeout( () => ! input.value.trim() && hint(), 0 ) );
 		}
 	}
 
@@ -2724,6 +2850,67 @@
 
 		// Conditions are left alone: every field stays in view while it is being edited.
 		applyTotals( root );
+		previewSwaps( root );
+	}
+
+	/** Where each widget's changing parts are (mirrors Classes\Answer_Text::widgets()). */
+	const SWAP_PARTS = {
+		heading: { text: '.refraction-heading-title' },
+		'text-editor': { text: '.refraction-text-editor' },
+		button: { text: '.refraction-button-text' },
+		alert: { text: '.refraction-alert-title', text2: '.refraction-alert-description' },
+		'icon-box': { text: '.refraction-icon-box-title', text2: '.refraction-icon-box-description' },
+		'image-box': { text: '.refraction-image-box-title', text2: '.refraction-image-box-description' },
+		'icon-list': { text: '.refraction-icon-list-text' },
+		image: { image: 'img' },
+		icon: { icon: '.refraction-icon' },
+	};
+
+	/**
+	 * Edit Mode (0.125.0): a widget with "Changes with the answers" shows the row chosen in "Show in the editor", read
+	 * from its settings as they are now (these widgets draw their preview in the editor itself).
+	 *
+	 * @param {Element} root The preview's page.
+	 */
+	function previewSwaps( root ) {
+		const editor = window.refraction;
+
+		if ( ! editor || ! editor.getContainer ) {
+			return;
+		}
+
+		root.querySelectorAll( '.refraction-widget[data-id]' ).forEach( ( widget ) => {
+			const container = editor.getContainer( widget.dataset.id );
+			const settings = container && container.settings;
+			const parts = SWAP_PARTS[ container && container.model ? container.model.get( 'widgetType' ) : '' ];
+
+			if ( ! settings || ! parts || ! settings.get( 'rfb_swap_rows' ) ) {
+				return;
+			}
+
+			const list = settings.get( 'rfb_swap_rows' );
+			const rows = ( list.toJSON ? list.toJSON() : list ).map( ( raw ) => ( {
+				item: Number( raw.item ) || 0,
+				set: Object.keys( parts ).map( ( name ) => {
+					const value = raw[ name ];
+
+					if ( 'image' === name ) {
+						return value && value.url ? { sel: parts[ name ], src: value.url, srcset: '', alt: '' } : null;
+					}
+
+					if ( 'icon' === name ) {
+						const html = value && value.value && editor.helpers && editor.helpers.renderIcon ? editor.helpers.renderIcon( container.view, value, { 'aria-hidden': true }, 'i' ) : '';
+
+						return 'string' === typeof html && html ? { sel: parts[ name ], html } : null;
+					}
+
+					return value && String( value ).trim() ? { sel: parts[ name ], html: 'text-editor' === container.model.get( 'widgetType' ) ? String( value ) : String( value ).replace( /\n/g, '<br>' ) } : null;
+				} ).filter( Boolean ),
+			} ) );
+			const index = Number( settings.get( 'rfb_swap_preview' ) ) || 0;
+
+			swapContent( widget, rows, rows[ index - 1 ] || null );
+		} );
 	}
 
 	let editorTimer = 0;

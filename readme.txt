@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.124.0
+Stable tag: 0.125.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.125.0 =
+* Form Builder: Heading, Text Editor, Button, Alert, Icon Box, Image Box, Icon List, Image and Icon on a Form page have Content > Changes with the answers: rows of "when this field's answer is ... show this text (or picture, or icon)". The first row that matches replaces the widget's content as the visitor answers; a choice can be named by its value or by the name the visitor sees. Show in the editor previews a row in Edit Mode.
+* Form Builder: the Address field can suggest real addresses: Suggestions come from > Real addresses (OpenStreetMap). Your site asks OpenStreetMap's address search (photon.komoot.io) as visitors type, near the place you set and in the countries you choose, after any of your own addresses that match; answers are kept for a week. Your own list stays the default and works offline.
+* Form Builder: Style > Input > Focus > Focus ring: the form's, None (no glow or colored border while typing), or your own color and width.
 
 = 0.124.0 =
 * Form Builder: Total amount (the widget is named so now) is worked out, not typed: with no formula it adds up the picked choices' prices, the picked choice cards and the Amount fields. Works out > "Add up the picked prices and amounts" can list the fields to add.
