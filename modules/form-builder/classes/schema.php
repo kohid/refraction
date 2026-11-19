@@ -431,6 +431,7 @@ class Schema {
 		$tag_default = 'step' === $type ? 'h3' : 'div';
 		$options = self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [];
 		$extras = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::option_extras( $raw['option_extras'] ?? [], $options ) : [];
+		$swaps = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::choice_swaps( $raw['swaps'] ?? [], self::options( $raw['options'] ?? [] ) ) : [];
 
 		// A price in Choice details (0.122.0) is what a Total counts for that choice, unless value|Label|number gave one.
 		foreach ( $options as &$option ) {
@@ -448,10 +449,15 @@ class Schema {
 			'required' => $has_value && ! self::is_container( $type ) && ! in_array( $type, [ 'hidden', 'total' ], true ) && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
 			'options' => $options,
 			'option_extras' => $extras,
+			// Changes with the answers on a Choice field (0.126.0): another name, picture, icon, text, badge or price for
+			// a choice while other answers match.
+			'swaps' => $swaps,
 			// Choice prices (0.122.0): shown beside the names, and a Total can add them up.
 			'choice_prices' => in_array( $type, [ 'radio', 'checkbox' ], true ) && ( ! array_key_exists( 'choice_prices', $raw ) || ! empty( $raw['choice_prices'] ) ),
 			'priced' => (bool) array_filter( $extras, static function ( $extra ) {
 				return null !== $extra['price'];
+			} ) || (bool) array_filter( $swaps, static function ( $swap ) {
+				return null !== $swap['price'];
 			} ),
 			// A field's own currency symbol (0.122.0); '' follows the form's (Form settings > Currency).
 			'currency' => in_array( $type, [ 'currency', 'total', 'radio', 'checkbox' ], true ) ? self::text( $raw['currency'] ?? '', 6 ) : '',
@@ -1218,6 +1224,121 @@ class Schema {
 		}
 	}
 
+	/**
+	 * Changes with the answers of a Choice field, cleaned (from the panel's rows, or already cleaned): each row's
+	 * conditions (one rule, or two with AND / OR), the choice it changes (its label, value or number in the list) and
+	 * what it shows instead.
+	 *
+	 * @param array $options The field's cleaned options.
+	 */
+	public static function choice_swaps( $raw, array $options ): array {
+		$by_name = [];
+
+		foreach ( $options as $i => $option ) {
+			$by_name[ strtolower( $option['label'] ) ] = $option['value'];
+			$by_name[ strtolower( $option['value'] ) ] = $option['value'];
+			$by_name[ (string) ( $i + 1 ) ] = $option['value'];
+		}
+
+		$swaps = [];
+
+		foreach ( is_array( $raw ) ? array_slice( $raw, 0, 40 ) : [] as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			$conditions = isset( $row['conditions'] ) ? Conditions::clean( [ 'action' => 'show' ] + (array) $row['conditions'] ) : null;
+
+			if ( ! $conditions ) {
+				$condition = Answer_Text::condition_of( $row );
+				$conditions = $condition ? Conditions::clean( [ 'enabled' => true, 'action' => 'show' ] + $condition ) : null;
+			}
+
+			$value = $by_name[ strtolower( self::text( (string) ( $row['value_of'] ?? ( $row['choice'] ?? '' ) ), 120 ) ) ] ?? null;
+
+			if ( ! $conditions || ! $conditions['enabled'] || null === $value ) {
+				continue;
+			}
+
+			$image = $row['image'] ?? 0;
+			$swap = [
+				'conditions' => $conditions,
+				'value_of' => $value,
+				'label' => self::text( $row['label'] ?? ( $row['name'] ?? '' ), 120 ),
+				'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
+				'icon' => self::option_icon( $row['icon'] ?? null ),
+				'text' => self::text( $row['text'] ?? '', 160 ),
+				'badge' => self::text( $row['badge'] ?? '', 30 ),
+				'price' => self::number_or_null( $row['price'] ?? null ),
+			];
+
+			if ( '' !== $swap['label'] || $swap['image'] || $swap['icon'] || '' !== $swap['text'] || '' !== $swap['badge'] || null !== $swap['price'] ) {
+				$swaps[] = $swap;
+			}
+		}
+
+		return $swaps;
+	}
+
+	/** A choice field as it is for these answers: each choice takes the first row of its own that matches. */
+	public static function with_swaps( array $field, callable $lookup ): array {
+		$done = [];
+
+		foreach ( (array) ( $field['swaps'] ?? [] ) as $swap ) {
+			if ( isset( $done[ $swap['value_of'] ] ) || ! Conditions::is_visible( $swap['conditions'], $lookup ) ) {
+				continue;
+			}
+
+			$done[ $swap['value_of'] ] = true;
+			$field = self::apply_swap( $field, $swap );
+		}
+
+		return $field;
+	}
+
+	/** One row's changes put into the field (its choice's name, price and details). */
+	public static function apply_swap( array $field, array $swap ): array {
+		$value = $swap['value_of'];
+
+		foreach ( $field['options'] as &$option ) {
+			if ( $option['value'] === $value ) {
+				$option['label'] = '' !== $swap['label'] ? $swap['label'] : $option['label'];
+				$option['number'] = null !== $swap['price'] ? $swap['price'] : $option['number'];
+			}
+		}
+		unset( $option );
+
+		$extra = $field['option_extras'][ $value ] ?? [ 'icon' => null, 'text' => '', 'badge' => '', 'image' => 0, 'price' => null, 'off' => null, 'off_text' => '' ];
+
+		foreach ( [ 'icon', 'text', 'badge', 'image', 'price' ] as $part ) {
+			if ( null !== $swap[ $part ] && '' !== $swap[ $part ] && 0 !== $swap[ $part ] ) {
+				$extra[ $part ] = $swap[ $part ];
+			}
+		}
+
+		$field['option_extras'][ $value ] = $extra;
+
+		return $field;
+	}
+
+	/** A choice's answer with the names the visitor saw, so a rule can name a choice either way ("minibus" or "Minibus Tours"). */
+	private static function answer_and_names( ?array $field, $value ) {
+		if ( ! $field || ! in_array( $field['type'], [ 'radio', 'checkbox', 'select' ], true ) ) {
+			return is_array( $value ) ? array_values( array_map( 'strval', array_filter( $value, 'is_scalar' ) ) ) : (string) $value;
+		}
+
+		$picked = array_map( 'strval', (array) $value );
+		$out = $picked;
+
+		foreach ( $field['options'] as $option ) {
+			if ( in_array( $option['value'], $picked, true ) ) {
+				$out[] = $option['label'];
+			}
+		}
+
+		return array_values( array_unique( array_filter( $out, 'strlen' ) ) );
+	}
+
 	/** Whether a picked choice is switched off by its "Not available when" rule. */
 	private static function picks_unavailable( array $field, $value, callable $lookup ): bool {
 		foreach ( array_map( 'strval', (array) $value ) as $picked ) {
@@ -1649,6 +1770,18 @@ class Schema {
 
 		foreach ( self::walk( $definition['fields'] ) as $field ) {
 			$by_key[ $field['key'] ] = $field;
+		}
+
+		// A choice's price can change with the answers (Choice > Changes with the answers): the totals count the price
+		// shown when the form was sent.
+		$named = static function ( string $key ) use ( &$values, $by_key ) {
+			return self::answer_and_names( $by_key[ $key ] ?? null, $values[ $key ] ?? '' );
+		};
+
+		foreach ( $by_key as $key => $field ) {
+			if ( ! empty( $field['swaps'] ) ) {
+				$by_key[ $key ] = self::with_swaps( $field, $named );
+			}
 		}
 
 		$lookup = static function ( string $key ) use ( &$values, $by_key ) {

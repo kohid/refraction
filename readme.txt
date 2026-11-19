@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.125.0
+Stable tag: 0.126.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.126.0 =
+* Form Builder: Changes with the answers rows can check two fields: And another field > AND (both must match) or OR (either one is enough).
+* Form Builder: Choice fields have their own Changes with the answers: for a choice (by name, value or place in the list), another name, picture, icon, line of text, badge or price while the answers match. Total amount counts the changed price, on the page and on the server.
+* Form Builder: Price and Amount have Changes with the answers too: another price shown, or another amount put in the box (an amount the visitor typed stays theirs).
+* Form Builder: Icon List > Changes with the answers can make a whole new list: every matching row with Item to change 0 is an item, with its own text and icon; 1, 2... still change one item.
 
 = 0.125.0 =
 * Form Builder: Heading, Text Editor, Button, Alert, Icon Box, Image Box, Icon List, Image and Icon on a Form page have Content > Changes with the answers: rows of "when this field's answer is ... show this text (or picture, or icon)". The first row that matches replaces the widget's content as the visitor answers; a choice can be named by its value or by the name the visitor sees. Show in the editor previews a row in Edit Mode.

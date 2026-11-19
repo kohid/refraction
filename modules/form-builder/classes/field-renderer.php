@@ -104,6 +104,11 @@ class Field_Renderer {
 			$attrs .= ' data-rfb-priced';
 		}
 
+		// Changes with the answers (0.126.0): each row ready for the script (pictures as URLs, icons as HTML, prices written).
+		if ( ! empty( $field['swaps'] ) ) {
+			$attrs .= ' data-rfb-choice-swaps="' . esc_attr( (string) wp_json_encode( self::choice_swaps( $field, $ctx ) ) ) . '"';
+		}
+
 		if ( Schema::is_step( $type ) ) {
 			echo self::step_head( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 			return;
@@ -426,6 +431,49 @@ class Field_Renderer {
 	/** Marks an amount that follows the form's symbol, so the editor can show a changed Form settings > Currency at once. */
 	private static function follows_form( array $field ): string {
 		return '' === (string) ( $field['currency'] ?? '' ) ? ' data-rfb-cur' : '';
+	}
+
+	/** A choice field's Changes with the answers as the script reads them. */
+	private static function choice_swaps( array $field, array $ctx ): array {
+		$money = self::money( $field, $ctx );
+		$rows = [];
+
+		foreach ( $field['swaps'] as $swap ) {
+			$row = [ 'match' => $swap['conditions']['match'], 'rules' => $swap['conditions']['rules'], 'value' => $swap['value_of'] ];
+
+			if ( '' !== $swap['label'] ) {
+				$row['label'] = $swap['label'];
+			}
+
+			if ( '' !== $swap['text'] ) {
+				$row['text'] = $swap['text'];
+			}
+
+			if ( '' !== $swap['badge'] ) {
+				$row['badge'] = $swap['badge'];
+			}
+
+			if ( null !== $swap['price'] ) {
+				$row['price'] = (float) $swap['price'];
+				$row['priceText'] = ! empty( $field['choice_prices'] ) ? Money::display( $swap['price'], $money ) : '';
+			}
+
+			if ( $swap['image'] && wp_attachment_is_image( $swap['image'] ) ) {
+				$row['img'] = [ 'src' => (string) wp_get_attachment_image_url( $swap['image'], 'medium_large' ), 'srcset' => (string) wp_get_attachment_image_srcset( $swap['image'], 'medium_large' ) ];
+			}
+
+			if ( $swap['icon'] ) {
+				$html = (string) Icons_Manager::try_get_icon_html( $swap['icon'], [ 'aria-hidden' => 'true' ] );
+
+				if ( '' !== $html ) {
+					$row['icon'] = $html;
+				}
+			}
+
+			$rows[] = $row;
+		}
+
+		return $rows;
 	}
 
 	/** A choice's price beside its name (0.122.0), inside the name so the Summary reads "Car Tours £55". */
