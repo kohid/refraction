@@ -551,7 +551,7 @@ class Shortcodes {
 			}
 
 			$value = $values[ $field['key'] ] ?? '';
-			$text = in_array( $field['type'], [ 'currency', 'total' ], true ) && is_numeric( $value ) ? Money::display( $value, $cfg, $field['per'], $field['per_label'] ) : Schema::display( $field, $value );
+			$text = in_array( $field['type'], [ 'currency', 'total' ], true ) && is_numeric( $value ) ? Money::display( $value, Money::for_field( $cfg, $field ), $field['per'], $field['per_label'] ) : Schema::display( $field, $value );
 			$text = 'total' === $field['type'] && '' === $text ? $field['no_price'] : $text;
 			$answers[ $field['key'] ] = [ $field['label'], $text ];
 		}

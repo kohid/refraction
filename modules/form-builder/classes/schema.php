@@ -429,6 +429,15 @@ class Schema {
 		$parts = array_values( array_intersect( self::NAME_PARTS, array_map( 'trim', array_map( 'strval', is_array( $parts ) ? $parts : explode( ',', (string) $parts ) ) ) ) );
 		$tag_default = 'step' === $type ? 'h3' : 'div';
 		$options = self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [];
+		$extras = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::option_extras( $raw['option_extras'] ?? [], $options ) : [];
+
+		// A price in Choice details (0.122.0) is what a Total counts for that choice, unless value|Label|number gave one.
+		foreach ( $options as &$option ) {
+			if ( null === $option['number'] && null !== ( $extras[ $option['value'] ]['price'] ?? null ) ) {
+				$option['number'] = $extras[ $option['value'] ]['price'];
+			}
+		}
+		unset( $option );
 		$layout_text = 'html' === $type ? self::html( $raw['content'] ?? '' ) : ( 'paragraph' === $type ? self::textarea( $raw['content'] ?? '', 2000 ) : self::text( $raw['content'] ?? '', 300 ) );
 
 		return [
@@ -437,7 +446,16 @@ class Schema {
 			'type' => $type,
 			'required' => $has_value && ! self::is_container( $type ) && ! in_array( $type, [ 'hidden', 'total' ], true ) && 'card' !== $root && ! $is_card && ! empty( $raw['required'] ),
 			'options' => $options,
-			'option_extras' => in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::option_extras( $raw['option_extras'] ?? [], $options ) : [],
+			'option_extras' => $extras,
+			// Choice prices (0.122.0): shown beside the names, and a Total can add them up.
+			'choice_prices' => in_array( $type, [ 'radio', 'checkbox' ], true ) && ( ! array_key_exists( 'choice_prices', $raw ) || ! empty( $raw['choice_prices'] ) ),
+			'priced' => (bool) array_filter( $extras, static function ( $extra ) {
+				return null !== $extra['price'];
+			} ),
+			// A field's own currency symbol (0.122.0); '' follows the form's (Form settings > Currency).
+			'currency' => in_array( $type, [ 'currency', 'total', 'radio', 'checkbox' ], true ) ? self::text( $raw['currency'] ?? '', 6 ) : '',
+			// What a required field shows after its label (0.122.0); '' is the usual *.
+			'required_mark' => self::text( $raw['required_mark'] ?? '', 40 ),
 			'placeholder' => self::text( $raw['placeholder'] ?? '', 120 ) ?: ( 'signature' === $type ? self::t( 'Sign here' ) : '' ),
 			'help' => self::text( $raw['help'] ?? '', 200 ),
 			'width' => in_array( $raw['width'] ?? '', self::WIDTHS, true ) ? $raw['width'] : 'full',
@@ -499,6 +517,9 @@ class Schema {
 			'formula' => 'total' === $type ? self::text( $raw['formula'] ?? '', Formula::MAX_LENGTH ) : '',
 			'rules' => 'total' === $type ? self::total_rules( $raw['rules'] ?? [] ) : [],
 			'no_price' => 'total' === $type ? self::text( $raw['no_price'] ?? '', 120 ) : '',
+			// A Total that adds up the prices of the picked choices (0.122.0): of the fields listed, or of every priced one.
+			'sum_prices' => 'total' === $type && ! empty( $raw['sum_prices'] ),
+			'sum_keys' => 'total' === $type ? array_values( array_filter( array_map( [ self::class, 'key' ], is_array( $raw['sum_keys'] ?? null ) ? $raw['sum_keys'] : preg_split( '/[\s,]+/', (string) ( $raw['sum_keys'] ?? '' ) ) ) ) ) : [],
 			'notice_hours' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 8760, (int) ( $raw['notice_hours'] ?? 0 ) ) ) : 0,
 			'max_days' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 1095, (int) ( $raw['max_days'] ?? 0 ) ) ) : 0,
 			'closed_days' => in_array( $type, [ 'date', 'datetime' ], true ) ? self::weekdays( $raw['closed_days'] ?? [] ) : [],
@@ -699,7 +720,7 @@ class Schema {
 	 * @param array $raw     [ { choice, icon: { value, library }, text, badge, image: { id } } ] (or already keyed by value).
 	 * @param array $options The field's cleaned options.
 	 *
-	 * @return array<string,array{icon:array|null,text:string,badge:string,image:int}>
+	 * @return array<string,array{icon:array|null,text:string,badge:string,image:int,price:float|null}>
 	 */
 	public static function option_extras( $raw, array $options ): array {
 		$by_name = [];
@@ -732,9 +753,10 @@ class Schema {
 				'text' => self::text( $row['text'] ?? '', 160 ),
 				'badge' => self::text( $row['badge'] ?? '', 30 ),
 				'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
+				'price' => self::number_or_null( $row['price'] ?? null ),
 			];
 
-			if ( $extra['icon'] || '' !== $extra['text'] || '' !== $extra['badge'] || $extra['image'] ) {
+			if ( $extra['icon'] || '' !== $extra['text'] || '' !== $extra['badge'] || $extra['image'] || null !== $extra['price'] ) {
 				$extras[ $value ] = $extra;
 			}
 		}
@@ -1276,7 +1298,7 @@ class Schema {
 			case 'number':
 			case 'currency':
 			case 'rating':
-				$normalised = 'currency' === $type ? Money::parse( $value, self::$money ?? Money::config( [] ) ) : str_replace( ',', '', $value );
+				$normalised = 'currency' === $type ? Money::parse( $value, Money::for_field( self::$money ?? Money::config( [] ), $field ) ) : str_replace( ',', '', $value );
 
 				if ( null === $normalised || ! is_numeric( $normalised ) ) {
 					return $out( $value, false, self::t( 'Enter a number.' ) );
@@ -1596,9 +1618,32 @@ class Schema {
 				}
 			}
 
-			$result = Formula::evaluate( $formula, $number );
+			$result = '' === trim( $formula ) && ! empty( $field['sum_prices'] ) ? self::sum_prices( $field, $by_key, $values, $hidden ) : Formula::evaluate( $formula, $number );
 			$values[ $field['key'] ] = null === $result ? '' : number_format( $result, 2, '.', '' );
 		}
+	}
+
+	/**
+	 * What a Total that adds up prices comes to (0.122.0): the picked choices of the fields it lists, or of every choice
+	 * field with prices in Choice details. Null when no choice is picked yet (the text for no price shows).
+	 */
+	private static function sum_prices( array $total, array $by_key, array $values, array $hidden ): ?float {
+		$keys = $total['sum_keys'] ? $total['sum_keys'] : array_keys( array_filter( $by_key, static function ( $field ) {
+			return ! empty( $field['priced'] );
+		} ) );
+		$sum = null;
+
+		foreach ( $keys as $key ) {
+			$value = $values[ $key ] ?? '';
+
+			if ( ! isset( $by_key[ $key ] ) || isset( $hidden[ $key ] ) || '' === $value || [] === $value ) {
+				continue;
+			}
+
+			$sum = ( $sum ?? 0.0 ) + self::number_of( $by_key[ $key ], $value );
+		}
+
+		return $sum;
 	}
 
 	/** Multi-line plain text (an email message), cleaned like a long answer. */

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.121.0
+Stable tag: 0.122.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.122.0 =
+* Form Builder: every field's text, number, link and picture settings take Dynamic Tags (the tag button beside the box). Labels, descriptions, help, placeholders and choice names are worked out on each page view.
+* Form Builder: Choice details are on every Choice field (also the List look) and each choice has a Price. Show the prices puts it beside the choice's name; a Total amount set to Works out > The prices of the picked choices adds them up (of the fields listed, or of every Choice field with prices).
+* Form Builder: Amount, Total amount and Choice fields have a Currency setting: the form's (Form settings > Currency) or a symbol of their own (£, $, €, ¥, ₹, ₱... or another).
+* Form Builder: in the editor, the amounts now show the currency set in Form settings > Currency at once. Before, they kept the currency saved when the editor opened until the page was saved and opened again. Totals are also worked out in the preview as you pick choices.
+* Form Builder: Required mark can be text, for example (Required), with its own color, font and space in Style > Label.
 
 = 0.121.0 =
 * Dynamic Container: Entrance. When the list comes into view its items appear one after another in sync (fade in up, down, from either side, fade, zoom in or out, come into focus, flip up, rise and turn), and the widgets inside each item after it, with the time between items and between widgets, duration, distance, easing and "every time it comes into view". Plays in Edit Mode when an Entrance setting changes.

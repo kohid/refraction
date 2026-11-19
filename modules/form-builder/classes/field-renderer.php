@@ -99,6 +99,11 @@ class Field_Renderer {
 			$attrs .= ' data-rfb-cond="' . esc_attr( (string) wp_json_encode( $field['conditions'] ) ) . '"';
 		}
 
+		// A choice field with prices: a Total that adds up prices counts it (0.122.0).
+		if ( ! empty( $field['priced'] ) ) {
+			$attrs .= ' data-rfb-priced';
+		}
+
 		if ( Schema::is_step( $type ) ) {
 			echo self::step_head( $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
 			return;
@@ -147,7 +152,7 @@ class Field_Renderer {
 			$shown = $value ?? ( $ctx['hidden'][ $field['key'] ] ?? $field['default'] );
 
 			if ( ! empty( $ctx['admin'] ) ) {
-				echo '<div' . $attrs . '><label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . ' <span class="rfb-muted">(' . esc_html__( 'hidden field', 'refraction' ) . ')</span></label><input class="rfb-input" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $shown ) . '"></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<div' . $attrs . '><label class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . ' <span class="rfb-muted">(' . esc_html__( 'hidden field', 'refraction' ) . ')</span></label><input class="rfb-input" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $shown ) . '"></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} else {
 				echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $shown ) . '" data-rfb-key="' . esc_attr( $field['key'] ) . '">';
 			}
@@ -178,19 +183,20 @@ class Field_Renderer {
 		} elseif ( 'name' === $type ) {
 			self::name( $field, is_array( $value ) ? $value : [], $name, $id, $label_class, $described_attr );
 		} elseif ( in_array( $type, [ 'radio', 'checkbox' ], true ) ) {
-			echo '<fieldset class="rfb-choice"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<fieldset class="rfb-choice"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$value = null === $value ? ( 'checkbox' === $type ? [] : $field['default'] ) : $value;
 			$picked = array_map( 'strval', (array) $value );
 			$suffix = 'radio' === $type ? '' : '[]';
 
 			$columns = (int) ( $field['choice_columns'] ?? 0 );
+			$money = self::money( $field, $ctx );
 			echo '<div class="rfb-choice-options"' . ( $columns ? ' style="--rfb-ch-cols:' . $columns . '"' : '' ) . '>';
 
 			foreach ( $field['options'] as $index => $option ) {
 				$option_id = $id . '-' . $index;
 				$extra = $field['option_extras'][ $option['value'] ] ?? null;
 				// The label stays right after the input: the Summary reads it from there.
-				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . self::option_price( $field, $extra, $money ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</div></fieldset>';
@@ -200,7 +206,7 @@ class Field_Renderer {
 			echo '<label class="rfb-switch" for="' . esc_attr( $id ) . '"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( '1' === (string) $value, true, false ) . $described_attr . '><span class="rfb-switch-track" aria-hidden="true"></span><span class="rfb-switch-text">' . esc_html( $field['label'] ) . '</span></label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			$value = null === $value ? $field['default'] : $value;
-			echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<label class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$icon = in_array( $field['type'], [ 'country', 'currency' ], true ) ? '' : self::field_icon( $field );
 
 			// An icon at the left of the box (0.93.0): the box keeps its own markup, the icon sits over its padding.
@@ -398,6 +404,33 @@ class Field_Renderer {
 		return $out;
 	}
 
+	/**
+	 * The text a required field shows after its label when it is not the usual * (0.122.0), read by the stylesheet
+	 * (content: attr(data-rfb-mark)).
+	 */
+	public static function mark( array $field ): string {
+		return ! empty( $field['required'] ) && '' !== (string) ( $field['required_mark'] ?? '' ) ? ' data-rfb-mark="' . esc_attr( $field['required_mark'] ) . '"' : '';
+	}
+
+	/** The money format this field writes in: the form's, with the field's own symbol when it picked one (0.122.0). */
+	private static function money( array $field, array $ctx ): array {
+		return Money::for_field( Money::config( (array) ( $ctx['money'] ?? [] ) ), $field );
+	}
+
+	/** Marks an amount that follows the form's symbol, so the editor can show a changed Form settings > Currency at once. */
+	private static function follows_form( array $field ): string {
+		return '' === (string) ( $field['currency'] ?? '' ) ? ' data-rfb-cur' : '';
+	}
+
+	/** A choice's price beside its name (0.122.0), inside the name so the Summary reads "Car Tours £55". */
+	private static function option_price( array $field, ?array $extra, array $cfg ): string {
+		if ( empty( $field['choice_prices'] ) || ! $extra || null === ( $extra['price'] ?? null ) ) {
+			return '';
+		}
+
+		return ' <span class="rfb-opt-price"' . self::follows_form( $field ) . ' data-rfb-price="' . esc_attr( (string) $extra['price'] ) . '">' . esc_html( Money::display( $extra['price'], $cfg ) ) . '</span>';
+	}
+
 	private static function number_attr( array $option ): string {
 		return isset( $option['number'] ) && null !== $option['number'] ? ' data-rfb-n="' . esc_attr( (string) (float) $option['number'] ) . '"' : '';
 	}
@@ -454,7 +487,7 @@ class Field_Renderer {
 	 * along as JSON) and again by the server, whose figure is stored. Nothing is posted.
 	 */
 	private static function total( array $field, $value, string $id, string $label_class, array $ctx ): void {
-		$cfg = Money::config( (array) ( $ctx['money'] ?? [] ) );
+		$cfg = self::money( $field, $ctx );
 		$per = Money::per_label( $field['per'], $field['per_label'] );
 		$shown = is_numeric( $value ) ? Money::display( $value, $cfg, $field['per'], $field['per_label'] ) : $field['no_price'];
 		$config = [
@@ -464,19 +497,20 @@ class Field_Renderer {
 			'symbol' => $cfg['currency_symbol'],
 			'after' => 'after' === $cfg['currency_position'],
 			'per' => $per,
-		];
+			'money' => Money::js( $cfg ),
+		] + ( ! empty( $field['sum_prices'] ) ? [ 'prices' => $field['sum_keys'] ] : [] );
 
-		echo '<span class="' . esc_attr( $label_class ) . '" id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo '<output class="rfb-total" aria-labelledby="' . esc_attr( $id ) . '-label" aria-live="polite" data-rfb-total="' . esc_attr( (string) wp_json_encode( $config ) ) . '"><span class="rfb-total-amount">' . esc_html( $shown ) . '</span></output>';
+		echo '<span class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<output class="rfb-total"' . self::follows_form( $field ) . ' aria-labelledby="' . esc_attr( $id ) . '-label" aria-live="polite" data-rfb-total="' . esc_attr( (string) wp_json_encode( $config ) ) . '"><span class="rfb-total-amount">' . esc_html( $shown ) . '</span></output>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped parts.
 	}
 
 	/** The Amount input: a text box that writes 1,200.50 as you type, with the currency symbol and the period beside it. */
 	private static function amount( array $field, $value, string $name, string $id, string $required, string $described_attr, array $ctx ): void {
-		$cfg = Money::config( (array) ( $ctx['money'] ?? [] ) );
+		$cfg = self::money( $field, $ctx );
 		$text = '' === (string) $value || ! is_numeric( $value ) ? (string) $value : Money::format( $value, $cfg );
 		$per = Money::per_label( $field['per'], $field['per_label'] );
 		// The currency symbol beside the box only when the field asks for it (0.94.0); an icon in the box can take its place.
-		$symbol = ! empty( $field['currency_symbol'] ) && '' !== $cfg['currency_symbol'] ? '<span class="rfb-amount-affix rfb-amount-symbol" aria-hidden="true">' . esc_html( $cfg['currency_symbol'] ) . '</span>' : '';
+		$symbol = ! empty( $field['currency_symbol'] ) && '' !== $cfg['currency_symbol'] ? '<span class="rfb-amount-affix rfb-amount-symbol"' . self::follows_form( $field ) . ' aria-hidden="true">' . esc_html( $cfg['currency_symbol'] ) . '</span>' : '';
 		$icon = self::field_icon( $field );
 		$limits = ( null !== $field['min'] ? ' data-rfb-min="' . esc_attr( (string) $field['min'] ) . '"' : '' ) . ( null !== $field['max'] ? ' data-rfb-max="' . esc_attr( (string) $field['max'] ) . '"' : '' );
 
@@ -571,7 +605,7 @@ class Field_Renderer {
 		$kind = $field['multiple'] ? 'checkbox' : 'radio';
 		$described = '' !== $field['description'] ? ' aria-describedby="' . esc_attr( $id . '-desc' ) . '"' : '';
 
-		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		foreach ( $field['children'] as $i => $card ) {
 			$card_id = $id . '-' . $i;
@@ -645,7 +679,7 @@ class Field_Renderer {
 		$multiple = $field['max_files'] > 1 ? ' multiple' : '';
 		$hint = sprintf( /* translators: 1: extensions, 2: size in MB, 3: file count. */ __( '%1$s, up to %2$s MB each, %3$d at most.', 'refraction' ), strtoupper( implode( ', ', $field['accept'] ) ), rtrim( rtrim( number_format( $field['max_size'], 1, '.', '' ), '0' ), '.' ), $field['max_files'] );
 
-		echo '<label class="' . esc_attr( $label_class ) . '" for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<label class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $existing ) {
 			echo '<ul class="rfb-files">';
@@ -671,7 +705,7 @@ class Field_Renderer {
 		];
 		$autocomplete = [ 'prefix' => 'honorific-prefix', 'first' => 'given-name', 'middle' => 'additional-name', 'last' => 'family-name' ];
 
-		echo '<fieldset class="rfb-choice rfb-name"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '">' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-name-row">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-name"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-name-row">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		foreach ( Schema::NAME_PARTS as $part ) {
 			if ( ! in_array( $part, $field['parts'], true ) ) {
@@ -694,7 +728,7 @@ class Field_Renderer {
 		$existing = (array) ( $ctx['files'][ $path ] ?? [] );
 		$hint = '' !== $field['placeholder'] ? $field['placeholder'] : __( 'Sign here', 'refraction' );
 
-		echo '<span class="' . esc_attr( $label_class ) . '" id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<span class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' id="' . esc_attr( $id ) . '-label">' . esc_html( $field['label'] ) . '</span>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( $existing ) {
 			foreach ( $existing as $file ) {
@@ -798,7 +832,7 @@ class Field_Renderer {
 				return '<a href="' . esc_url( $text ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( preg_replace( '#^https?://#', '', $text ) ) . '</a>';
 			case 'currency':
 			case 'total':
-				return '<span class="rfb-money">' . esc_html( Money::display( $text, Money::config( $money ), $field['per'], $field['per_label'] ) ) . '</span>';
+				return '<span class="rfb-money">' . esc_html( Money::display( $text, Money::for_field( Money::config( $money ), $field ), $field['per'], $field['per_label'] ) ) . '</span>';
 			case 'rating':
 				return '<span class="rfb-stars" role="img" aria-label="' . esc_attr( $text ) . '">' . esc_html( str_repeat( '★', (int) $value ) . str_repeat( '☆', 5 - (int) $value ) ) . '</span>';
 			case 'toggle':

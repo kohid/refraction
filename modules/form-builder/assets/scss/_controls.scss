@@ -145,6 +145,19 @@ $rfb-widths: (
 		content: '*';
 	}
 
+	// A required mark written on the field (0.122.0), for example "(Required)".
+	.rfb-label.is-required[data-rfb-mark]::after {
+		content: attr(data-rfb-mark);
+	}
+
+	// A choice's price beside its name (0.122.0).
+	.rfb-opt-price {
+		margin-left: 0.4em;
+		color: var(--rfb-ch-price, var(--rfb-primary));
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
 	.rfb-input {
 		display: block;
 		width: 100%;

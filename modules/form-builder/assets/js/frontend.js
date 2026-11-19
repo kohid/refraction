@@ -1533,8 +1533,31 @@
 		return total.per ? withSymbol + ' ' + total.per : withSymbol;
 	}
 
+	/**
+	 * What a Total that adds up prices comes to (mirrors Schema::sum_prices, 0.122.0): the picked choices of the listed
+	 * fields, or of every field with prices; null while nothing is picked.
+	 *
+	 * @param {Element}  form The form (in the editor, the preview's page).
+	 * @param {string[]} keys The field keys, or none for every priced field.
+	 * @return {number|null} The sum.
+	 */
+	function sumPrices( form, keys ) {
+		const wrappers = keys.length ? keys.map( ( key ) => form.querySelector( `[data-rfb-key="${ CSS.escape( key ) }"]` ) ).filter( Boolean ) : Array.from( form.querySelectorAll( '[data-rfb-priced]' ) );
+		let sum = null;
+
+		wrappers.forEach( ( wrapper ) => {
+			const picked = Array.from( wrapper.querySelectorAll( 'input:checked, select' ) ).some( ( el ) => 'SELECT' !== el.tagName || '' !== el.value );
+
+			if ( picked && ! wrapper.closest( '[data-rfb-cond][hidden]' ) ) {
+				sum = ( sum || 0 ) + numberOf( form, wrapper.dataset.rfbKey );
+			}
+		} );
+
+		return sum;
+	}
+
 	function applyTotals( form ) {
-		const cfg = moneyOf( form );
+		const formCfg = moneyOf( form );
 
 		// In page order, so a total can count an earlier total.
 		form.querySelectorAll( '[data-rfb-total]' ).forEach( ( out ) => {
@@ -1558,7 +1581,8 @@
 				formula = rule.formula;
 			}
 
-			const value = evaluate( formula, ( key ) => numberOf( form, key ) );
+			const cfg = total.money ? Object.assign( {}, formCfg, total.money ) : formCfg;
+			const value = Array.isArray( total.prices ) && ! rule && '' === String( formula || '' ).trim() ? sumPrices( form, total.prices ) : evaluate( formula, ( key ) => numberOf( form, key ) );
 			const amount = out.querySelector( '.rfb-total-amount' );
 
 			out.rfbValue = value;
@@ -2382,11 +2406,105 @@
 		document.querySelectorAll( '.rfb-field' ).forEach( ( field ) => enhance( field ) );
 	};
 
+	// ---------------------------------------------------------------- the editor's preview (0.122.0)
+
+	/** Form settings > Currency as it is in the editor now, saved or not; null outside a Form page. */
+	function editorMoney() {
+		const model = window.refraction && window.refraction.settings && window.refraction.settings.page && window.refraction.settings.page.model;
+		const a = model ? model.attributes : null;
+
+		if ( ! a || ! ( 'rfb_currency_symbol' in a ) ) {
+			return null;
+		}
+
+		const d = ',' === a.rfb_decimal_sep ? ',' : '.';
+		let t = [ ',', '.', ' ', '' ].includes( a.rfb_thousands_sep ) ? a.rfb_thousands_sep : ',';
+
+		if ( t === d ) {
+			t = '.' === d ? ',' : '.';
+		}
+
+		const n = Number( a.rfb_decimals );
+
+		return { symbol: String( a.rfb_currency_symbol || '' ).slice( 0, 6 ), after: 'after' === a.rfb_currency_position, t, d, n: Number.isFinite( n ) ? Math.max( 0, Math.min( 4, Math.round( n ) ) ) : 2 };
+	}
+
+	/**
+	 * The preview draws each field on its own, from the saved Form settings: write the amounts again in the currency
+	 * set now, so a changed symbol, position or separator shows at once (fields with their own currency keep their
+	 * symbol), and work the totals out over the whole page as the site does.
+	 */
+	function refreshEditor() {
+		const m = editorMoney();
+		const root = document.body;
+
+		if ( m ) {
+			const money = { t: m.t, d: m.d, n: m.n };
+
+			root.querySelectorAll( '.rfb-amount-symbol[data-rfb-cur]' ).forEach( ( symbol ) => {
+				const box = symbol.parentElement;
+
+				symbol.textContent = m.symbol;
+				symbol.hidden = '' === m.symbol;
+				box.classList.toggle( 'is-after', m.after );
+
+				if ( m.after ) {
+					box.insertBefore( symbol, box.querySelector( '.rfb-amount-per' ) );
+				} else {
+					box.insertBefore( symbol, box.firstChild );
+				}
+			} );
+
+			root.querySelectorAll( '[data-rfb-total]' ).forEach( ( out ) => {
+				try {
+					const total = JSON.parse( out.dataset.rfbTotal );
+
+					total.money = money;
+
+					if ( out.hasAttribute( 'data-rfb-cur' ) ) {
+						total.symbol = m.symbol;
+						total.after = m.after;
+					}
+
+					out.dataset.rfbTotal = JSON.stringify( total );
+				} catch ( e ) {}
+			} );
+
+			root.querySelectorAll( '.rfb-opt-price[data-rfb-cur], .rfb-price-amount[data-rfb-cur]' ).forEach( ( price ) => {
+				price.textContent = formatMoney( Number( price.dataset.rfbPrice ) || 0, money, { symbol: m.symbol, after: m.after } );
+			} );
+		}
+
+		// Conditions are left alone: every field stays in view while it is being edited.
+		applyTotals( root );
+	}
+
+	let editorTimer = 0;
+	const queueEditorRefresh = () => {
+		clearTimeout( editorTimer );
+		editorTimer = setTimeout( refreshEditor, 30 );
+	};
+
 	const editorHooks = () => {
 		const hooks = window.refractionFrontend && window.refractionFrontend.hooks;
 
 		if ( hooks && window.refractionFrontend.isEditMode && window.refractionFrontend.isEditMode() ) {
-			hooks.addAction( 'frontend/element_ready/global', ( $scope ) => $scope[ 0 ] && enhance( $scope[ 0 ] ) );
+			hooks.addAction( 'frontend/element_ready/global', ( $scope ) => {
+				if ( $scope[ 0 ] ) {
+					enhance( $scope[ 0 ] );
+				}
+
+				queueEditorRefresh();
+			} );
+
+			const model = window.refraction && window.refraction.settings && window.refraction.settings.page && window.refraction.settings.page.model;
+
+			if ( model && model.on ) {
+				model.on( 'change', queueEditorRefresh );
+			}
+
+			document.addEventListener( 'input', queueEditorRefresh );
+			document.addEventListener( 'change', queueEditorRefresh );
 		}
 	};
 

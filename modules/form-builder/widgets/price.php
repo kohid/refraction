@@ -70,7 +70,7 @@ class Price extends Widget_Base {
 
 	/** The amount and period to show: the card's (while a card prints, or found in the page in the editor), else the widget's own. */
 	private function shown(): array {
-		$s = $this->get_settings();
+		$s = $this->get_settings_for_display();
 		$own = [ 'amount' => is_numeric( $s['amount'] ?? null ) ? (float) $s['amount'] : null, 'per' => (string) ( $s['per'] ?? '' ), 'per_label' => (string) ( $s['per_label'] ?? '' ) ];
 
 		if ( 'yes' !== ( $s['use_card'] ?? '' ) ) {
@@ -105,6 +105,6 @@ class Price extends Widget_Base {
 		$money = $state ? (array) ( $state['ctx']['money'] ?? [] ) : ( $document ? $document->form_settings()['settings'] : [] );
 		$per = Money::per_label( $shown['per'], $shown['per_label'] );
 
-		echo '<span class="rfb-price"><span class="rfb-price-amount">' . esc_html( Money::display( $shown['amount'], Money::config( $money ) ) ) . '</span>' . ( '' !== $per ? ' <span class="rfb-price-per">' . esc_html( $per ) . '</span>' : '' ) . '</span>';
+		echo '<span class="rfb-price"><span class="rfb-price-amount" data-rfb-cur data-rfb-price="' . esc_attr( (string) $shown['amount'] ) . '">' . esc_html( Money::display( $shown['amount'], Money::config( $money ) ) ) . '</span>' . ( '' !== $per ? ' <span class="rfb-price-per">' . esc_html( $per ) . '</span>' : '' ) . '</span>';
 	}
 }
