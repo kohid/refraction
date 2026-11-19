@@ -103,12 +103,17 @@
 			const scope = wrapper.closest( '[data-rfb-scope]' );
 			const results = ( cond.rules || [] ).map( ( rule ) => matches( rule, fieldValue( form, scope, rule.field ) ) );
 			const matched = 'any' === cond.match ? results.includes( true ) : ! results.includes( false );
-			const visible = cond.enabled && cond.rules.length ? ( 'hide' === cond.action ? ! matched : matched ) : true;
+			const active = cond.enabled && cond.rules.length;
+			// "Disabled when" (0.124.0): in view but greyed and not answerable while the rules match.
+			const disabled = !! active && 'disable' === cond.action && matched;
+			const visible = active && 'disable' !== cond.action ? ( 'hide' === cond.action ? ! matched : matched ) : true;
 
 			wrapper.hidden = ! visible;
+			wrapper.classList.toggle( 'rfb-is-disabled', disabled );
+			wrapper.toggleAttribute( 'aria-disabled', disabled );
 
-			// Controls stay off while this wrapper, or a panel, card or group around it, is hidden.
-			const blocked = ! visible || !! ( wrapper.parentElement && wrapper.parentElement.closest( '[data-rfb-cond][hidden]' ) );
+			// Controls stay off while this wrapper, or a panel, card or group around it, is hidden or disabled.
+			const blocked = ! visible || disabled || !! ( wrapper.parentElement && wrapper.parentElement.closest( '[data-rfb-cond][hidden], .rfb-is-disabled' ) );
 
 			wrapper.querySelectorAll( 'input, select, textarea, button' ).forEach( ( el ) => {
 				if ( blocked ) {
@@ -124,6 +129,37 @@
 					delete el.dataset.rfbWasDisabled;
 				}
 			} );
+		} );
+
+		// Choices that are not available for these answers (Choice details > Not available when, 0.124.0): greyed, their
+		// note in place of the price, and not pickable; a picked one is let go.
+		form.querySelectorAll( '.rfb-check[data-rfb-off]' ).forEach( ( label ) => {
+			let rule;
+
+			try {
+				rule = JSON.parse( label.dataset.rfbOff );
+			} catch ( e ) {
+				return;
+			}
+
+			const scope = label.closest( '[data-rfb-scope]' );
+			const off = ( rule.rules || [] ).every( ( r ) => matches( r, fieldValue( form, scope, r.field ) ) );
+			const input = label.querySelector( 'input' );
+			const note = label.querySelector( '.rfb-opt-off' );
+
+			label.classList.toggle( 'is-off', off );
+
+			if ( note ) {
+				note.hidden = ! off;
+			}
+
+			if ( input && ! label.closest( '[data-rfb-cond][hidden], .rfb-is-disabled' ) ) {
+				input.disabled = off;
+
+				if ( off && input.checked ) {
+					input.checked = false;
+				}
+			}
 		} );
 
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( ( host ) => host.rfbSync && host.rfbSync() );
@@ -1547,7 +1583,8 @@
 		let sum = null;
 
 		wrappers.forEach( ( wrapper ) => {
-			const picked = Array.from( wrapper.querySelectorAll( 'input:checked, select' ) ).some( ( el ) => 'SELECT' !== el.tagName || '' !== el.value );
+			// A picked choice or card, or an amount typed in (0.124.0).
+			const picked = Array.from( wrapper.querySelectorAll( 'input:checked, select, input[data-rfb-amount]' ) ).some( ( el ) => ( 'SELECT' !== el.tagName && ! el.hasAttribute( 'data-rfb-amount' ) ) || '' !== el.value.trim() );
 
 			if ( picked && ! wrapper.closest( '[data-rfb-cond][hidden]' ) ) {
 				sum = ( sum || 0 ) + numberOf( form, wrapper.dataset.rfbKey );

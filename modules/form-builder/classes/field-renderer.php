@@ -100,7 +100,7 @@ class Field_Renderer {
 		}
 
 		// A choice field with prices: a Total that adds up prices counts it (0.122.0).
-		if ( ! empty( $field['priced'] ) ) {
+		if ( Schema::counts_in_total( $field ) ) {
 			$attrs .= ' data-rfb-priced';
 		}
 
@@ -196,7 +196,8 @@ class Field_Renderer {
 				$option_id = $id . '-' . $index;
 				$extra = $field['option_extras'][ $option['value'] ] ?? null;
 				// The label stays right after the input: the Summary reads it from there.
-				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . self::option_price( $field, $extra, $money ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$off = $extra && ! empty( $extra['off'] ) ? ' data-rfb-off="' . esc_attr( (string) wp_json_encode( $extra['off'] ) ) . '"' : '';
+				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"' . $off . '><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . self::option_price( $field, $extra, $money ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . ( '' !== $off ? '<span class="rfb-opt-off" hidden>' . esc_html( '' !== $extra['off_text'] ? $extra['off_text'] : __( 'Not available', 'refraction' ) ) . '</span>' : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</div></fieldset>';
@@ -338,7 +339,7 @@ class Field_Renderer {
 
 		if ( 'number' === $type && ! empty( $field['stepper'] ) ) {
 			// A minus and a plus button around the box (the script wires them; without it the box still takes a number).
-			$input = '<div class="rfb-count" data-rfb-count><button type="button" class="rfb-count-btn" data-rfb-step="-1" aria-label="' . esc_attr__( 'One less', 'refraction' ) . '" tabindex="-1">&minus;</button>' . $input . '<button type="button" class="rfb-count-btn" data-rfb-step="1" aria-label="' . esc_attr__( 'One more', 'refraction' ) . '" tabindex="-1">+</button></div>';
+			$input = '<div class="rfb-count' . ( 'boxed' === ( $field['stepper_look'] ?? '' ) ? ' rfb-count--boxed' : '' ) . '" data-rfb-count><button type="button" class="rfb-count-btn" data-rfb-step="-1" aria-label="' . esc_attr__( 'One less', 'refraction' ) . '" tabindex="-1">&minus;</button>' . $input . '<button type="button" class="rfb-count-btn" data-rfb-step="1" aria-label="' . esc_attr__( 'One more', 'refraction' ) . '" tabindex="-1">+</button></div>';
 		}
 
 		echo $input; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.

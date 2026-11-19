@@ -5,6 +5,7 @@ use Refraction\Controls_Manager;
 use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
+use Refraction\Modules\FormBuilder\Classes\Conditions;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Classes\Field_Renderer;
 use Refraction\Modules\FormBuilder\Classes\Money;
@@ -191,6 +192,14 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 
 		if ( $this->has( 'stepper' ) ) {
 			$this->add_control( 'stepper', [ 'label' => esc_html__( 'Minus and plus buttons', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'For counts such as passengers or suitcases (whole numbers).', 'refraction' ) ] );
+			$this->add_control( 'stepper_look', [
+				'label' => esc_html__( 'Buttons look', 'refraction' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [ '' => esc_html__( 'In the box', 'refraction' ), 'boxed' => esc_html__( 'Grey buttons, full width', 'refraction' ) ],
+				'description' => esc_html__( 'Grey buttons: − and + in grey squares at each end of a full-width box, the number in the middle. Style > Minus and plus buttons changes the colors and sizes.', 'refraction' ),
+				'condition' => [ 'stepper' => 'yes' ],
+			] );
 		}
 
 		if ( $this->has( 'suggestions' ) ) {
@@ -465,6 +474,17 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'description' => esc_html__( 'What this choice costs. A Total amount adds up the prices of the picked choices (Total amount > Works out).', 'refraction' ),
 			'dynamic' => [ 'active' => true ],
 		] );
+		// Not available when (0.124.0): the choice is greyed and can not be picked while another answer matches.
+		$details->add_control( 'off_field', [
+			'label' => esc_html__( 'Not available when field (key)', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => 'passengers',
+			'separator' => 'before',
+			'description' => esc_html__( 'For example passengers is greater than 4: the car is greyed and can not be picked.', 'refraction' ),
+		] );
+		$details->add_control( 'off_op', [ 'label' => esc_html__( 'Condition', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'greater', 'options' => Conditions::operators(), 'condition' => [ 'off_field!' => '' ] ] );
+		$details->add_control( 'off_value', [ 'label' => esc_html__( 'Value', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'off_field!' => '', 'off_op!' => [ 'empty', 'not_empty' ] ] ] );
+		$details->add_control( 'off_text', [ 'label' => esc_html__( 'Text while not available', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__( 'Too small', 'refraction' ), 'condition' => [ 'off_field!' => '' ], 'dynamic' => [ 'active' => true ] ] );
 		$this->add_control( 'option_extras', [
 			'label' => esc_html__( 'Choice details', 'refraction' ),
 			'type' => Controls_Manager::REPEATER,
@@ -549,6 +569,26 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
 				'selectors' => [ '{{WRAPPER}} .rfb-name-row' => 'row-gap: {{SIZE}}{{UNIT}};' ],
 			] );
+			$this->end_controls_section();
+		}
+
+		if ( $this->has( 'stepper' ) ) {
+			$on = [ 'stepper' => 'yes' ];
+			$this->start_controls_section( 'section_style_stepper', [ 'label' => esc_html__( 'Minus and plus buttons', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => $on ] );
+			$this->add_control( 'step_bg', [ 'label' => esc_html__( 'Background color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-bg: {{VALUE}};' ] ] );
+			$this->add_control( 'step_color', [ 'label' => esc_html__( 'Sign color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-color: {{VALUE}};' ] ] );
+			$this->add_control( 'step_hover_bg', [ 'label' => esc_html__( 'Background on hover', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-hover-bg: {{VALUE}};' ] ] );
+			$this->add_control( 'step_hover_color', [ 'label' => esc_html__( 'Sign color on hover', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-hover-color: {{VALUE}};' ] ] );
+			$this->add_responsive_control( 'step_width', [ 'label' => esc_html__( 'Button width', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 28, 'max' => 90 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-w: {{SIZE}}px;' ] ] );
+			$this->add_responsive_control( 'step_height', [ 'label' => esc_html__( 'Height', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 28, 'max' => 90 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-h: {{SIZE}}px;' ] ] );
+			$this->add_responsive_control( 'step_max', [
+				'label' => esc_html__( 'Widest', 'refraction' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range' => [ 'px' => [ 'min' => 100, 'max' => 600 ], '%' => [ 'min' => 20, 'max' => 100 ] ],
+				'selectors' => [ '{{WRAPPER}}' => '--rfb-count-max: {{SIZE}}{{UNIT}};' ],
+			] );
+			$this->add_responsive_control( 'step_sign', [ 'label' => esc_html__( 'Sign size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 10, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}}' => '--rfb-step-sign: {{SIZE}}px;' ] ] );
 			$this->end_controls_section();
 		}
 
@@ -717,6 +757,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'selectors' => [ '{{WRAPPER}} .rfb-look-images .rfb-opt-label::before' => 'display: none;' ],
 			'condition' => [ 'choice_look' => 'images' ],
 		] );
+		$this->add_control( 'ch_picture_heading', [ 'label' => esc_html__( 'Picture and card size', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before', 'classes' => 'rf-panel-category', 'condition' => [ 'choice_look' => 'images' ] ] );
 		$this->add_responsive_control( 'ch_image_ratio', [
 			'label' => esc_html__( 'Picture shape', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -859,6 +900,7 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 			'time_max' => (string) ( $s['time_max'] ?? '' ),
 			'time_step' => $s['time_step'] ?? 0,
 			'stepper' => $yes( 'stepper' ),
+			'stepper_look' => (string) ( $s['stepper_look'] ?? '' ),
 			'suggestions' => (string) ( $s['suggestions'] ?? '' ),
 			'icon' => $s['field_icon'] ?? null,
 			'icon_last' => $s['field_icon_last'] ?? null,

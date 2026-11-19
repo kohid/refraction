@@ -277,3 +277,28 @@ Check: `scripts/check-form-prices.mjs`.
   corners (CSS variables `--rfb-ch-card-cols`, `--rfb-pic-*`).
 
 Check: `scripts/check-address-conditions.mjs`.
+
+## Conditions everywhere, unavailable choices, Total amount, stepper look (0.124.0)
+
+- **Conditional visibility on every element of a Form page** (`Classes\Element_Conditions`). Widgets (through their
+  common controls) and containers get Advanced > Conditional visibility with the fields' own controls
+  (`rfb_el_cond_*`; fields keep `cond_*`, built by the same `Element_Conditions::controls()`). The editor shows the
+  section on Form pages only, and not on widgets that have the field one (`display-fields.js`). On the site the element
+  carries `data-rfb-cond` and the form's script shows, hides or disables it. `Editor_Forms::collect()` passes the
+  rules of the elements around a field (and Display Conditions made only of form fields' answers) to the field as
+  `guards`; `Schema::is_shown()` checks them on submit, so a required field inside a hidden element is not asked for.
+- **Disabled when**: a third action for field and element rules. The element stays in view, greyed
+  (`.rfb-is-disabled`), its inputs off; on submit it counts as not answered.
+- **Not available when** (Choice details: field key, condition, default "is greater than", value, text while not
+  available). Cleaned into `option_extras[value].off`; the label carries `data-rfb-off`; the script greys the choice
+  (`.is-off`), shows the text in place of the price, disables it and lets go of it when picked; the server refuses it
+  ("This choice is not available for your answers.").
+- **Total amount** (renamed from Total): with no formula, or Works out > Add up the picked prices and amounts, it adds
+  the picked choices' prices, the picked choice cards and the Amount fields (`Schema::counts_in_total()`,
+  `data-rfb-priced`). It is shown, never typed.
+- **Number > Buttons look**: Grey buttons, full width (`.rfb-count--boxed`); Style > Minus and plus buttons sets
+  colors, button width, height, widest and sign size (`--rfb-step-*`, `--rfb-count-max`).
+- **Image cards**: Style > Choices > Picture and card size is its own group; a long name and its price wrap inside the
+  card.
+
+Check: `scripts/check-form-conditions.mjs`.

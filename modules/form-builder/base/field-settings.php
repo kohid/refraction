@@ -2,11 +2,10 @@
 namespace Refraction\Modules\FormBuilder\Base;
 
 use Refraction\Controls_Manager;
-use Refraction\Modules\FormBuilder\Classes\Conditions;
+use Refraction\Modules\FormBuilder\Classes\Element_Conditions;
 use Refraction\Modules\FormBuilder\Classes\Editor_Forms;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Plugin;
-use Refraction\Repeater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -56,38 +55,9 @@ trait Field_Settings {
 		return ! $post_id || Plugin::$instance->documents->get( $post_id ) instanceof Form_Document;
 	}
 
-	/** Advanced tab: show or hide this field depending on other answers (checked again on the server). */
+	/** Advanced tab: show, hide or disable this field depending on other answers (checked again on the server). */
 	protected function register_condition_controls(): void {
-		$this->start_controls_section( 'section_conditions', [ 'label' => esc_html__( 'Conditional visibility', 'refraction' ), 'tab' => Controls_Manager::TAB_ADVANCED ] );
-		$this->add_control( 'cond_enabled', [ 'label' => esc_html__( 'Show or hide depending on other answers', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
-		$this->add_control( 'cond_action', [
-			'label' => esc_html__( 'This field is', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
-			'default' => 'show',
-			'options' => [ 'show' => esc_html__( 'Shown when', 'refraction' ), 'hide' => esc_html__( 'Hidden when', 'refraction' ) ],
-			'condition' => [ 'cond_enabled' => 'yes' ],
-		] );
-		$this->add_control( 'cond_match', [
-			'label' => esc_html__( 'Rules to match', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
-			'default' => 'all',
-			'options' => [ 'all' => esc_html__( 'All of them', 'refraction' ), 'any' => esc_html__( 'Any of them', 'refraction' ) ],
-			'condition' => [ 'cond_enabled' => 'yes' ],
-		] );
-
-		$rule = new Repeater();
-		$rule->add_control( 'field', [ 'label' => esc_html__( 'Field key', 'refraction' ), 'type' => Controls_Manager::TEXT, 'placeholder' => 'service', 'description' => esc_html__( 'The Field key of the field to look at (Advanced > Records table).', 'refraction' ) ] );
-		$rule->add_control( 'op', [ 'label' => esc_html__( 'Condition', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'equals', 'options' => Conditions::operators() ] );
-		$rule->add_control( 'value', [ 'label' => esc_html__( 'Value', 'refraction' ), 'type' => Controls_Manager::TEXT, 'condition' => [ 'op!' => [ 'empty', 'not_empty' ] ] ] );
-		$this->add_control( 'cond_rules', [
-			'label' => esc_html__( 'Rules', 'refraction' ),
-			'type' => Controls_Manager::REPEATER,
-			'fields' => $rule->get_controls(),
-			'title_field' => '{{{ field }}} {{{ op }}} {{{ value }}}',
-			'default' => [],
-			'condition' => [ 'cond_enabled' => 'yes' ],
-		] );
-		$this->end_controls_section();
+		Element_Conditions::controls( $this, 'cond_', 'section_conditions' );
 	}
 
 	/** Advanced tab: the key answers are saved under, and how they show in Refraction > Builder and the public list. */

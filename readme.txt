@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.123.0
+Stable tag: 0.124.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,14 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.124.0 =
+* Form Builder: Total amount (the widget is named so now) is worked out, not typed: with no formula it adds up the picked choices' prices, the picked choice cards and the Amount fields. Works out > "Add up the picked prices and amounts" can list the fields to add.
+* Form Builder: every widget and container on a Form page has Advanced > Conditional visibility, like the fields: Shown when, Hidden when or Disabled when other answers match. The fields inside a hidden element are not asked for on submit.
+* Form Builder: fields can also be Disabled when (greyed, in view, not answerable).
+* Form Builder: each choice in Choice details can be Not available when another answer matches (for example passengers is greater than 4): the choice is greyed, shows its note (Too small) in place of the price and can not be picked; the server refuses it too.
+* Form Builder: Number with Minus and plus buttons has a Buttons look, Grey buttons, full width, and Style > Minus and plus buttons (colors, button width, height, widest, sign size).
+* Form Builder: Image cards have their own Picture and card size group in Style > Choices; a long name and its price wrap inside the card instead of running past its edge.
 
 = 0.123.0 =
 * Form Builder: new Address field. As the visitor types, a list under the box shows the matching addresses (arrow keys and Enter, or a click, pick one). The addresses are your own: typed in the field, or a .txt / .csv file from the Media Library for long lists (up to 50,000), searched by your own site; no outside address service. Only addresses from the list, letters before suggesting and how many show are settings; Style > Suggestions styles the list, which stays open in the editor while you style it.

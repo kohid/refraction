@@ -58,7 +58,8 @@ class Conditions {
 
 		return [
 			'enabled' => ! empty( $raw['enabled'] ) && $rules,
-			'action' => 'hide' === ( $raw['action'] ?? '' ) ? 'hide' : 'show',
+			// "disable" (0.124.0): the field stays in view, greyed and not answerable, while the rules match.
+			'action' => in_array( $raw['action'] ?? '', [ 'hide', 'disable' ], true ) ? $raw['action'] : 'show',
 			'match' => 'any' === ( $raw['match'] ?? '' ) ? 'any' : 'all',
 			'rules' => $rules,
 		];
@@ -81,7 +82,8 @@ class Conditions {
 
 		$matched = 'any' === $conditions['match'] ? in_array( true, $results, true ) : ! in_array( false, $results, true );
 
-		return 'hide' === $conditions['action'] ? ! $matched : $matched;
+		// A disabled field is not answered: like a hidden one, it is never required or stored.
+		return in_array( $conditions['action'], [ 'hide', 'disable' ], true ) ? ! $matched : $matched;
 	}
 
 	/** @param string|array|null $actual */

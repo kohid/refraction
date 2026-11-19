@@ -123,7 +123,7 @@ class Schema {
 					'file' => self::t( 'File upload' ),
 					'signature' => self::t( 'Signature' ),
 					'hidden' => self::t( 'Hidden field' ),
-					'total' => self::t( 'Total' ),
+					'total' => self::t( 'Total amount' ),
 				],
 			],
 		];
@@ -469,6 +469,10 @@ class Schema {
 			'content' => $layout_text,
 			'level' => max( 2, min( 6, (int) ( $raw['level'] ?? 3 ) ) ),
 			'conditions' => Conditions::clean( $raw['conditions'] ?? [] ),
+			// The conditions of the page elements around the field (0.124.0, Element_Conditions): all must let it through.
+			'guards' => array_values( array_filter( array_map( [ Conditions::class, 'clean' ], array_slice( is_array( $raw['guards'] ?? null ) ? $raw['guards'] : [], 0, 10 ) ), static function ( $guard ) {
+				return $guard['enabled'];
+			} ) ),
 			'css_class' => implode( ' ', $classes ),
 			'hide_label' => ! empty( $raw['hide_label'] ),
 			'accept' => $accept ?: [ 'jpg', 'jpeg', 'png', 'pdf' ],
@@ -519,7 +523,9 @@ class Schema {
 			'rules' => 'total' === $type ? self::total_rules( $raw['rules'] ?? [] ) : [],
 			'no_price' => 'total' === $type ? self::text( $raw['no_price'] ?? '', 120 ) : '',
 			// A Total that adds up the prices of the picked choices (0.122.0): of the fields listed, or of every priced one.
-			'sum_prices' => 'total' === $type && ! empty( $raw['sum_prices'] ),
+			// A Total with no formula adds up the answers that cost something (0.124.0): picked choices with prices, picked
+			// choice cards and the Amount fields.
+			'sum_prices' => 'total' === $type && ( ! empty( $raw['sum_prices'] ) || '' === trim( (string) ( $raw['formula'] ?? '' ) ) ),
 			'sum_keys' => 'total' === $type ? array_values( array_filter( array_map( [ self::class, 'key' ], is_array( $raw['sum_keys'] ?? null ) ? $raw['sum_keys'] : preg_split( '/[\s,]+/', (string) ( $raw['sum_keys'] ?? '' ) ) ) ) ) : [],
 			'notice_hours' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 8760, (int) ( $raw['notice_hours'] ?? 0 ) ) ) : 0,
 			'max_days' => in_array( $type, [ 'date', 'datetime' ], true ) ? max( 0, min( 1095, (int) ( $raw['max_days'] ?? 0 ) ) ) : 0,
@@ -528,6 +534,7 @@ class Schema {
 			'time_max' => in_array( $type, [ 'time', 'datetime' ], true ) ? self::clock( $raw['time_max'] ?? '' ) : '',
 			'time_step' => in_array( $type, [ 'time', 'datetime' ], true ) ? max( 0, min( 240, (int) ( $raw['time_step'] ?? 0 ) ) ) : 0,
 			'stepper' => 'number' === $type && ! empty( $raw['stepper'] ),
+			'stepper_look' => 'number' === $type && 'boxed' === ( $raw['stepper_look'] ?? '' ) ? 'boxed' : '',
 			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
 			// Address (0.123.0): the owner's own addresses, typed in or in a .txt / .csv file, suggested while typing.
 			'address_list' => 'address' === $type ? Address::clean_list( $raw['address_list'] ?? [] ) : [],
@@ -761,9 +768,19 @@ class Schema {
 				'badge' => self::text( $row['badge'] ?? '', 30 ),
 				'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
 				'price' => self::number_or_null( $row['price'] ?? null ),
+				// Not available when (0.124.0): greyed and not pickable while the rule matches, with a short note.
+				// From the panel (off_field, off_op whose default is "greater", off_value), or already cleaned (off).
+				'off' => '' !== trim( (string) ( $row['off_field'] ?? '' ) )
+					? Conditions::clean( [ 'enabled' => true, 'action' => 'hide', 'match' => 'all', 'rules' => [ [ 'field' => (string) $row['off_field'], 'op' => (string) ( $row['off_op'] ?? 'greater' ), 'value' => (string) ( $row['off_value'] ?? '' ) ] ] ] )
+					: ( is_array( $row['off'] ?? null ) ? Conditions::clean( [ 'action' => 'hide' ] + $row['off'] ) : null ),
+				'off_text' => self::text( $row['off_text'] ?? '', 40 ),
 			];
 
-			if ( $extra['icon'] || '' !== $extra['text'] || '' !== $extra['badge'] || $extra['image'] || null !== $extra['price'] ) {
+			if ( $extra['off'] && ! $extra['off']['enabled'] ) {
+				$extra['off'] = null;
+			}
+
+			if ( $extra['icon'] || '' !== $extra['text'] || '' !== $extra['badge'] || $extra['image'] || null !== $extra['price'] || $extra['off'] ) {
 				$extras[ $value ] = $extra;
 			}
 		}
@@ -1060,6 +1077,17 @@ class Schema {
 		return [ 'values' => $values, 'errors' => $errors ];
 	}
 
+	/** Whether a field is answerable: its own rules and those of the page elements around it (guards) let it through. */
+	private static function is_shown( array $field, callable $lookup ): bool {
+		foreach ( array_merge( [ $field['conditions'] ], (array) ( $field['guards'] ?? [] ) ) as $conditions ) {
+			if ( ! Conditions::is_visible( $conditions, $lookup ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/** Value of a field as the visibility rules see it: hidden fields count as empty. */
 	private static function seen( array $scope, array $root, array $hidden, string $key ) {
 		if ( isset( $hidden[ $key ] ) ) {
@@ -1084,7 +1112,7 @@ class Schema {
 					return self::seen( $scope, $root, $hidden, $name );
 				};
 
-				if ( Conditions::is_visible( $field['conditions'], $see ) ) {
+				if ( self::is_shown( $field, $see ) ) {
 					self::validate_scope( $field['children'], $scope, $root, $path, $only, $files, $values, $errors, $hidden );
 				} else {
 					foreach ( self::walk( $field['children'] ) as $inner ) {
@@ -1103,7 +1131,7 @@ class Schema {
 				return self::seen( $scope, $root, $hidden, $name );
 			};
 
-			if ( ! Conditions::is_visible( $field['conditions'], $lookup ) ) {
+			if ( ! self::is_shown( $field, $lookup ) ) {
 				$hidden[ $key ] = true;
 				continue;
 			}
@@ -1173,12 +1201,30 @@ class Schema {
 				$result['error'] = self::t( 'This field is required.' );
 			}
 
+			// A choice that is not available for these answers (Choice details > Not available when, 0.124.0).
+			if ( null === $result['error'] && ! $result['empty'] && self::picks_unavailable( $field, $result['value'], $lookup ) ) {
+				$result['error'] = self::t( 'This choice is not available for your answers.' );
+			}
+
 			if ( null !== $result['error'] ) {
 				$errors[ $here ] = $result['error'];
 			}
 
 			$values[ $key ] = $result['value'];
 		}
+	}
+
+	/** Whether a picked choice is switched off by its "Not available when" rule. */
+	private static function picks_unavailable( array $field, $value, callable $lookup ): bool {
+		foreach ( array_map( 'strval', (array) $value ) as $picked ) {
+			$off = $field['option_extras'][ $picked ]['off'] ?? null;
+
+			if ( $off && $off['enabled'] && ! Conditions::is_visible( $off, $lookup ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1640,9 +1686,7 @@ class Schema {
 	 * field with prices in Choice details. Null when no choice is picked yet (the text for no price shows).
 	 */
 	private static function sum_prices( array $total, array $by_key, array $values, array $hidden ): ?float {
-		$keys = $total['sum_keys'] ? $total['sum_keys'] : array_keys( array_filter( $by_key, static function ( $field ) {
-			return ! empty( $field['priced'] );
-		} ) );
+		$keys = $total['sum_keys'] ? $total['sum_keys'] : array_keys( array_filter( $by_key, [ self::class, 'counts_in_total' ] ) );
 		$sum = null;
 
 		foreach ( $keys as $key ) {
@@ -1656,6 +1700,11 @@ class Schema {
 		}
 
 		return $sum;
+	}
+
+	/** The answers a Total that adds up counts when it lists no fields: priced choices, choice cards, Amounts. */
+	public static function counts_in_total( array $field ): bool {
+		return ! empty( $field['priced'] ) || in_array( $field['type'], [ 'currency', 'choice_set' ], true );
 	}
 
 	/** Multi-line plain text (an email message), cleaned like a long answer. */

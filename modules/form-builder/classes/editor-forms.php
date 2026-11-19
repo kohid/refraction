@@ -174,9 +174,11 @@ class Editor_Forms {
 	 * Repeater widget holds the fields inside it, and a Steps widget becomes a step break before the fields of each step.
 	 * Any other element (containers, the editor's own widgets) only arranges, so its fields are read as if it was not there.
 	 *
-	 * @param callable $key ( element id, raw field ) => final key
+	 * @param callable $key    ( element id, raw field ) => final key
+	 * @param array[]  $guards The conditions of the elements around (0.124.0): a field inside a hidden element is
+	 *                         not asked for (Element_Conditions::guards_of).
 	 */
-	public static function collect( array $elements, callable $key ): array {
+	public static function collect( array $elements, callable $key, array $guards = [] ): array {
 		$fields = [];
 
 		foreach ( $elements as $element ) {
@@ -186,6 +188,7 @@ class Editor_Forms {
 
 			$type = (string) ( $element['widgetType'] ?? '' );
 			$children = (array) ( $element['elements'] ?? [] );
+			$inner = array_merge( $guards, Element_Conditions::guards_of( $element ) );
 
 			if ( 'widget' === ( $element['elType'] ?? '' ) && 0 === strpos( $type, Field_Widget::PREFIX ) ) {
 				$widget = Plugin::$instance->elements_manager->create_element_instance( $element );
@@ -197,9 +200,10 @@ class Editor_Forms {
 
 				$raw = $widget->raw_field();
 				$raw['key'] = $key( (string) $element['id'], $raw );
+				$raw['guards'] = $inner;
 
 				if ( Schema::is_container( $raw['type'] ) ) {
-					$raw['children'] = self::collect( $children, $key );
+					$raw['children'] = self::collect( $children, $key, $inner );
 				}
 
 				// Choice cards: each card (a repeater item and its container) is a free Group card of the set.
@@ -210,7 +214,7 @@ class Editor_Forms {
 					foreach ( $items as $i => $item ) {
 						$card = $widget->card_raw( $i );
 						$card['key'] = $key( $element['id'] . '-' . ( $item['_id'] ?? $i ), $card );
-						$card['children'] = self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key );
+						$card['children'] = self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key, $inner );
 						$raw['children'][] = $card;
 					}
 
@@ -227,13 +231,13 @@ class Editor_Forms {
 					$marker = [ 'type' => 'step', 'label' => (string) ( $step['step_title'] ?? '' ), 'description' => (string) ( $step['step_description'] ?? '' ), 'hide_label' => false, 'label_tag' => 'h3' ];
 					$marker['key'] = $key( $element['id'] . '-' . $i, $marker );
 					$fields[] = $marker;
-					$fields = array_merge( $fields, self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key ) );
+					$fields = array_merge( $fields, self::collect( (array) ( $children[ $i ]['elements'] ?? [] ), $key, $inner ) );
 				}
 
 				continue;
 			}
 
-			$fields = array_merge( $fields, self::collect( $children, $key ) );
+			$fields = array_merge( $fields, self::collect( $children, $key, $inner ) );
 		}
 
 		return $fields;
