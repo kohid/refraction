@@ -234,8 +234,8 @@ async function main() {
 		check( 'site', 'the total adds the picked car and the amount: £60 + £5', ( await total() ) === '£65.00', await total() );
 		for ( let i = 0; i < 4; i++ ) { await plus(); }
 		await v.waitForTimeout( 200 );
-		const saloon = await carCard( 0 ).evaluate( ( el ) => ( { off: el.classList.contains( 'is-off' ), disabled: el.querySelector( 'input' ).disabled, checked: el.querySelector( 'input' ).checked, note: el.querySelector( '.rfb-opt-off' ).hidden ? '' : el.querySelector( '.rfb-opt-off' ).textContent, price: getComputedStyle( el.querySelector( '.rfb-opt-price' ) ).display, opacity: getComputedStyle( el ).opacity } ) );
-		check( 'site', '5 passengers: the saloon is greyed, shows Too small in place of its price, and is let go', saloon.off && saloon.disabled && ! saloon.checked && saloon.note === 'Too small' && saloon.price === 'none' && Number( saloon.opacity ) < 0.7, JSON.stringify( saloon ) );
+		const saloon = await carCard( 0 ).evaluate( ( el ) => ( { off: el.classList.contains( 'is-off' ), disabled: el.querySelector( 'input' ).disabled, checked: el.querySelector( 'input' ).checked, note: el.querySelector( '.rfb-opt-off' ).hidden ? '' : el.querySelector( '.rfb-opt-off' ).textContent, border: getComputedStyle( el ).borderTopStyle + ' ' + getComputedStyle( el ).borderTopColor, price: getComputedStyle( el.querySelector( '.rfb-opt-price' ) ).display, opacity: getComputedStyle( el ).opacity } ) );
+		check( 'site', '5 passengers: the saloon is greyed with a dashed outline, shows Too small in place of its price, and is let go', saloon.off && saloon.disabled && ! saloon.checked && saloon.note === 'Too small' && saloon.price === 'none' && Number( saloon.opacity ) < 0.7 && saloon.border.startsWith( 'dashed' ) && ! saloon.border.endsWith( 'rgba(0, 0, 0, 0)' ), JSON.stringify( saloon ) );
 		check( 'site', 'the total drops the car: £5', ( await total() ) === '£5.00', await total() );
 		await carCard( 0 ).click( { force: true } );
 		check( 'site', 'an unavailable card can not be picked', ! ( await carCard( 0 ).locator( 'input' ).isChecked() ) );
