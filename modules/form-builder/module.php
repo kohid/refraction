@@ -83,6 +83,10 @@ class Module extends BaseModule {
 		Classes\Element_Conditions::boot();
 		// Text that changes with the answers on core widgets of a Form page (0.125.0).
 		Classes\Answer_Text::boot();
+		// The Items of an Icon List row (a list inside a repeater row, 0.127.0).
+		add_action( 'refraction/controls/register', static function ( $controls_manager ) {
+			$controls_manager->register( new Controls\Control_List_Items() );
+		} );
 		// Group, Repeater and Steps hold containers; the editor learns them as nested element types.
 		add_action( 'refraction/editor/before_enqueue_scripts', static function () {
 			$min = \Refraction\Utils::is_script_debug() ? '' : '.min';

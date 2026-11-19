@@ -431,7 +431,7 @@ class Schema {
 		$tag_default = 'step' === $type ? 'h3' : 'div';
 		$options = self::has_options( $type ) ? self::options( $raw['options'] ?? [] ) : [];
 		$extras = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::option_extras( $raw['option_extras'] ?? [], $options ) : [];
-		$swaps = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::choice_swaps( $raw['swaps'] ?? [], self::options( $raw['options'] ?? [] ) ) : [];
+		$swaps = in_array( $type, [ 'radio', 'checkbox' ], true ) ? self::choice_swaps( $raw['swaps'] ?? [], self::options( $raw['options'] ?? [] ), $key ) : [];
 
 		// A price in Choice details (0.122.0) is what a Total counts for that choice, unless value|Label|number gave one.
 		foreach ( $options as &$option ) {
@@ -1229,9 +1229,13 @@ class Schema {
 	 * conditions (one rule, or two with AND / OR), the choice it changes (its label, value or number in the list) and
 	 * what it shows instead.
 	 *
-	 * @param array $options The field's cleaned options.
+	 * Then change the choice left empty (0.127.0): the choice the row's own rule on this field names ("vehicle_option
+	 * is Car Tours" changes Car Tours), else every choice.
+	 *
+	 * @param array  $options The field's cleaned options.
+	 * @param string $key     The field's own key.
 	 */
-	public static function choice_swaps( $raw, array $options ): array {
+	public static function choice_swaps( $raw, array $options, string $key = '' ): array {
 		$by_name = [];
 
 		foreach ( $options as $i => $option ) {
@@ -1254,26 +1258,41 @@ class Schema {
 				$conditions = $condition ? Conditions::clean( [ 'enabled' => true, 'action' => 'show' ] + $condition ) : null;
 			}
 
-			$value = $by_name[ strtolower( self::text( (string) ( $row['value_of'] ?? ( $row['choice'] ?? '' ) ), 120 ) ) ] ?? null;
+			$named = strtolower( self::text( (string) ( $row['value_of'] ?? ( $row['choice'] ?? '' ) ), 120 ) );
+			$values = '' !== $named ? [ $by_name[ $named ] ?? null ] : [];
 
-			if ( ! $conditions || ! $conditions['enabled'] || null === $value ) {
+			if ( '' === $named && $conditions ) {
+				foreach ( $conditions['rules'] as $rule ) {
+					if ( $key === $rule['field'] && 'equals' === $rule['op'] && isset( $by_name[ strtolower( $rule['value'] ) ] ) ) {
+						$values[] = $by_name[ strtolower( $rule['value'] ) ];
+					}
+				}
+
+				$values = $values ? $values : array_column( $options, 'value' );
+			}
+
+			$values = array_values( array_unique( array_filter( $values, 'is_string' ) ) );
+
+			if ( ! $conditions || ! $conditions['enabled'] || ! $values ) {
 				continue;
 			}
 
-			$image = $row['image'] ?? 0;
-			$swap = [
-				'conditions' => $conditions,
-				'value_of' => $value,
-				'label' => self::text( $row['label'] ?? ( $row['name'] ?? '' ), 120 ),
-				'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
-				'icon' => self::option_icon( $row['icon'] ?? null ),
-				'text' => self::text( $row['text'] ?? '', 160 ),
-				'badge' => self::text( $row['badge'] ?? '', 30 ),
-				'price' => self::number_or_null( $row['price'] ?? null ),
-			];
+			foreach ( $values as $value ) {
+				$image = $row['image'] ?? 0;
+				$swap = [
+					'conditions' => $conditions,
+					'value_of' => $value,
+					'label' => self::text( $row['label'] ?? ( $row['name'] ?? '' ), 120 ),
+					'image' => max( 0, (int) ( is_array( $image ) ? ( $image['id'] ?? 0 ) : $image ) ),
+					'icon' => self::option_icon( $row['icon'] ?? null ),
+					'text' => self::text( $row['text'] ?? '', 160 ),
+					'badge' => self::text( $row['badge'] ?? '', 30 ),
+					'price' => self::number_or_null( $row['price'] ?? null ),
+				];
 
-			if ( '' !== $swap['label'] || $swap['image'] || $swap['icon'] || '' !== $swap['text'] || '' !== $swap['badge'] || null !== $swap['price'] ) {
-				$swaps[] = $swap;
+				if ( '' !== $swap['label'] || $swap['image'] || $swap['icon'] || '' !== $swap['text'] || '' !== $swap['badge'] || null !== $swap['price'] ) {
+					$swaps[] = $swap;
+				}
 			}
 		}
 

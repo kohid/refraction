@@ -128,19 +128,23 @@ async function main() {
 		const rows = {
 			// 0.126.0: AND (both answers) before the single rows; the first that matches wins.
 			heading: [ row( 'vehicle_option', 'minibus', { logic: 'and', field2: 'passengers', op2: 'greater', value2: '8', text: 'Two minibuses: up to 16 seats' } ), row( 'vehicle_option', 'Minibus Tours', { text: 'Max 8 Seats/£65 per hour' } ), row( 'vehicle_option', 'car', { text: 'Max 4 Seats/£55 per hour' } ) ],
-			editor: [ row( 'vehicle_option', 'minibus', { text: '<p>Room for <strong>8</strong> and their luggage.</p>' } ) ],
+			// 0.127.0: a Hidden field's value in a rule (AND the car)
+			editor: [ row( 'vehicle_option', 'minibus', { text: '<p>Room for <strong>8</strong> and their luggage.</p>' } ), row( 'tour', 'Loch Ness & Urquhart', { logic: 'and', field2: 'vehicle_option', op2: 'equals', value2: 'car', text: '<p>Loch Ness by car.</p>' } ) ],
 			button: [ row( 'vehicle_option', 'minibus', { logic: 'or', field2: 'passengers', op2: 'greater', value2: '8', text: 'Book the minibus' } ) ],
 			// a new list for the minibus (two items, each with its icon), and the car changes its second item
-			list: [ row( 'vehicle_option', 'minibus', { item: 0, text: 'Seats: 8', icon: { value: 'fas fa-user', library: 'fa-solid' } } ), row( 'vehicle_option', 'minibus', { item: 0, text: 'Wi-Fi on board', icon: { value: 'fas fa-wifi', library: 'fa-solid' } } ), row( 'vehicle_option', 'car', { item: 2, text: 'Seats: 4 plus luggage' } ) ],
+			// 0.127.0: one row, a whole list (Items with their own icons, **bold**); the car's row changes one item
+			list: [ row( 'vehicle_option', 'minibus', { items: [ { text: '**Seats:** 8', icon: { value: 'fas fa-user', library: 'fa-solid' } }, { text: 'Wi-Fi on board', icon: { value: 'fas fa-wifi', library: 'fa-solid' } } ] } ), row( 'vehicle_option', 'car', { mode: 'item', item: 2, text: 'Seats: 4 plus luggage' } ) ],
 			price: [ row( 'vehicle_option', 'minibus', { price: 65 } ) ],
 			amount: [ row( 'vehicle_option', 'minibus', { amount: 20 } ) ],
-			choice: [ row( 'passengers', '', { op: 'greater', value: '4', choice: 'car', name: 'Estate car', price: 75, badge: 'Bigger car' } ) ],
+			// the second row leaves "Then change the choice" empty: it changes the choice its own rule names (0.127.0)
+			choice: [ row( 'passengers', '', { op: 'greater', value: '4', choice: 'car', name: 'Estate car', price: 75, badge: 'Bigger car' } ), row( 'tour', 'Loch Ness & Urquhart', { logic: 'and', field2: 'vehicle_option', op2: 'equals', value2: 'Car Tours', price: 275 } ) ],
 			image: [ row( 'vehicle_option', 'minibus', { image: { id: pics.bus, url: busUrl } } ) ],
 		};
 		await page.evaluate( ( a ) => {
 			const add = ( container, model ) => $e.run( 'document/elements/create', { container, model, options: { edit: false } } );
 			const root = refraction.getPreviewContainer();
 			const box = add( root, { elType: 'container', settings: { flex_direction: 'column', flex_gap: { unit: 'px', size: 18, column: '18', row: '18' } } } );
+			add( box, { elType: 'widget', widgetType: 'rfb-field-hidden', settings: { field_label: 'Tour', field_key: 'tour', hidden_source: 'static', default_value: 'Loch Ness & Urquhart' } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-field-number', settings: { field_label: 'Passengers', field_key: 'passengers', default_value: '2' } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-field-radio', settings: { field_label: 'Vehicle Option', field_key: 'vehicle_option', field_options: 'car|Car Tours\nminibus|Minibus Tours', choice_look: 'cards', option_extras: [ { _id: 'p1', choice: 'car', price: 55 }, { _id: 'p2', choice: 'minibus', price: 65 } ], rfb_choice_swaps: a.rows.choice } } );
 			add( box, { elType: 'widget', widgetType: 'rfb-price', settings: { amount: 55, rfb_swap_rows: a.rows.price } } );
@@ -194,7 +198,25 @@ async function main() {
 		};
 		await setOn( widget( 'icon-list' ), { rfb_swap_preview: 1 } );
 		const editorList = await widget( 'icon-list' ).evaluate( ( el ) => [ ...el.querySelectorAll( '.refraction-icon-list-item' ) ].map( ( li ) => li.querySelector( '.refraction-icon-list-text' ).textContent.trim() + ':' + ( li.querySelector( '.refraction-icon-list-icon' ).innerHTML.includes( 'wifi' ) ? 'wifi' : ( li.querySelector( '.refraction-icon-list-icon' ).innerHTML.includes( 'user' ) ? 'user' : 'other' ) ) ) );
-		check( 'edit mode', 'Icon List, Show in the editor 1: the new list of two items, each with its own icon', editorList.join( '|' ) === 'Seats: 8:user|Wi-Fi on board:wifi', editorList.join( '|' ) );
+		check( 'edit mode', 'Icon List, Show in the editor 1: the row\'s list of two items, each with its own icon', editorList.join( '|' ) === 'Seats: 8:user|Wi-Fi on board:wifi', editorList.join( '|' ) );
+		check( 'edit mode', '**words** in an item are bold', ( await widget( 'icon-list' ).locator( '.refraction-icon-list-text strong' ).first().textContent() ) === 'Seats:' );
+		// the Items control in the row: two items, each with its icon; Add item adds one
+		if ( ! ( await page.locator( '.refraction-control-rfb_swap_rows' ).isVisible() ) ) {
+			await page.locator( '.refraction-control-section_rfb_swap' ).click();
+			await page.waitForTimeout( 500 );
+		}
+		await page.locator( '.refraction-control-rfb_swap_rows .refraction-repeater-row-item-title' ).first().click();
+		await page.waitForTimeout( 500 );
+		const items = await page.$$eval( '.refraction-control-rfb_swap_rows .rfb-list-items__item', ( els ) => els.filter( ( e ) => e.offsetParent ).map( ( e ) => e.querySelector( 'input' ).value + ':' + ( e.querySelector( '.rfb-list-items__icon' ).innerHTML.includes( 'fa-user' ) || e.querySelector( '.rfb-list-items__icon' ).innerHTML.includes( 'user' ) ? 'user' : ( e.querySelector( '.rfb-list-items__icon' ).innerHTML.includes( 'wifi' ) ? 'wifi' : 'other' ) ) ) );
+		check( 'panel', 'an Icon List row holds its own Items, each with text and its own icon', items.join( '|' ) === '**Seats:** 8:user|Wi-Fi on board:wifi', items.join( '|' ) );
+		await page.locator( '.refraction-control-rfb_swap_rows .rfb-list-items__add:visible' ).first().click();
+		await page.keyboard.type( 'Free water' );
+		await page.waitForTimeout( 1500 );
+		const stored = await page.evaluate( () => { const c = refraction.selection.getElements()[ 0 ]; return c.settings.get( 'rfb_swap_rows' ).at( 0 ).get( 'items' ).map( ( i ) => i.text ).join( '|' ); } );
+		check( 'panel', 'Add item adds a third item to the row, kept in its settings', stored === '**Seats:** 8|Wi-Fi on board|Free water', stored );
+		await page.screenshot( { path: join( SHOTS, 'panel-list-items.png' ) } );
+		await page.locator( '.refraction-control-rfb_swap_rows .rfb-list-items__item:visible button[title="Remove"]' ).last().click();
+		await page.waitForTimeout( 800 );
 		await preview.locator( '.refraction-widget-icon-list' ).first().screenshot( { path: join( SHOTS, 'editor-list.png' ) } );
 		await setOn( pf( 'vehicle_option' ), { rfb_choice_swap_preview: 1 } );
 		const editorChoice = await pf( 'vehicle_option' ).locator( '.rfb-check' ).first().evaluate( ( el ) => ( { name: el.querySelector( '.rfb-opt-label' ).firstChild.textContent.trim(), price: el.querySelector( '.rfb-opt-price' ).textContent, badge: el.querySelector( '.rfb-opt-badge' ) && el.querySelector( '.rfb-opt-badge' ).textContent } ) );
@@ -284,8 +306,8 @@ async function main() {
 		await f( 'passengers' ).locator( 'input' ).fill( '2' );
 		await v.waitForTimeout( 200 );
 		const car2 = await state();
-		check( 'site', 'Car Tours, 2 passengers: the heading takes its own row, the list its own items with the second changed, the others go back', car2.heading === 'Max 4 Seats/£55 per hour' && car2.editor === before.editor && car2.button === before.button && car2.list === 'Air conditioning|Seats: 4 plus luggage' && car2.image === before.image && car2.price === before.price && car2.deposit === before.deposit, JSON.stringify( car2 ) );
-		check( 'site', 'the car is Car Tours at £55.00 again, its badge gone; Total amount £55', ( await f( 'vehicle_option' ).locator( '.rfb-check' ).first().evaluate( ( el ) => [ el.querySelector( '.rfb-opt-label' ).firstChild.textContent.trim(), el.querySelector( '.rfb-opt-price' ).textContent, !! el.querySelector( '.rfb-opt-badge' ) ].join( '|' ) ) ) === 'Car Tours|$55.00|false' && car2.total === '$55.00', car2.total );
+		check( 'site', 'Car Tours, 2 passengers: the heading takes its own row, the text the Hidden field\'s row, the list its own items with the second changed, the others go back', car2.heading === 'Max 4 Seats/£55 per hour' && car2.editor === 'Loch Ness by car.' && car2.button === before.button && car2.list === 'Air conditioning|Seats: 4 plus luggage' && car2.image === before.image && car2.price === before.price && car2.deposit === before.deposit, JSON.stringify( car2 ) );
+		check( 'site', 'the Hidden field\'s row with no choice named changes the car it names: Car Tours at $275.00, badge gone; Total amount $275', ( await f( 'vehicle_option' ).locator( '.rfb-check' ).first().evaluate( ( el ) => [ el.querySelector( '.rfb-opt-label' ).firstChild.textContent.trim(), el.querySelector( '.rfb-opt-price' ).textContent, !! el.querySelector( '.rfb-opt-badge' ) ].join( '|' ) ) ) === 'Car Tours|$275.00|false' && car2.total === '$275.00', car2.total );
 
 		// real addresses, asked by the site
 		await f( 'pickup' ).locator( 'input' ).pressSequentially( 'Inver', { delay: 60 } );

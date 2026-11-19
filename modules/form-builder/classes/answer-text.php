@@ -3,6 +3,7 @@ namespace Refraction\Modules\FormBuilder\Classes;
 
 use Refraction\Controls_Manager;
 use Refraction\Icons_Manager;
+use Refraction\Modules\FormBuilder\Controls;
 use Refraction\Modules\FormBuilder\Documents\Form_Document;
 use Refraction\Plugin;
 use Refraction\Repeater;
@@ -42,7 +43,7 @@ class Answer_Text {
 			'alert' => [ 'section_alert', [ 'text' => [ $title, Controls_Manager::TEXT, '.refraction-alert-title' ], 'text2' => [ $description, Controls_Manager::TEXTAREA, '.refraction-alert-description' ] ] ],
 			'icon-box' => [ 'section_icon', [ 'text' => [ $title, Controls_Manager::TEXT, '.refraction-icon-box-title' ], 'text2' => [ $description, Controls_Manager::TEXTAREA, '.refraction-icon-box-description' ] ] ],
 			'image-box' => [ 'section_image', [ 'text' => [ $title, Controls_Manager::TEXT, '.refraction-image-box-title' ], 'text2' => [ $description, Controls_Manager::TEXTAREA, '.refraction-image-box-description' ] ] ],
-			'icon-list' => [ 'section_icon', [ 'item' => [ esc_html__( 'Item number', 'refraction' ), Controls_Manager::NUMBER, '' ], 'text' => [ $text, Controls_Manager::TEXT, '.refraction-icon-list-text' ], 'icon' => [ esc_html__( 'Icon', 'refraction' ), Controls_Manager::ICONS, '.refraction-icon-list-icon' ] ] ],
+			'icon-list' => [ 'section_icon', [ 'mode' => [ esc_html__( 'Then show', 'refraction' ), Controls_Manager::SELECT, '' ], 'items' => [ esc_html__( 'Items', 'refraction' ), Controls\Control_List_Items::TYPE, '' ], 'item' => [ esc_html__( 'Item number', 'refraction' ), Controls_Manager::NUMBER, '' ], 'text' => [ $text, Controls_Manager::TEXT, '.refraction-icon-list-text' ], 'icon' => [ esc_html__( 'Icon', 'refraction' ), Controls_Manager::ICONS, '.refraction-icon-list-icon' ] ] ],
 			'image' => [ 'section_image', [ 'image' => [ esc_html__( 'Picture', 'refraction' ), Controls_Manager::MEDIA, 'img' ] ] ],
 			'icon' => [ 'section_icon', [ 'icon' => [ esc_html__( 'Icon', 'refraction' ), Controls_Manager::ICONS, '.refraction-icon' ] ] ],
 			'rfb-price' => [ 'section_price', [ 'price' => [ esc_html__( 'Price', 'refraction' ), Controls_Manager::NUMBER, '.rfb-price-amount' ] ] ],
@@ -119,20 +120,43 @@ class Answer_Text {
 
 		foreach ( $spec[1] as $name => [ $label, $type ] ) {
 			$args = [ 'label' => esc_html__( 'Then show', 'refraction' ) . ': ' . $label, 'type' => $type, 'label_block' => ! in_array( $type, [ Controls_Manager::NUMBER, Controls_Manager::ICONS ], true ) ];
+			// An Icon List row is a whole new list (its Items), or a change to one item of the list (0.127.0).
+			$one = [ 'mode' => 'item' ];
 
-			if ( 'item' === $name ) {
+			if ( 'mode' === $name ) {
+				$args = [
+					'label' => $label,
+					'type' => $type,
+					'default' => '',
+					'separator' => 'before',
+					'options' => [ '' => esc_html__( 'A new list', 'refraction' ), 'item' => esc_html__( 'A change to one item', 'refraction' ) ],
+				];
+			} elseif ( 'items' === $name ) {
+				$args = [
+					'label' => $label,
+					'type' => $type,
+					'description' => esc_html__( 'The list for these answers, in order, each item with its icon (empty: the list\'s own). **Words** in stars are bold.', 'refraction' ),
+					'condition' => [ 'mode' => '' ],
+				];
+			} elseif ( 'item' === $name ) {
 				$args = [
 					'label' => esc_html__( 'Item to change', 'refraction' ),
 					'type' => $type,
-					'min' => 0,
-					'default' => 0,
-					'separator' => 'before',
-					'description' => esc_html__( '0: this row is an item of a new list (every row with 0 that matches, in order, each with its icon). 1, 2...: changes that item of the list.', 'refraction' ),
+					'min' => 1,
+					'default' => 1,
+					'description' => esc_html__( '1 is the first item of the list.', 'refraction' ),
+					'condition' => $one,
 				];
+			} elseif ( $list ) {
+				$args['condition'] = $one;
+
+				if ( Controls_Manager::ICONS === $type ) {
+					$args += [ 'skin' => 'inline', 'description' => esc_html__( 'Empty: the item\'s own icon.', 'refraction' ) ];
+				}
 			} elseif ( Controls_Manager::NUMBER === $type ) {
 				$args += [ 'step' => 0.01, 'separator' => 'before' ];
 			} elseif ( Controls_Manager::ICONS === $type ) {
-				$args += [ 'skin' => 'inline', 'description' => $list ? esc_html__( 'Empty: the list\'s own icon.', 'refraction' ) : '' ];
+				$args += [ 'skin' => 'inline' ];
 			} elseif ( Controls_Manager::TEXTAREA === $type ) {
 				$args += [ 'rows' => 3 ];
 			}
@@ -141,7 +165,7 @@ class Answer_Text {
 				$args['separator'] = 'before';
 			}
 
-			if ( in_array( $type, [ Controls_Manager::TEXT, Controls_Manager::TEXTAREA, Controls_Manager::WYSIWYG, Controls_Manager::MEDIA, Controls_Manager::NUMBER ], true ) && 'item' !== $name ) {
+			if ( in_array( $type, [ Controls_Manager::TEXT, Controls_Manager::TEXTAREA, Controls_Manager::WYSIWYG, Controls_Manager::MEDIA, Controls_Manager::NUMBER ], true ) && ! in_array( $name, [ 'item', 'mode', 'items' ], true ) ) {
 				$args['dynamic'] = [ 'active' => true ];
 			}
 
@@ -157,7 +181,7 @@ class Answer_Text {
 			'prevent_empty' => false,
 			'title_field' => self::title_field( __( 'Choose a field', 'refraction' ) ),
 			'description' => $list
-				? esc_html__( 'Form pages: the rows that match (Item to change 0) make the list instead of the items above, each with its text and icon; no match keeps the list as set.', 'refraction' )
+				? esc_html__( 'Form pages: each row is a list for its answers (one item, or two and more). The rows that match make the list instead of the items above, in order; no match keeps the list as set. A row can also change one item.', 'refraction' )
 				: esc_html__( 'Form pages: the first row whose answer matches replaces this widget\'s content; no match keeps it as set above.', 'refraction' ),
 		] );
 		$element->add_control( self::PREVIEW, [
@@ -196,8 +220,14 @@ class Answer_Text {
 			foreach ( $spec[1] as $name => [ , $type, $selector ] ) {
 				$value = $row[ $name ] ?? null;
 
-				if ( 'item' === $name ) {
-					$rule['item'] = max( 0, (int) $value );
+				if ( 'mode' === $name ) {
+					continue;
+				} elseif ( 'item' === $name ) {
+					$rule['item'] = 'item' === ( $row['mode'] ?? '' ) ? max( 1, (int) $value ) : 0;
+				} elseif ( 'items' === $name ) {
+					if ( 'item' !== ( $row['mode'] ?? '' ) ) {
+						$rule['items'] = self::list_items( (array) $value );
+					}
 				} elseif ( Controls_Manager::MEDIA === $type ) {
 					$id = is_array( $value ) ? (int) ( $value['id'] ?? 0 ) : 0;
 					$url = $id ? (string) wp_get_attachment_image_url( $id, 'full' ) : ( is_array( $value ) ? esc_url_raw( (string) ( $value['url'] ?? '' ) ) : '' );
@@ -219,16 +249,43 @@ class Answer_Text {
 							: [ 'sel' => $selector, 'html' => esc_html( Money::display( (float) $value, self::money() ) ) ];
 					}
 				} elseif ( '' !== trim( (string) $value ) ) {
-					$rule['set'][] = [ 'sel' => $selector, 'html' => wp_kses_post( Controls_Manager::WYSIWYG === $type ? wpautop( (string) $value ) : nl2br( (string) $value ) ), 'part' => $name ];
+					$rule['set'][] = [ 'sel' => $selector, 'html' => self::text_html( (string) $value, $type ), 'part' => $name ];
 				}
 			}
 
-			if ( $rule['set'] ) {
+			if ( $rule['set'] || ! empty( $rule['items'] ) ) {
 				$rows[] = $rule;
 			}
 		}
 
 		return $rows ? $rows : null;
+	}
+
+	/** A text as HTML: the editor's text kept (no scripts), line breaks kept, **words** in stars bold. */
+	private static function text_html( string $text, string $type = Controls_Manager::TEXT ): string {
+		if ( Controls_Manager::WYSIWYG === $type ) {
+			return wp_kses_post( wpautop( $text ) );
+		}
+
+		return wp_kses_post( nl2br( (string) preg_replace( '/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $text ) ) );
+	}
+
+	/** An Icon List row's Items for the script: each item's text as HTML and its icon (none: the list's own). */
+	private static function list_items( array $items ): array {
+		$out = [];
+
+		foreach ( array_slice( $items, 0, 50 ) as $item ) {
+			$text = trim( (string) ( is_array( $item ) ? ( $item['text'] ?? '' ) : '' ) );
+
+			if ( '' === $text ) {
+				continue;
+			}
+
+			$icon = is_array( $item['icon'] ?? null ) && ! empty( $item['icon']['value'] ) ? (string) Icons_Manager::try_get_icon_html( $item['icon'], [ 'aria-hidden' => 'true' ] ) : '';
+			$out[] = [ 'html' => self::text_html( $text ), 'icon' => $icon ];
+		}
+
+		return $out;
 	}
 
 	/** Puts the rows after the widget's content (the editor's preview gets the row it should show). */

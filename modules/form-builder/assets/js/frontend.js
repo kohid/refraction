@@ -26,7 +26,8 @@
 			return '';
 		}
 
-		const inputs = Array.from( wrapper.querySelectorAll( 'input, select, textarea' ) ).filter( ( el ) => 'file' !== el.type );
+		// A hidden field is its own input (no wrapper around it, 0.127.0).
+		const inputs = wrapper.matches( 'input' ) ? [ wrapper ] : Array.from( wrapper.querySelectorAll( 'input, select, textarea' ) ).filter( ( el ) => 'file' !== el.type );
 
 		if ( ! inputs.length ) {
 			return '';
@@ -213,6 +214,11 @@
 
 		const wrapper = ( scope || form ).querySelector( `[data-rfb-key="${ CSS.escape( rule.field ) }"]` );
 		const names = wrapper ? Array.from( wrapper.querySelectorAll( 'input:checked' ) ).map( ( input ) => {
+			// The choice's own name, not one a row has put there (Changes with the answers on the Choice itself).
+			if ( input.parentElement && input.parentElement.rfbOwn ) {
+				return input.parentElement.rfbOwn.name.trim();
+			}
+
 			const name = input.parentElement && input.parentElement.querySelector( '.rfb-opt-label' );
 
 			return name ? ( name.firstChild && 3 === name.firstChild.nodeType ? name.firstChild.textContent : name.textContent ).trim() : '';
@@ -310,18 +316,35 @@
 
 		const model = list.querySelector( '.refraction-icon-list-item' );
 
+		const ownIcon = model && model.querySelector( '.refraction-icon-list-icon' ) ? model.querySelector( '.refraction-icon-list-icon' ).innerHTML : '';
+		// Each row is a list of its own (Items, 0.127.0), or one item (a row made before, with its text and icon).
+		const entries = rows.flatMap( ( row ) => ( row.items && row.items.length ? row.items : [ {
+			html: ( row.set.find( ( part ) => 'icon' !== part.part ) || {} ).html || '',
+			icon: ( row.set.find( ( part ) => 'icon' === part.part ) || {} ).html || '',
+		} ] ) );
+
 		list.textContent = '';
-		rows.forEach( ( row ) => {
+		entries.forEach( ( entry ) => {
 			const item = model ? model.cloneNode( true ) : document.createElement( 'li' );
+			const text = item.querySelector( '.refraction-icon-list-text' );
+			const icon = item.querySelector( '.refraction-icon-list-icon' );
 
 			item.classList.add( 'refraction-icon-list-item' );
-			row.set.forEach( ( part ) => {
-				const target = item.querySelector( part.sel );
 
-				if ( target ) {
-					target.innerHTML = part.html;
-				}
-			} );
+			if ( text ) {
+				text.innerHTML = entry.html;
+			}
+
+			if ( icon ) {
+				icon.innerHTML = entry.icon || ownIcon;
+			}
+
+			// An item with a link in the list's own items keeps the item's look but not its link.
+			if ( item.querySelector( 'a' ) ) {
+				const link = item.querySelector( 'a' );
+
+				link.replaceWith( ...link.childNodes );
+			}
 
 			list.appendChild( item );
 		} );
@@ -3149,10 +3172,17 @@
 			const list = settings.get( 'rfb_swap_rows' );
 			const type = container.model.get( 'widgetType' );
 			const money = editorMoney();
+			const bold = ( text ) => String( text ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( /\*\*(.+?)\*\*/g, '<strong>$1</strong>' );
+			const iconHtml = ( icon ) => {
+				const html = icon && icon.value && editor.helpers && editor.helpers.renderIcon ? editor.helpers.renderIcon( container.view, icon, { 'aria-hidden': true }, 'i' ) : '';
+
+				return 'string' === typeof html ? html : '';
+			};
 			const rows = ( list.toJSON ? list.toJSON() : list ).map( ( raw ) => ( {
-				item: Number( raw.item ) || 0,
+				item: 'icon-list' === type && 'item' === raw.mode ? Math.max( 1, Number( raw.item ) || 1 ) : 0,
+				items: 'icon-list' === type && 'item' !== raw.mode && Array.isArray( raw.items ) ? raw.items.filter( ( i ) => i && String( i.text || '' ).trim() ).map( ( i ) => ( { html: bold( i.text ), icon: iconHtml( i.icon ) } ) ) : [],
 				cond: [ raw.field, raw.op, raw.value, raw.logic, raw.field2, raw.op2, raw.value2 ].join( '|' ),
-				set: Object.keys( parts ).map( ( name ) => {
+				set: Object.keys( parts ).filter( ( name ) => 'icon-list' !== type || 'item' === raw.mode ).map( ( name ) => {
 					const value = raw[ name ];
 
 					if ( 'price' === name || 'amount' === name ) {
@@ -3175,7 +3205,7 @@
 						return 'string' === typeof html && html ? { sel: parts[ name ], html } : null;
 					}
 
-					return value && String( value ).trim() ? { sel: parts[ name ], html: 'text-editor' === container.model.get( 'widgetType' ) ? String( value ) : String( value ).replace( /\n/g, '<br>' ) } : null;
+					return value && String( value ).trim() ? { sel: parts[ name ], html: 'text-editor' === type ? String( value ) : bold( value ).replace( /\n/g, '<br>' ) } : null;
 				} ).filter( Boolean ),
 			} ) );
 			const picked = rows[ ( Number( settings.get( 'rfb_swap_preview' ) ) || 0 ) - 1 ] || null;
