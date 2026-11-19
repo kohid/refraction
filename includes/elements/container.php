@@ -271,12 +271,8 @@ class Container extends Element_Base {
 	protected function print_html_tag() {
 		$html_tag = $this->get_settings( 'html_tag' );
 
-		// A Link set on a container with the default tag makes it a link (0.121.0): the Link setting shows without
-		// choosing the "a" tag first.
-		if ( empty( $html_tag ) && ! empty( $this->get_settings_for_display( 'link' )['url'] ) ) {
-			$html_tag = 'a';
-		}
-
+		// A Link with the Default tag no longer turns the box into an <a> (0.128.0): a link may not hold another link,
+		// so a card with its own buttons fell apart. The box keeps its tag and a link is laid over it (before_render).
 		if ( empty( $html_tag ) ) {
 			$html_tag = 'div';
 		}
@@ -292,13 +288,28 @@ class Container extends Element_Base {
 	public function before_render() {
 		$settings = $this->get_settings_for_display();
 		$link = $settings['link'];
+		$cover = ! empty( $link['url'] ) && 'a' !== ( $settings['html_tag'] ?? '' );
 
-		if ( ! empty( $link['url'] ) ) {
+		if ( ! empty( $link['url'] ) && ! $cover ) {
 			$this->add_link_attributes( '_wrapper', $link );
+		}
+
+		// The whole box opens the link, and the links and buttons inside it still open their own (0.128.0).
+		if ( $cover ) {
+			$this->add_render_attribute( '_wrapper', 'class', 'refraction-has-link' );
+			$this->add_link_attributes( 'container_link', $link );
+			$this->add_render_attribute( 'container_link', [
+				'class' => 'refraction-container-link',
+				'aria-label' => '' !== trim( (string) ( $settings['link_label'] ?? '' ) ) ? $settings['link_label'] : esc_html__( 'Open', 'refraction' ),
+			] );
 		}
 
 		?><<?php $this->print_html_tag(); ?> <?php $this->print_render_attribute_string( '_wrapper' ); ?>>
 		<?php
+		if ( $cover ) {
+			?><a <?php $this->print_render_attribute_string( 'container_link' ); ?>></a><?php
+		}
+
 		if ( $this->is_boxed_container( $settings ) ) { ?>
 			<div class="e-con-inner">
 		<?php }
@@ -607,12 +618,8 @@ class Container extends Element_Base {
 				'type' => Controls_Manager::ALERT,
 				'alert_type' => 'warning',
 				'content' => esc_html__( 'Don’t add links to elements nested in this container - it will break the layout.', 'refraction' ),
-				'conditions' => [
-					'relation' => 'or',
-					'terms' => [
-						[ 'name' => 'html_tag', 'operator' => '===', 'value' => 'a' ],
-						[ 'name' => 'link[url]', 'operator' => '!==', 'value' => '' ],
-					],
+				'condition' => [
+					'html_tag' => 'a',
 				],
 			]
 		);
@@ -625,11 +632,26 @@ class Container extends Element_Base {
 				'dynamic' => [
 					'active' => true,
 				],
-				'description' => esc_html__( 'The whole container becomes a link (with the Default tag, it is drawn as a link).', 'refraction' ),
+				'description' => esc_html__( 'Clicking anywhere on the container opens the link; links and buttons inside it still open their own.', 'refraction' ),
 				// With the Default tag too (0.121.0); another chosen tag (section, article...) keeps its tag and no link.
 				'condition' => [
 					'html_tag' => [ '', 'a' ],
 				],
+			]
+		);
+
+		$this->add_control(
+			'link_label',
+			[
+				'label' => esc_html__( 'Link text for screen readers', 'refraction' ),
+				'type' => Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Airport transfers', 'refraction' ),
+				'description' => esc_html__( 'What a screen reader says for the link. Empty: "Open".', 'refraction' ),
+				'condition' => [
+					'html_tag' => '',
+					'link[url]!' => '',
+				],
+				'dynamic' => [ 'active' => true ],
 			]
 		);
 

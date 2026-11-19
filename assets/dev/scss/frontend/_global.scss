@@ -358,3 +358,27 @@
 .rficon-animation-spin {
 	animation: rficon-spin 2s infinite linear;
 }
+
+// A container with a Link (0.128.0): the link lies over the whole box, and the links, buttons and fields inside it
+// sit above it so they still work.
+.refraction-has-link {
+	position: relative;
+
+	> .refraction-container-link {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		border-radius: inherit;
+	}
+
+	> .refraction-element,
+	> .e-con-inner {
+		pointer-events: none;
+	}
+
+	:where(a:not(.refraction-container-link), button, input, select, textarea, label, [role="button"], [tabindex]) {
+		position: relative;
+		z-index: 2;
+		pointer-events: auto;
+	}
+}

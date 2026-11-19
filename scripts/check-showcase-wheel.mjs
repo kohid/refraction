@@ -178,6 +178,8 @@ async function main() {
 		} );
 		const extrasPage = page( 'Showcase wheel floating images', extras );
 		const stillPage = page( 'Showcase wheel content still', wheel( pics, { content_motion: 'none' } ) );
+		// 0.128.0: on phones the parts one under another: thumbnails, text, picture; bigger screens as before.
+		const arranged = page( 'Showcase wheel arranged', wheel( pics, { arrange_mobile: 'thumbs-text', stack_gap_mobile: { unit: 'px', size: 16 }, stack_picture_width_mobile: { unit: '%', size: 60 } } ) );
 		const auto = page( 'Showcase wheel auto', wheel( pics, { autoplay: 'yes', interval: 1200, duration: 300, pause_on_hover: '' } ) );
 
 		const ctx = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
@@ -402,7 +404,27 @@ async function main() {
 		} );
 		check( 'phone', 'on a phone the picture sits above the content and the content above the thumbnails, nothing scrolls sideways', phone.above && phone.clearOfThumbs && phone.overflow <= 0, JSON.stringify( phone ) );
 		await m.screenshot( { path: join( SHOTS, 'phone.png' ) } );
+		const layout = () => m.evaluate( () => {
+			const slot = document.querySelector( '.rf-sw__slot.is-active' );
+			const r = ( el ) => el.getBoundingClientRect();
+			const nav = document.querySelector( '.rf-sw__nav' );
+			const vis = slot.querySelector( '.rf-sw__visual' );
+			const content = slot.querySelector( ':scope > .e-con' );
+			return { navTop: Math.round( r( nav ).top ), contentTop: Math.round( r( content ).top ), visTop: Math.round( r( vis ).top ), visPos: getComputedStyle( vis ).position, visW: Math.round( r( vis ).width ), slotW: Math.round( r( slot ).width ), bar: nav.offsetHeight - nav.clientHeight, overflow: document.documentElement.scrollWidth - innerWidth };
+		} );
+		check( 'phone', 'the thumbnails scroll sideways with no scroll bar', ( await layout() ).bar === 0 );
+		await m.goto( arranged.url, { waitUntil: 'load' } );
+		await m.waitForSelector( '.rf-sw.is-ready' );
+		const arr = await layout();
+		check( 'arrangement', 'on a phone, Parts "thumbnails, text, picture": the thumbnails first, then the text, then the picture (60% wide), in the flow', arr.navTop < arr.contentTop && arr.contentTop < arr.visTop && 'relative' === arr.visPos && Math.abs( arr.visW - arr.slotW * 0.6 ) < 3 && arr.overflow <= 0, JSON.stringify( arr ) );
+		await m.screenshot( { path: join( SHOTS, 'phone-arranged.png' ), fullPage: true } );
 		await mctx.close();
+		const dctx = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
+		const d = await dctx.newPage();
+		await d.goto( arranged.url, { waitUntil: 'load' } );
+		await d.waitForSelector( '.rf-sw.is-ready' );
+		check( 'arrangement', 'a bigger screen keeps the picture over the slide', 'absolute' === ( await d.evaluate( () => getComputedStyle( document.querySelector( '.rf-sw__slot.is-active .rf-sw__visual' ) ).position ) ) );
+		await dctx.close();
 
 		// ------------------------------------------------------------ Edit Mode
 		await p.goto( `${ BASE }/wp-login.php` );
@@ -474,6 +496,22 @@ async function main() {
 			};
 		} );
 		check( 'editor', 'in Edit Mode a slide\'s arc in a corner (bottom left), an uploaded shape, the label spacing and the shape width show at once', 'bottom-left' === edDeco.corner && 'M5 0L10 5L5 10L0 5Z' === edDeco.mine && '14px' === edDeco.gap && '100px' === edDeco.shapeW, JSON.stringify( edDeco ) );
+		// Arrangement on the phone screen size, in Edit Mode (0.128.0).
+		await p.evaluate( ( c ) => $e.run( 'document/elements/settings', { container: c, settings: { arrange_mobile: 'text' } } ), w );
+		await p.evaluate( () => $e.run( 'panel/change-device-mode', { device: 'mobile' } ) );
+		await p.waitForTimeout( 2500 );
+		const edArr = await frame.evaluate( () => {
+			const slot = document.querySelector( '.rf-sw__slot.is-active' ) || document.querySelector( '.rf-sw__slot' );
+			const r = ( el ) => el.getBoundingClientRect();
+			const vis = slot.querySelector( '.rf-sw__visual' );
+			const content = slot.querySelector( ':scope > .e-con' );
+			const nav = document.querySelector( '.rf-sw__nav' );
+			return { width: innerWidth, contentTop: Math.round( r( content ).top ), visTop: Math.round( r( vis ).top ), navTop: nav ? Math.round( r( nav ).top ) : -1, visPos: getComputedStyle( vis ).position };
+		} );
+		check( 'editor', 'on the phone screen size in Edit Mode, Parts "text, picture, thumbnails" shows at once', edArr.contentTop < edArr.visTop && edArr.visTop < edArr.navTop && 'relative' === edArr.visPos, JSON.stringify( edArr ) );
+		await p.screenshot( { path: join( SHOTS, 'editor-arranged.png' ) } );
+		await p.evaluate( () => $e.run( 'panel/change-device-mode', { device: 'desktop' } ) );
+		await p.waitForTimeout( 1500 );
 		const panel = await p.evaluate( ( c ) => {
 			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
 			return new Promise( ( done ) => setTimeout( () => {

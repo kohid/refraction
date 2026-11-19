@@ -747,6 +747,9 @@ class Showcase_Wheel extends Widget_Nested_Base {
 
 		$this->end_controls_section();
 
+		// ------------------------------------------------ Content: arrangement on each screen size (0.128.0)
+		$this->register_arrangement_controls();
+
 		// ------------------------------------------------ Content: motion
 		$this->start_controls_section( 'section_motion', [ 'label' => esc_html__( 'Motion', 'refraction' ) ] );
 
@@ -990,7 +993,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'size_units' => [ 'px' ],
 			'range' => [ 'px' => [ 'min' => 80, 'max' => 500 ] ],
 			'default' => [ 'unit' => 'px', 'size' => 230 ],
-			'description' => esc_html__( 'On phones the picture sits at the top of the slide and the slide\'s content starts under it.', 'refraction' ),
+			'description' => esc_html__( 'On phones the picture sits at the top of the slide and the slide\'s content starts under it; also its height when the parts are one under another (Content > Arrangement).', 'refraction' ),
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-phone-picture: {{SIZE}}{{UNIT}};' ],
 		] );
 
@@ -1329,6 +1332,72 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			<?php $this->render_nav( $settings, $slides, $total ); ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Arrangement (0.128.0): on any screen size (set it on 480px for phones), the picture can stay over the slide, or
+	 * the parts go one under another in a chosen order. Drawn by CSS custom properties (frontend.scss), so each screen
+	 * size keeps its own and the editor shows it at once.
+	 */
+	private function register_arrangement_controls(): void {
+		$this->start_controls_section( 'section_arrange', [ 'label' => esc_html__( 'Arrangement', 'refraction' ) ] );
+
+		$flow = '--rf-sw-display: flex; --rf-sw-slot-display: flex; --rf-sw-con-h: auto; --rf-sw-v-pos: relative; --rf-sw-v-top: auto; --rf-sw-v-bottom: auto; --rf-sw-v-right: auto; --rf-sw-v-left: auto; --rf-sw-v-transform: none; --rf-sw-v-width: var(--rf-sw-stack-pic-w, 80%); --rf-sw-v-height: var(--rf-sw-phone-picture); --rf-sw-v-margin: auto; --rf-sw-room-top: var(--rf-sw-stack-pad, 20px); --rf-sw-room-bottom: var(--rf-sw-stack-pad, 20px); --rf-sw-nav-pos: relative; --rf-sw-nav-side: auto; --rf-sw-nav-end: auto; ';
+		$order = static function ( int $picture, int $content, int $slides, int $nav ): string {
+			return sprintf( '--rf-sw-o-picture: %d; --rf-sw-o-content: %d; --rf-sw-o-slides: %d; --rf-sw-o-nav: %d; --rf-sw-nav-pad: %s;', $picture, $content, $slides, $nav, $nav < $slides ? 'var(--rf-sw-nav-inset) var(--rf-sw-nav-inset) 0' : '0 var(--rf-sw-nav-inset) var(--rf-sw-nav-inset)' );
+		};
+		$reset = implode( ' ', array_map( static fn( $name ) => '--rf-sw-' . $name . ': initial;', [ 'display', 'slot-display', 'con-h', 'v-pos', 'v-top', 'v-bottom', 'v-right', 'v-left', 'v-transform', 'v-width', 'v-height', 'v-margin', 'room-top', 'room-bottom', 'nav-pos', 'nav-side', 'nav-end', 'nav-pad', 'o-picture', 'o-content', 'o-slides', 'o-nav' ] ) );
+
+		$this->add_responsive_control( 'arrange', [
+			'label' => esc_html__( 'Parts', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'As on the bigger screen', 'refraction' ),
+				'over' => esc_html__( 'Picture over the slide', 'refraction' ),
+				'pic' => esc_html__( 'One under another: picture, text, thumbnails', 'refraction' ),
+				'text' => esc_html__( 'One under another: text, picture, thumbnails', 'refraction' ),
+				'thumbs-pic' => esc_html__( 'One under another: thumbnails, picture, text', 'refraction' ),
+				'thumbs-text' => esc_html__( 'One under another: thumbnails, text, picture', 'refraction' ),
+			],
+			'selectors_dictionary' => [
+				'over' => $reset,
+				'pic' => $flow . $order( 0, 1, 0, 1 ),
+				'text' => $flow . $order( 1, 0, 0, 1 ),
+				'thumbs-pic' => $flow . $order( 0, 1, 1, 0 ),
+				'thumbs-text' => $flow . $order( 1, 0, 1, 0 ),
+			],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '{{VALUE}}' ],
+			'description' => esc_html__( 'Pick a screen size at the top of the editor (for example 480px) and choose how its slides are laid out. One under another: the picture, the slide\'s text and the thumbnails follow each other in that order.', 'refraction' ),
+		] );
+
+		$this->add_responsive_control( 'stack_picture_width', [
+			'label' => esc_html__( 'Picture width (one under another)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ '%', 'px' ],
+			'range' => [ '%' => [ 'min' => 20, 'max' => 100 ], 'px' => [ 'min' => 80, 'max' => 900 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-stack-pic-w: {{SIZE}}{{UNIT}};' ],
+			'description' => esc_html__( 'Its height is Style > Picture > Height on phones.', 'refraction' ),
+		] );
+
+		$this->add_responsive_control( 'stack_gap', [
+			'label' => esc_html__( 'Space between the parts', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-stack-gap: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'stack_pad', [
+			'label' => esc_html__( 'Space above and below the text', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 120 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => '--rf-sw-stack-pad: {{SIZE}}{{UNIT}};' ],
+			'description' => esc_html__( 'On phones, when the parts are one under another.', 'refraction' ),
+		] );
+
+		$this->end_controls_section();
 	}
 
 	private function has_nav( array $settings, int $total ): bool {

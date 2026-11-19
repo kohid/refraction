@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.127.0
+Stable tag: 0.128.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.128.0 =
+* Container and Dynamic Container: a Link on a container that holds its own links or buttons (cards with Read more) no longer breaks the cards apart. The container keeps its box and a link lies over it: clicking anywhere opens the container's link, and the links and buttons inside open their own. A new Link text for screen readers names it.
+* Showcase Wheel: Content > Arrangement, per screen size (for example 480px): keep the picture over the slide, or put the parts one under another in the order you choose (picture, text and thumbnails), with the picture width, the space between the parts and the space around the text. On phones the thumbnails scroll sideways without a scroll bar.
+* Phone Showcase: Layout > Order Of The Parts and Steps (shown or hidden), per screen size: on phones the text above, the phone and the steps can come in any order, and the steps can be hidden while the phone still goes through every screen.
 
 = 0.127.0 =
 * Form Builder: a Hidden field's value can be used in conditions and in Changes with the answers (the page read it as empty).

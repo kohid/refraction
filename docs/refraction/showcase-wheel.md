@@ -88,3 +88,13 @@ Mode plays it when you pick a slide.
   settings. A panel rule (`:has()` on the checked tab, in the module's `editor_styles()`) hides the others by their
   `rf-fl-N` class: a condition would also leave their CSS out.
 
+
+## Arrangement per screen size (0.128.0)
+
+Content > Arrangement > Parts (responsive): As on the bigger screen, Picture over the slide, or one under another
+(picture, text, thumbnails; text, picture, thumbnails; thumbnails, picture, text; thumbnails, text, picture). Each
+choice sets CSS custom properties on `.rf-sw` (`--rf-sw-display`, `--rf-sw-v-*`, `--rf-sw-o-*`, `--rf-sw-nav-*`,
+`--rf-sw-room-*`), which `frontend.scss` reads with today's layout as the fallback; Picture over the slide sets them
+back to `initial`. So each screen size keeps its own and Edit Mode shows it at once. Picture width (one under
+another), Space between the parts and Space above and below the text go with it; the picture's height is Style >
+Picture > Height on phones. On phones the thumbnails scroll without a scroll bar. Check: `scripts/check-showcase-wheel.mjs`.

@@ -49,3 +49,12 @@ Default tag is drawn as `<a>` (`Container::print_html_tag()`).
   (`scrollbar-width: none`, `::-webkit-scrollbar`); the row still scrolls with a swipe, the trackpad or the keyboard.
 - Edit Mode: the containers are placed straight into `.rf-dc` (`get_default_children_placeholder_selector()`), so the
   preview is the same grid or row, and the device switcher shows each screen size's layout.
+
+## Linked containers (0.128.0)
+
+A Link with the Default tag no longer turns the container into an `<a>` (0.121.0 did): a link may not hold another
+link, so a card with its own Read more button was split by the browser into several boxes. The container keeps its
+tag, gets `refraction-has-link`, and prints `<a class="refraction-container-link">` laid over it (`_global.scss`); the
+links, buttons and fields inside sit above it and keep their own links. Link text for screen readers names the link
+(empty: "Open"). Choosing the "a" tag still makes the container itself the link. Check:
+`scripts/check-dynamic-container.mjs` (linked cards).

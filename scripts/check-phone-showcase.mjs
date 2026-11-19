@@ -149,6 +149,8 @@ async function main() {
 			],
 			phone_width: { unit: 'px', size: 320 },
 		} ) ] ), {} );
+		// 0.128.0: on phones, the phone first, then the text above, with the steps hidden.
+		const reordered = page( 'Phone layout reordered', box( [ w( 'ps12', { steps: [ step( 1 ), step( 2 ) ], cards: [], label: 'Taxi app', heading: 'Book in four taps', description: 'Day or night.', parts_order_mobile: 'phone-text-steps', steps_display_mobile: 'hide' } ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -345,6 +347,26 @@ async function main() {
 		} );
 		check( 'phone screen', 'on a phone: the phone first (as set), then the steps; no sideways scroll; cards hidden (as set)', small.stacked && ! small.sideways && 'none,none' === small.cards, JSON.stringify( small ) );
 		await p.screenshot( { path: join( SHOTS, 'small.png' ), fullPage: true } );
+		await p.goto( reordered.url );
+		await sleep( 800 );
+		const order = await p.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps12"]' );
+			const top = ( sel ) => Math.round( root.querySelector( sel ).getBoundingClientRect().top );
+			return { device: top( '.rf-showcase__device' ), intro: top( '.rf-showcase__intro' ), steps: getComputedStyle( root.querySelector( '.rf-showcase__steps' ) ).display, sideways: document.documentElement.scrollWidth > window.innerWidth };
+		} );
+		check( 'phone screen', 'Order Of The Parts on phones: the phone, then the text above; Steps hidden on phones', order.device < order.intro && 'none' === order.steps && ! order.sideways, JSON.stringify( order ) );
+		await p.screenshot( { path: join( SHOTS, 'small-reordered.png' ), fullPage: true } );
+		const wide = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
+		const wp2 = await wide.newPage();
+		await wp2.goto( reordered.url );
+		await sleep( 600 );
+		const big = await wp2.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps12"]' );
+			const r = ( sel ) => root.querySelector( sel ).getBoundingClientRect();
+			return { steps: getComputedStyle( root.querySelector( '.rf-showcase__steps' ) ).display, beside: r( '.rf-showcase__side' ).right <= r( '.rf-showcase__device' ).left + 1 };
+		} );
+		check( 'phone screen', 'a bigger screen keeps the steps, beside the phone', 'none' !== big.steps && big.beside, JSON.stringify( big ) );
+		await wide.close();
 
 		// Per screen size: the phone's scale, place and tilt, each card's place, size and showing, card padding/corners.
 		const perScreenLook = async ( pg ) => pg.evaluate( () => {
@@ -472,6 +494,22 @@ async function main() {
 		await sleep( 1500 );
 		const pickedGlobal = await iconBg( 2 );
 		check( 'globals', 'in the editor a card\'s Global Color shows too: the saved one (primary) and one picked now (secondary)', 'rgb(110, 193, 228)' === savedGlobal && 'ok' === picked && 'rgb(84, 89, 95)' === pickedGlobal, JSON.stringify( [ savedGlobal, picked, pickedGlobal ] ) );
+
+		// 0.128.0 in Edit Mode: on the phone screen size, the order of the parts and hidden steps show at once.
+		await e.goto( `${ BASE }/wp-admin/post.php?post=${ reordered.id }&action=refraction` );
+		await e.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
+		await sleep( 2500 );
+		await e.evaluate( () => window.$e.run( 'document/elements/settings', { container: window.refraction.getContainer( 'ps12' ), settings: { parts_order_mobile: 'text-steps-phone', steps_display_mobile: 'show' } } ) );
+		await e.evaluate( () => window.$e.run( 'panel/change-device-mode', { device: 'mobile' } ) );
+		await sleep( 2500 );
+		const eframe = e.frame( { name: 'refraction-preview-iframe' } );
+		const edOrder = await eframe.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps12"]' );
+			const top = ( sel ) => Math.round( root.querySelector( sel ).getBoundingClientRect().top );
+			return { width: innerWidth, intro: top( '.rf-showcase__intro' ), steps: top( '.rf-showcase__steps' ), device: top( '.rf-showcase__device' ), shown: getComputedStyle( root.querySelector( '.rf-showcase__steps' ) ).display };
+		} );
+		check( 'editor', 'on the phone screen size in Edit Mode: text above, steps, then the phone, steps shown again, at once', edOrder.intro < edOrder.steps && edOrder.steps < edOrder.device && 'none' !== edOrder.shown, JSON.stringify( edOrder ) );
+		await e.screenshot( { path: join( SHOTS, 'editor-phone-order.png' ) } );
 		await ectx.close();
 
 		check( 'console', 'no JavaScript errors', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );

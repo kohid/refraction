@@ -91,10 +91,20 @@ async function main() {
 	animated[ 0 ].elements[ 0 ].elements[ 0 ].elements.push( { id: id(), elType: 'widget', widgetType: 'text-editor', settings: { editor: '<p>Second widget</p>' }, elements: [] } );
 	Object.assign( animated[ 0 ].elements[ 0 ].elements[ 1 ].settings, { link: { url: 'https://example.com/fleet', is_external: '', nofollow: '' }, hover_animation: 'grow' } );
 	const anim = page( 'Dynamic container entrance', animated );
+	// 0.128.0: a linked card that holds its own link (a button) must stay whole: links can not sit inside links.
+	const cards = grid( {}, 3 );
+	cards[ 0 ].elements[ 0 ].elements.forEach( ( item, i ) => {
+		item.settings.link = { url: `https://example.com/card-${ i + 1 }`, is_external: '', nofollow: '' };
+		item.elements.push(
+			{ id: id(), elType: 'widget', widgetType: 'text-editor', settings: { editor: `<p>Card text ${ i + 1 }</p>` }, elements: [] },
+			{ id: id(), elType: 'widget', widgetType: 'button', settings: { text: 'Read more', link: { url: `https://example.com/more-${ i + 1 }` } }, elements: [] }
+		);
+	} );
+	const linkedCards = page( 'Linked cards', cards );
 	const plainLink = page( 'Container link', [ { id: id(), elType: 'container', settings: { link: { url: 'https://example.com/plain' } }, elements: [ { id: id(), elType: 'widget', widgetType: 'heading', settings: { title: 'Linked box' }, elements: [] } ] } ] );
 	const row = page( 'Dynamic container row', grid( { layout: 'scroll', show: 2.5, column_gap: { unit: 'px', size: 24 } }, 6 ) );
 
-	const browser = await chromium.launch();
+	const browser = await chromium.launch( existsSync( '/opt/pw-browsers/chromium' ) ? { executablePath: '/opt/pw-browsers/chromium', args: [ '--no-sandbox' ] } : {} );
 	const errors = [];
 
 	try {
@@ -167,21 +177,45 @@ async function main() {
 		check( 'entrance', 'then everything is in place and the entrance classes are gone (hover animations work as before)', 0 === after.left && ! after.armed && '1,1,1,1' === after.opacity && 'none' === after.transform, JSON.stringify( after ) );
 		const linked = await pg.evaluate( () => {
 			const el = document.querySelector( '.rf-dc' ).children[ 1 ];
-			return { tag: el.tagName, href: el.getAttribute( 'href' ), grow: el.classList.contains( 'refraction-animation-grow' ), css: !! document.querySelector( 'link[id^="e-animation-grow"]' ) };
+			const cover = el.querySelector( ':scope > .refraction-container-link' );
+			return { tag: el.tagName, href: cover && cover.getAttribute( 'href' ), grow: el.classList.contains( 'refraction-animation-grow' ), css: !! document.querySelector( 'link[id^="e-animation-grow"]' ) };
 		} );
-		check( 'container', 'an item with a Link (default tag) is a link, and its Hover Animation (grow) applies with its CSS', 'A' === linked.tag && 'https://example.com/fleet' === linked.href && linked.grow && linked.css, JSON.stringify( linked ) );
+		check( 'container', 'an item with a Link (default tag) keeps its box and carries the link over it; its Hover Animation (grow) applies with its CSS', 'DIV' === linked.tag && 'https://example.com/fleet' === linked.href && linked.grow && linked.css, JSON.stringify( linked ) );
 		await pg.hover( '.rf-dc > :nth-child(2)' );
 		await pg.waitForTimeout( 500 );
 		const grown = await pg.evaluate( () => getComputedStyle( document.querySelector( '.rf-dc' ).children[ 1 ] ).transform );
 		check( 'container', 'hovering it grows it', /^matrix\(1\.[01]/.test( grown ), grown );
 		await ctx.close();
 
+		( { pg, ctx } = await at( linkedCards.url, 1280 ) );
+		const whole = await pg.evaluate( () => {
+			const list = document.querySelector( '.rf-dc' );
+			return {
+				items: list.children.length,
+				inside: [ ...list.children ].map( ( item ) => !! item.querySelector( '.refraction-widget-button' ) && /Card text/.test( item.textContent ) ),
+				nested: document.querySelectorAll( 'a a' ).length,
+			};
+		} );
+		check( 'link', 'linked cards that hold a Read more button stay whole: 3 items, each with its text and button, no link inside a link', whole.items === 3 && whole.inside.every( Boolean ) && whole.nested === 0, JSON.stringify( whole ) );
+		const hit = await pg.evaluate( () => {
+			const item = document.querySelector( '.rf-dc' ).children[ 1 ];
+			const r = item.getBoundingClientRect();
+			const card = document.elementFromPoint( r.left + r.width / 2, r.top + 8 );
+			const button = item.querySelector( '.refraction-widget-button a' ).getBoundingClientRect();
+			const onButton = document.elementFromPoint( button.left + button.width / 2, button.top + button.height / 2 );
+			return { card: card && card.closest( 'a' ) && card.closest( 'a' ).getAttribute( 'href' ), button: onButton && onButton.closest( 'a' ) && onButton.closest( 'a' ).getAttribute( 'href' ) };
+		} );
+		check( 'link', 'clicking the card opens its link; its own button still opens the button\'s link', hit.card === 'https://example.com/card-2' && hit.button === 'https://example.com/more-2', JSON.stringify( hit ) );
+		await pg.screenshot( { path: join( SHOTS, 'linked-cards.png' ) } );
+		await ctx.close();
+
 		( { pg, ctx } = await at( plainLink.url, 1280 ) );
 		const plain = await pg.evaluate( () => {
 			const el = [ ...document.querySelectorAll( '.e-con' ) ].find( ( c ) => /Linked box/.test( c.textContent ) );
-			return el ? el.tagName + ' ' + el.getAttribute( 'href' ) : '';
+			const cover = el && el.querySelector( ':scope > .refraction-container-link' );
+			return el ? el.tagName + ' ' + ( cover && cover.getAttribute( 'href' ) ) + ' ' + ( cover && cover.getAttribute( 'aria-label' ) ) : '';
 		} );
-		check( 'container', 'any Container with a Link and the default tag is a link', 'A https://example.com/plain' === plain, plain );
+		check( 'container', 'any Container with a Link and the default tag opens the link from anywhere on it (a link over the box, named for screen readers)', 'DIV https://example.com/plain Open' === plain, plain );
 		await ctx.close();
 
 		( { pg, ctx } = await at( anim.url, 390 ) );

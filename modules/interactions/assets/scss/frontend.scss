@@ -710,21 +710,39 @@ html.rf-hp-on body {
 	--rf-showcase-on-accent: #fff;
 
 	display: grid;
-	grid-template-columns: minmax(0, var(--rf-steps-w, 1fr)) minmax(0, 1fr);
+	grid-template-columns: var(--rf-ps-cols, minmax(0, var(--rf-steps-w, 1fr)) minmax(0, 1fr));
 	align-items: center;
 	column-gap: clamp(24px, 5vw, 80px);
-	row-gap: 40px;
+	row-gap: var(--rf-ps-row-gap, 40px);
 }
 
 .rf-showcase-phone-left .rf-showcase__side {
 	order: 2;
 }
 
+// Layout > Order of the parts (0.128.0): the text above, the steps and the phone each take their own place, in the
+// order chosen for that screen size (the side's box steps aside: display: contents).
 .rf-showcase__side {
-	display: flex;
+	display: var(--rf-ps-side, flex);
 	flex-direction: column;
 	gap: 18px;
 	min-width: 0;
+}
+
+.rf-showcase__intro {
+	order: var(--rf-ps-o-intro, 0);
+}
+
+.rf-showcase__steps {
+	order: var(--rf-ps-o-steps, 0);
+}
+
+.rf-showcase__buttons {
+	order: var(--rf-ps-o-buttons, 0);
+}
+
+.rf-showcase__device {
+	order: var(--rf-ps-o-device, 0);
 }
 
 // Text above the steps, heading and description.
@@ -1632,7 +1650,7 @@ html.rf-hp-on body {
 @media (max-width: 767px) {
 
 	.rf-showcase {
-		grid-template-columns: minmax(0, 1fr);
+		grid-template-columns: var(--rf-ps-cols, minmax(0, 1fr));
 	}
 
 	.rf-showcase-phone-left .rf-showcase__side {
@@ -1640,7 +1658,7 @@ html.rf-hp-on body {
 	}
 
 	.rf-showcase-stack-phone .rf-showcase__device {
-		order: -1;
+		order: var(--rf-ps-o-device, -1);
 	}
 
 	.rf-showcase__device {
