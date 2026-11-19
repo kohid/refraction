@@ -343,3 +343,16 @@ Check: `scripts/check-answer-text.mjs`.
   list's own icon when empty; `swapList()`); 1, 2... change one item as before.
 
 Check: `scripts/check-answer-text.mjs` (extended).
+
+## Hidden fields in rules, empty choice target, Icon List items (0.127.0)
+
+- **Hidden fields**: printed as a bare `<input data-rfb-key>`, so `fieldValue()` read them as empty (it looked for
+  inputs inside the keyed element). It now reads the element itself when it is the input.
+- **Then change the choice left empty**: `Schema::choice_swaps()` used to skip the row (no choice found), so nothing,
+  price included, changed. Empty now means the choice named by the row's own "is" rule on this field, else every
+  choice.
+- **Icon List rows** have Then show: A new list (Items) or A change to one item (Item number, Text, Icon). Items is a
+  list control inside the row (`Controls\Control_List_Items`, `rfb_list_items`, `assets/js/editor/list-items.js`):
+  each item a text (**bold**) and its own icon from the editor's icon library (empty: the list's own icon), added,
+  removed and moved. The matching rows' items make the list, in row order (`swapList()`); rows made in 0.126.0 (one
+  item each) still work.

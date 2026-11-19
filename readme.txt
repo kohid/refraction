@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.126.0
+Stable tag: 0.127.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.127.0 =
+* Form Builder: a Hidden field's value can be used in conditions and in Changes with the answers (the page read it as empty).
+* Form Builder: Choice > Changes with the answers with "Then change the choice" left empty now changes the choice the row's own rule names ("vehicle_option is Car Tours" changes Car Tours), else every choice; before, the row did nothing, so its price did not change.
+* Form Builder: Icon List > Changes with the answers: each row is now a whole list for its answers, with its own Items (one, two or more, each with its text and its own icon, moved up and down, **words** in stars bold), or a change to one item.
 
 = 0.126.0 =
 * Form Builder: Changes with the answers rows can check two fields: And another field > AND (both must match) or OR (either one is enough).
