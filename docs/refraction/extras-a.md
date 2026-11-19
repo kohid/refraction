@@ -38,6 +38,9 @@ browser check: `node scripts/check-extras-a.mjs --site DIR --port N`.
   so a hidden element and its children are not in the HTML. Times use the site timezone (`wp_timezone()`); tests can replace the clock with
   the filter `refraction/display_conditions/now`; `refraction/display_conditions/device` overrides the device.
 * Device uses the `Sec-CH-UA-Mobile` hint and User-Agent patterns: approximate. Prefer the Responsive visibility switches for layout.
+* Form field's answer (0.123.0, Form pages): Field, Answer and Value, checked in the visitor's browser as they answer
+  (`Module::plan()` settles what the server can, the rest rides on the element as `data-rfb-cond` for the Form Builder's
+  script). See docs/refraction/form-builder.md, "Address field, form-field Display Conditions, Choice picture size".
 * Cache: an element with conditions counts as dynamic (`refraction/element/is_dynamic_content`), so with the element cache on it is a shortcode
   rendered per request. A full-page cache plugin in front of WordPress can still serve one visitor's HTML to another: exclude those pages
   or vary the cache by cookie.

@@ -145,6 +145,61 @@ $rfb-widths: (
 		content: '*';
 	}
 
+	// Address (0.123.0): the box and, under it, the addresses that match what is typed.
+	.rfb-address {
+		position: relative;
+	}
+
+	.rfb-address-list {
+		position: absolute;
+		z-index: 30;
+		top: calc(100% + var(--rfb-addr-offset, 4px));
+		right: 0;
+		left: 0;
+		box-sizing: border-box;
+		max-height: var(--rfb-addr-max-h, 280px);
+		margin: 0;
+		padding: 4px 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		border: 1px solid var(--rfb-addr-border, var(--rfb-input-border, #d9dce3));
+		border-radius: var(--rfb-addr-radius, 8px);
+		background: var(--rfb-addr-bg, #fff);
+		box-shadow: 0 10px 28px rgba(24, 28, 50, 0.14);
+		list-style: none;
+		text-align: start;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	.rfb-address-option {
+		margin: 0;
+		padding: var(--rfb-addr-pad-y, 10px) var(--rfb-addr-pad-x, 16px);
+		color: var(--rfb-addr-color, var(--rfb-ink, #181c32));
+		cursor: pointer;
+		font-size: inherit;
+		line-height: 1.35;
+
+		&:hover,
+		&.is-active {
+			background: var(--rfb-addr-hover-bg, color-mix(in srgb, var(--rfb-primary, #2271b1) 9%, transparent));
+			color: var(--rfb-addr-hover-color, var(--rfb-addr-color, var(--rfb-ink, #181c32)));
+		}
+	}
+
+	// The editor keeps the list open, in the flow so it does not cover the next fields (Style > Suggestions).
+	.rfb-address-preview .rfb-address-list {
+		position: static;
+		margin-top: var(--rfb-addr-offset, 4px);
+	}
+
+	.rfb-address-empty {
+		padding: 10px 16px;
+		color: var(--rfb-muted);
+	}
+
 	// A required mark written on the field (0.122.0), for example "(Required)".
 	.rfb-label.is-required[data-rfb-mark]::after {
 		content: attr(data-rfb-mark);
@@ -2187,14 +2242,15 @@ $rfb-widths: (
 	// Image cards: the choice's picture on top, its name below with a small radio; the picked card gets the accent
 	// border and a check badge on the picture (top right unless Style > Selection mark places it).
 	.rfb-look-images {
+		// Style > Choices > Card width (0.123.0) sets --rfb-ch-card-cols: cards of that width, as many as fit.
 		.rfb-choice-options {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+			grid-template-columns: var(--rfb-ch-card-cols, repeat(auto-fill, minmax(140px, 1fr)));
 			gap: var(--rfb-ch-gap, 14px);
 		}
 
 		.rfb-choice-options[style*="--rfb-ch-cols"] {
-			grid-template-columns: repeat(var(--rfb-ch-cols), minmax(0, 1fr));
+			grid-template-columns: var(--rfb-ch-card-cols, repeat(var(--rfb-ch-cols), minmax(0, 1fr)));
 		}
 
 		.rfb-check {
@@ -2240,18 +2296,26 @@ $rfb-widths: (
 			}
 		}
 
+		// The picture's size (0.123.0): Style > Choices > Picture width, height, fit, space around it and corners.
 		.rfb-opt-media {
 			order: -2;
+			box-sizing: border-box;
+			width: var(--rfb-pic-w, auto);
+			max-width: 100%;
+			margin-inline: auto;
+			padding: var(--rfb-pic-pad, 0);
 			overflow: hidden;
-			border-radius: calc(var(--rfb-ch-radius, 14px) - 6px);
+			border-radius: var(--rfb-pic-radius, calc(var(--rfb-ch-radius, 14px) - 6px));
 			background: color-mix(in srgb, var(--rfb-ink, #181c32) 6%, transparent);
+			align-self: stretch;
 
 			img {
 				display: block;
 				width: 100%;
-				height: auto;
-				aspect-ratio: var(--rfb-ch-ratio, 4 / 3);
-				object-fit: cover;
+				height: var(--rfb-pic-h, auto);
+				aspect-ratio: var(--rfb-pic-ratio, var(--rfb-ch-ratio, 4 / 3));
+				object-fit: var(--rfb-pic-fit, cover);
+				border-radius: var(--rfb-pic-img-radius, 0);
 			}
 		}
 
@@ -2303,7 +2367,7 @@ $rfb-widths: (
 		}
 
 		.rfb-look-images .rfb-choice-options[style*="--rfb-ch-cols"] {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-columns: var(--rfb-ch-card-cols, repeat(2, minmax(0, 1fr)));
 		}
 	}
 

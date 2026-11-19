@@ -30,7 +30,7 @@ class Schema {
 	const MARKER_POSITIONS = [ 'left', 'right', 'top-left', 'top-right', 'hidden' ];
 	const MARKER_LOOKS = [ 'radio', 'tick', 'none' ];
 	/** Fields that can show an icon at the left of their box (0.93.0). */
-	const ICON_TYPES = [ 'text', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select', 'country', 'currency', 'name' ];
+	const ICON_TYPES = [ 'text', 'address', 'textarea', 'email', 'phone', 'url', 'number', 'date', 'time', 'datetime', 'select', 'country', 'currency', 'name' ];
 	/** Phone formats (0.93.0): as typed, or a pattern applied while typing (# is a digit). */
 	const PHONE_FORMATS = [ '', 'national', 'international' ];
 	const PHONE_PATTERNS = [ 'national' => '(###) ###-####', 'international' => '+## ### ### ####' ];
@@ -92,6 +92,7 @@ class Schema {
 				'label' => self::t( 'Basic fields' ),
 				'types' => [
 					'text' => self::t( 'Text' ),
+					'address' => self::t( 'Address' ),
 					'textarea' => self::t( 'Long text' ),
 					'name' => self::t( 'Name' ),
 					'number' => self::t( 'Number' ),
@@ -157,7 +158,7 @@ class Schema {
 		return [
 			'step' => 'linear-scale', 'group' => 'dashboard', 'repeater' => 'repeat', 'accordion' => 'table-rows', 'tabs' => 'tablet', 'columns' => 'view-column', 'icon_list' => 'checklist', 'badge' => 'label', 'price' => 'sell', 'choice_set' => 'layers', 'panel' => 'table-rows', 'divider' => 'horizontal-rule',
 			'heading' => 'title', 'paragraph' => 'subject', 'image' => 'image', 'html' => 'code',
-			'text' => 'text-fields', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
+			'text' => 'text-fields', 'address' => 'location-on', 'textarea' => 'notes', 'name' => 'badge', 'number' => 'pin', 'currency' => 'payments', 'email' => 'mail',
 			'phone' => 'call', 'url' => 'link', 'country' => 'public', 'date' => 'calendar-month', 'time' => 'schedule', 'datetime' => 'event',
 			'select' => 'arrow-drop-down-circle', 'radio' => 'radio-button-checked', 'checkbox' => 'check-box', 'toggle' => 'toggle-on', 'rating' => 'star',
 			'file' => 'upload-file', 'signature' => 'draw', 'hidden' => 'visibility-off', 'summary' => 'checklist', 'total' => 'payments',
@@ -528,6 +529,12 @@ class Schema {
 			'time_step' => in_array( $type, [ 'time', 'datetime' ], true ) ? max( 0, min( 240, (int) ( $raw['time_step'] ?? 0 ) ) ) : 0,
 			'stepper' => 'number' === $type && ! empty( $raw['stepper'] ),
 			'suggestions' => 'text' === $type ? self::suggestions( $raw['suggestions'] ?? [] ) : [],
+			// Address (0.123.0): the owner's own addresses, typed in or in a .txt / .csv file, suggested while typing.
+			'address_list' => 'address' === $type ? Address::clean_list( $raw['address_list'] ?? [] ) : [],
+			'address_file' => 'address' === $type ? max( 0, (int) ( is_array( $raw['address_file'] ?? null ) ? ( $raw['address_file']['id'] ?? 0 ) : ( $raw['address_file'] ?? 0 ) ) ) : 0,
+			'address_strict' => 'address' === $type && ! empty( $raw['address_strict'] ),
+			'address_min' => 'address' === $type ? max( 1, min( 5, (int) ( $raw['address_min'] ?? 2 ) ) ) : 2,
+			'address_max' => 'address' === $type ? max( 3, min( 20, (int) ( $raw['address_max'] ?? 8 ) ) ) : 8,
 			// Field extras (0.93.0): an icon in the box, a growing long text, a phone pattern, the country's flag.
 			'icon' => in_array( $type, self::ICON_TYPES, true ) ? self::option_icon( $raw['icon'] ?? null ) : null,
 			'icon_last' => 'name' === $type ? self::option_icon( $raw['icon_last'] ?? null ) : null,
@@ -1321,6 +1328,11 @@ class Schema {
 				}
 
 				return $out( 'currency' === $type ? number_format( $number, 2, '.', '' ) : self::number_text( $number ), false );
+
+			case 'address':
+				return ! empty( $field['address_strict'] ) && ! Address::allows( $field, $value )
+					? $out( $value, false, self::t( 'Choose an address from the list.' ) )
+					: $out( $value, false );
 
 			case 'email':
 				return false === filter_var( $value, FILTER_VALIDATE_EMAIL )

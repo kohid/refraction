@@ -250,3 +250,30 @@ Check: `node scripts/check-new-wizard.mjs --site DIR --port N`.
   mark has its color, typography and space before.
 
 Check: `scripts/check-form-prices.mjs`.
+
+## Address field, form-field Display Conditions, Choice picture size (0.123.0)
+
+- **Address field** (`rfb-field-address`, type `address`). A text box with a combobox list under it: the addresses
+  that match what is typed. The plugin stays offline, so the addresses are the site owner's own: Addresses (one per
+  line) and/or a .txt / .csv file from the Media Library (up to 50,000 lines; CSV cells joined with ", "). Classes\Address
+  holds the matching (every word typed starts a word of the address; those starting with what was typed first, then
+  shorter), shared with `searchAddresses()` in `frontend.js`. A list of 300 or fewer goes with the page and is
+  searched in the browser; a longer one (or a file) is searched by the site: `admin-ajax.php?action=refraction_fb_address&collection=&field=&q=`
+  (`Shortcodes::address_search`, only for an Address field of a form that takes submissions, at most the field's
+  "Suggestions shown"). Keys: arrows move (`aria-activedescendant`), Enter or a click picks, Escape closes. Only
+  addresses from the list: the browser refuses another address before sending, the server checks again
+  (`Address::allows`). Style > Suggestions styles the list; in the editor the list stays open under the box, in the
+  flow, while it is styled (Show the list in the editor).
+- **Display Conditions > Form field's answer** (`form_field`). Field (the Form page's fields, filled by
+  `assets/js/editor/display-fields.js` from the page as it is now: a field's own key, else the key the page already
+  gave it (`rfbFieldKeys` in the document config), else one made from its label), Answer (the Form Builder's
+  comparisons) and Value. The server cannot know an answer, so `Module::plan()` works out the other conditions first
+  ("all" with one false, or "any" with one true, settles it) and otherwise prints the element with `data-rfb-cond`
+  (the Form Builder's own rule format); the form's script shows or hides it as the visitor answers, and a container
+  whose elements are all hidden closes up. In the editor every element stays visible with its badge (Form pages have
+  no "Show elements with conditions" setting: they used to hide such elements in the editor; fixed).
+- **Choice > Image cards**, Style > Choices: Card width (cards of that width, as many as fit), Picture width, Picture
+  height (instead of Picture shape), Picture fit (crop, whole picture, stretch), Space around the picture, Picture
+  corners (CSS variables `--rfb-ch-card-cols`, `--rfb-pic-*`).
+
+Check: `scripts/check-address-conditions.mjs`.

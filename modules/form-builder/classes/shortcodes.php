@@ -21,6 +21,7 @@ class Shortcodes {
 
 	const ACTION_SUBMIT = 'refraction_fb_submit';
 	const ACTION_TOKEN = 'refraction_fb_token';
+	const ACTION_ADDRESS = 'refraction_fb_address';
 
 	private Collections $collections;
 	private Records $records;
@@ -38,6 +39,33 @@ class Shortcodes {
 		add_action( 'admin_post_' . self::ACTION_SUBMIT, [ $this, 'handle_submit' ] );
 		add_action( 'wp_ajax_nopriv_' . self::ACTION_TOKEN, [ $this, 'fresh_token' ] );
 		add_action( 'wp_ajax_' . self::ACTION_TOKEN, [ $this, 'fresh_token' ] );
+		add_action( 'wp_ajax_nopriv_' . self::ACTION_ADDRESS, [ $this, 'address_search' ] );
+		add_action( 'wp_ajax_' . self::ACTION_ADDRESS, [ $this, 'address_search' ] );
+	}
+
+	/**
+	 * The addresses of an Address field that match what the visitor typed (0.123.0), for a list too long to send with
+	 * the page. This site searches its own list: no outside service. Only for a form that takes submissions, and only the
+	 * best few matches of at least two letters.
+	 */
+	public function address_search(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read only, like the form itself.
+		$slug = isset( $_GET['collection'] ) ? Schema::slug( wp_unslash( $_GET['collection'] ) ) : '';
+		$key = isset( $_GET['field'] ) ? Schema::key( wp_unslash( $_GET['field'] ) ) : '';
+		$typed = isset( $_GET['q'] ) ? substr( sanitize_text_field( wp_unslash( $_GET['q'] ) ), 0, 80 ) : '';
+		// phpcs:enable
+		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
+		$field = $definition && $definition['public_form'] && '' !== $key ? Schema::field( $definition, $key ) : null;
+
+		if ( ! $field || 'address' !== $field['type'] ) {
+			wp_send_json_error( null, 404 );
+		}
+
+		if ( strlen( trim( $typed ) ) < max( 2, (int) $field['address_min'] ) ) {
+			wp_send_json_success( [ 'items' => [] ] );
+		}
+
+		wp_send_json_success( [ 'items' => Address::search( Address::lines( $field ), $typed, (int) $field['address_max'] ) ] );
 	}
 
 	/**
@@ -174,7 +202,7 @@ class Shortcodes {
 		}
 
 		$steps = Schema::steps( $definition );
-		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings ];
+		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings, 'collection' => $slug ];
 		$i18n = self::step_i18n() + [
 			'required' => __( 'This field is required.', 'refraction' ),
 			'countrySearch' => __( 'Search countries', 'refraction' ),

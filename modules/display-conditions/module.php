@@ -25,6 +25,9 @@ class Module extends BaseModule {
 	const ITEMS = 'refraction_dc_items';
 	const LOGIC = 'refraction_dc_logic';
 	const MODE = 'refraction_dc_mode';
+
+	/** The condition on a form field's answer (0.123.0), checked in the browser. */
+	const FORM_FIELD = 'form_field';
 	const EDITOR_SHOW = 'refraction_dc_editor_show';
 
 	public function get_name() {
@@ -37,6 +40,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/element/after_section_end', [ $this, 'register_element_section' ], 10, 2 );
 		add_action( 'refraction/documents/register_controls', [ $this, 'register_document_control' ] );
 		add_filter( 'refraction/frontend/should_print_element', [ $this, 'should_print' ], 10, 2 );
+		add_action( 'refraction/frontend/before_render', [ $this, 'add_browser_rules' ] );
 		add_filter( 'refraction/element/is_dynamic_content', [ $this, 'is_dynamic' ], 10, 2 );
 		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue_editor_assets' ] );
 		add_action( 'refraction/preview/enqueue_styles', [ $this, 'enqueue_preview_styles' ] );
@@ -100,6 +104,25 @@ class Module extends BaseModule {
 				'is' => esc_html__( 'True', 'refraction' ),
 				'is_not' => esc_html__( 'Not true', 'refraction' ),
 			],
+			'condition' => [ 'dc_type!' => self::FORM_FIELD ],
+		] );
+
+		// A form field's answer (0.123.0): the fields of the Form page being edited (the editor fills the list as you
+		// add fields), checked in the visitor's browser as they answer.
+		$repeater->add_control( 'dc_field', [
+			'label' => esc_html__( 'Field', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'Choose a field', 'refraction' ) ],
+			'label_block' => true,
+			'condition' => [ 'dc_type' => self::FORM_FIELD ],
+		] );
+		$repeater->add_control( 'dc_field_op', [
+			'label' => esc_html__( 'Answer', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'equals',
+			'options' => self::field_operators(),
+			'condition' => [ 'dc_type' => self::FORM_FIELD ],
 		] );
 
 		$select2 = static function ( string $name, string $label, array $options, array $types ) use ( $repeater ) {
@@ -144,8 +167,8 @@ class Module extends BaseModule {
 			'label' => esc_html__( 'Value', 'refraction' ),
 			'type' => Controls_Manager::TEXT,
 			'label_block' => true,
-			'condition' => [ 'dc_type' => [ 'user', 'post', 'term', 'author', 'url_param', 'cookie', 'referrer', 'language' ] ],
-			'description' => esc_html__( 'Separate several values with commas. Terms: taxonomy:slug. URL parameter and cookie: name or name=value. Language: en or en-US.', 'refraction' ),
+			'condition' => [ 'dc_type' => [ 'user', 'post', 'term', 'author', 'url_param', 'cookie', 'referrer', 'language', self::FORM_FIELD ], 'dc_field_op!' => [ 'empty', 'not_empty' ] ],
+			'description' => esc_html__( 'Separate several values with commas. Terms: taxonomy:slug. URL parameter and cookie: name or name=value. Language: en or en-US. A form field: the answer, or a choice\'s value.', 'refraction' ),
 		] );
 
 		$repeater->add_control( 'dc_from', [
@@ -179,7 +202,7 @@ class Module extends BaseModule {
 			[
 				'type' => Controls_Manager::REPEATER,
 				'fields' => $repeater->get_controls(),
-				'title_field' => '{{{ dc_type.replace( /_/g, " " ) }}}',
+				'title_field' => '{{{ "' . self::FORM_FIELD . '" === dc_type && dc_field ? dc_field + " " + dc_field_op.replace( /_/g, " " ) + ( dc_value ? " " + dc_value : "" ) : dc_type.replace( /_/g, " " ) }}}',
 				'prevent_empty' => false,
 				'render_type' => 'ui',
 				'button_text' => esc_html__( 'Add condition', 'refraction' ),
@@ -190,7 +213,7 @@ class Module extends BaseModule {
 			'refraction_dc_note',
 			[
 				'type' => Controls_Manager::RAW_HTML,
-				'raw' => esc_html__( 'Checked on the server for every visitor: an element that does not match is not in the page HTML. Device and language are approximate. In the editor every element stays visible and shows a badge.', 'refraction' ),
+				'raw' => esc_html__( 'Checked on the server for every visitor: an element that does not match is not in the page HTML. Device and language are approximate. A form field\'s answer is checked in the browser as the visitor answers (on Form pages). In the editor every element stays visible and shows a badge.', 'refraction' ),
 				'content_classes' => 'refraction-descriptor',
 			]
 		);
@@ -215,7 +238,15 @@ class Module extends BaseModule {
 			'referrer' => esc_html__( 'Referrer contains', 'refraction' ),
 			'device' => esc_html__( 'Device (approximate)', 'refraction' ),
 			'language' => esc_html__( 'Browser language', 'refraction' ),
+			self::FORM_FIELD => esc_html__( 'Form field\'s answer', 'refraction' ),
 		];
+	}
+
+	/** How a form field's answer is compared (the Form Builder's own rules). */
+	private static function field_operators(): array {
+		$conditions = '\\Refraction\\Modules\\FormBuilder\\Classes\\Conditions';
+
+		return class_exists( $conditions ) ? $conditions::operators() : [ 'equals' => esc_html__( 'is', 'refraction' ), 'not_equals' => esc_html__( 'is not', 'refraction' ) ];
 	}
 
 	public function register_document_control( $document ) {
@@ -275,6 +306,10 @@ class Module extends BaseModule {
 
 			$item = [ 'type' => $type, 'op' => 'is_not' === ( $row['dc_op'] ?? '' ) ? 'is_not' : 'is', 'value' => $value ];
 
+			if ( self::FORM_FIELD === $type ) {
+				$item = [ 'type' => $type, 'field' => (string) ( $row['dc_field'] ?? '' ), 'compare' => (string) ( $row['dc_field_op'] ?? 'equals' ), 'value' => $value ];
+			}
+
 			if ( 'date_range' === $type ) {
 				$item['from'] = (string) ( $row['dc_from'] ?? '' );
 				$item['to'] = (string) ( $row['dc_to'] ?? '' );
@@ -306,10 +341,66 @@ class Module extends BaseModule {
 			return $should;
 		}
 
+		$plan = self::plan( $settings );
+
+		return null === $plan['visible'] ? true : $plan['visible'];
+	}
+
+	/**
+	 * What the server decides for an element (0.123.0): `visible` true / false, or null when the answer depends on form
+	 * fields, which the browser checks as the visitor answers (`browser` holds those rules, Form Builder style).
+	 * The server's own conditions are worked out first: with "all of them" one false is enough to hide, with "any of
+	 * them" one true is enough to show, whatever the form fields say.
+	 */
+	public static function plan( array $settings ): array {
 		$logic = 'or' === ( $settings[ self::LOGIC ] ?? '' ) ? 'or' : 'and';
 		$mode = 'hide' === ( $settings[ self::MODE ] ?? '' ) ? 'hide' : 'show';
+		$items = self::normalize_items( $settings[ self::ITEMS ] ?? [] );
+		$fields = array_values( array_filter( $items, static fn( $item ) => self::FORM_FIELD === $item['type'] && '' !== $item['field'] ) );
+		$others = array_values( array_filter( $items, static fn( $item ) => self::FORM_FIELD !== $item['type'] ) );
 
-		return Condition_Evaluator::is_visible( self::normalize_items( $settings[ self::ITEMS ] ), $logic, $mode, new Wp_Context() );
+		if ( ! $fields ) {
+			return [ 'visible' => Condition_Evaluator::is_visible( $others, $logic, $mode, new Wp_Context() ), 'browser' => null ];
+		}
+
+		$complete = array_filter( $others, [ Condition_Evaluator::class, 'is_complete' ] );
+
+		if ( $complete ) {
+			$matched = Condition_Evaluator::is_visible( $complete, $logic, 'show', new Wp_Context() );
+
+			if ( ( 'and' === $logic && ! $matched ) || ( 'or' === $logic && $matched ) ) {
+				return [ 'visible' => 'and' === $logic ? 'hide' === $mode : 'show' === $mode, 'browser' => null ];
+			}
+		}
+
+		return [
+			'visible' => null,
+			'browser' => [
+				'enabled' => true,
+				'action' => $mode,
+				'match' => 'or' === $logic ? 'any' : 'all',
+				'rules' => array_map( static fn( $item ) => [ 'field' => $item['field'], 'op' => $item['compare'], 'value' => $item['value'] ], $fields ),
+			],
+		];
+	}
+
+	/** An element whose display depends on form fields carries its rules for the form's script (data-rfb-cond). */
+	public function add_browser_rules( $element ) {
+		if ( ! $element instanceof Element_Base || $this->in_editor() ) {
+			return;
+		}
+
+		$settings = $element->get_settings();
+
+		if ( empty( $settings[ self::ITEMS ] ) ) {
+			return;
+		}
+
+		$plan = self::plan( $settings );
+
+		if ( $plan['browser'] ) {
+			$element->add_render_attribute( '_wrapper', 'data-rfb-cond', (string) wp_json_encode( $plan['browser'] ) );
+		}
 	}
 
 	/** A conditioned element depends on the visitor, so the element cache must render it per request. */

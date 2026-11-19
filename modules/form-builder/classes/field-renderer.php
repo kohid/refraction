@@ -207,7 +207,7 @@ class Field_Renderer {
 		} else {
 			$value = null === $value ? $field['default'] : $value;
 			echo '<label class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . ' for="' . esc_attr( $id ) . '">' . esc_html( $field['label'] ) . '</label>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			$icon = in_array( $field['type'], [ 'country', 'currency' ], true ) ? '' : self::field_icon( $field );
+			$icon = in_array( $field['type'], [ 'country', 'currency', 'address' ], true ) ? '' : self::field_icon( $field );
 
 			// An icon at the left of the box (0.93.0): the box keeps its own markup, the icon sits over its padding.
 			if ( '' !== $icon ) {
@@ -238,6 +238,11 @@ class Field_Renderer {
 
 		if ( 'currency' === $type ) {
 			self::amount( $field, $value, $name, $id, $required, $described_attr, $ctx );
+			return;
+		}
+
+		if ( 'address' === $type ) {
+			self::address( $field, $value, $name, $id, $required, $described_attr, $ctx );
 			return;
 		}
 
@@ -521,6 +526,37 @@ class Field_Renderer {
 		echo 'after' === $cfg['currency_position'] ? $symbol : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 		echo '' !== $per ? '<span class="rfb-amount-affix rfb-amount-per">' . esc_html( $per ) . '</span>' : '';
 		echo '</div>';
+	}
+
+	/**
+	 * The Address box (0.123.0): a combobox whose list shows the addresses that match what is typed. A short list rides
+	 * with the page; a long one (or a file) is searched by the site (Shortcodes::address_search) as the visitor types.
+	 */
+	private static function address( array $field, $value, string $name, string $id, string $required, string $described_attr, array $ctx ): void {
+		$lines = Address::lines( $field );
+		$slug = (string) ( $ctx['collection'] ?? '' );
+		$config = [ 'min' => $field['address_min'], 'max' => $field['address_max'], 'none' => __( 'No address matches. Keep typing, or check the spelling.', 'refraction' ) ];
+
+		if ( count( $lines ) > Address::INLINE && '' !== $slug && function_exists( 'admin_url' ) ) {
+			$config['url'] = add_query_arg( [ 'action' => Shortcodes::ACTION_ADDRESS, 'collection' => $slug, 'field' => $field['key'] ], admin_url( 'admin-ajax.php' ) );
+		} else {
+			// The editor's preview has no saved form to ask: it searches the first addresses of the list.
+			$config['list'] = array_slice( $lines, 0, Address::INLINE );
+		}
+
+		if ( ! empty( $field['address_strict'] ) ) {
+			$config['strict'] = __( 'Choose an address from the list.', 'refraction' );
+		}
+
+		$value = null === $value ? $field['default'] : $value;
+		$list = $id . '-addresses';
+		$icon = self::field_icon( $field );
+
+		echo '<div class="rfb-address" data-rfb-address="' . esc_attr( (string) wp_json_encode( $config ) ) . '">';
+		echo '' !== $icon ? '<div class="rfb-icon-box">' . $icon : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+		echo '<input class="rfb-input" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( (string) $value ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="' . esc_attr( $list ) . '"' . $required . $described_attr . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '' !== $icon ? '</div>' : '';
+		echo '<ul class="rfb-address-list" id="' . esc_attr( $list ) . '" role="listbox" aria-label="' . esc_attr( $field['label'] ) . '" hidden></ul></div>';
 	}
 
 	/** The panel ids and open state helpers shared by Accordion and Tabs. */
