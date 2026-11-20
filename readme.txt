@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.128.0
+Stable tag: 0.129.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,14 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.129.0 =
+* New Records widgets (their own Records category) for working with bookings and other Builder records on a page:
+* Sidebar Panel: a container held at the left or right edge, docked (full height) or floating (a card a little away from the edge), or kept in the page and sticking while it scrolls. It can move the page aside so nothing is covered. Below the screen size you choose it folds into a Menu button that opens it as a drawer. Use it on the left for a menu and on the right for details.
+* Records Table: a collection's records with the columns you arrange (drag them in the panel): text with a second line, reference and date booked, person with initials, journey (A, numbered stops, B), status badge, amount and date. Search, status and from/to date filters, sorting by a heading, pages, Refresh and Export CSV. Viewers can drag the headings into another order (kept in their browser). On phones the rows become cards. Choosing a row opens an Off-Canvas and shows the record in Record Details.
+* Record Details: the chosen record in the sections you list (headings, fields in full or half width, plain, bold, as a row, an amount, a total or a badge, the journey, the customer with Call and Email buttons, and status buttons that change the status). Edit Mode shows the newest record so it can be styled.
+* Records are never public: each widget says who may see them (administrators, editors, or anyone signed in) and the site checks it again on every request; only editors and administrators can change a status.
+* Builder records can be listed by the date they were made (from / to).
 
 = 0.128.0 =
 * Container and Dynamic Container: a Link on a container that holds its own links or buttons (cards with Read more) no longer breaks the cards apart. The container keeps its box and a link lies over it: clicking anywhere opens the container's link, and the links and buttons inside open their own. A new Link text for screen readers names it.

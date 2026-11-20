@@ -43,6 +43,9 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-focus-stack.default' ] = () => import( /* webpackChunkName: 'focus-stack' */ 'refraction/modules/focus-stack/assets/js/frontend/handlers/focus-stack' );
 	this.elementsHandlers[ 'refraction-showcase-wheel.default' ] = () => import( /* webpackChunkName: 'showcase-wheel' */ 'refraction/modules/showcase-wheel/assets/js/frontend/handlers/showcase-wheel' );
 	this.elementsHandlers[ 'refraction-dynamic-container.default' ] = () => import( /* webpackChunkName: 'dynamic-container' */ 'refraction/modules/dynamic-container/assets/js/frontend/handlers/dynamic-container' );
+	this.elementsHandlers[ 'refraction-sidebar-panel.default' ] = () => import( /* webpackChunkName: 'sidebar-panel' */ 'refraction/modules/records-dashboard/assets/js/frontend/handlers/sidebar-panel' );
+	this.elementsHandlers[ 'refraction-records-table.default' ] = () => import( /* webpackChunkName: 'records-table' */ 'refraction/modules/records-dashboard/assets/js/frontend/handlers/records-table' );
+	this.elementsHandlers[ 'refraction-record-details.default' ] = () => import( /* webpackChunkName: 'record-details' */ 'refraction/modules/records-dashboard/assets/js/frontend/handlers/record-details' );
 	this.elementsHandlers[ 'refraction-event-calendar.default' ] = () => import( /* webpackChunkName: 'event-calendar' */ 'refraction/modules/events/assets/js/frontend/handlers/event-calendar' );
 	this.elementsHandlers[ 'refraction-event-gallery.default' ] = () => import( /* webpackChunkName: 'event-gallery' */ 'refraction/modules/events/assets/js/frontend/handlers/event-gallery' );
 

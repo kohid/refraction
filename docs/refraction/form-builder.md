@@ -356,3 +356,10 @@ Check: `scripts/check-answer-text.mjs` (extended).
   each item a text (**bold**) and its own icon from the editor's icon library (empty: the list's own icon), added,
   removed and moved. The matching rows' items make the list, in row order (`swapList()`); rows made in 0.126.0 (one
   item each) still work.
+
+## Records on a page: Records Dashboard (0.129.0)
+
+A collection's records can be worked with on any page, by people who are signed in: the **Records** widgets (Sidebar
+Panel, Records Table, Record Details) list them with search, status and date filters, show one record's details in an
+Off-Canvas and change its status. See [records-dashboard.md](records-dashboard.md). `Records::query()` now also takes
+`from` / `to` (`Y-m-d`) for the day a record was made.
