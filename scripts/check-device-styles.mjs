@@ -58,7 +58,7 @@ const PAGE = [ {
 	settings: { background_background: 'classic', background_color: '#ffffff', background_color_phone_xs: '#ffeeee' },
 	elements: [
 		{ id: 'dh01', elType: 'widget', widgetType: 'heading', settings: { title: 'Per device', title_color: '#0000ff', title_color_phone_md: '#ff0000', title_color_phone_sm: '#00aa00', title_color_phone_xs: '#aa00aa' }, elements: [] },
-		{ id: 'dh02', elType: 'widget', widgetType: 'heading', settings: { title: 'Desktop colour only', title_color: '#123456' }, elements: [] },
+		{ id: 'dh02', elType: 'widget', widgetType: 'heading', settings: { title: 'Desktop colour only', title_color: '#123456', text_shadow_text_shadow_type: 'yes', text_shadow_text_shadow: { horizontal: 1, vertical: 1, blur: 0, color: 'rgba(0,0,0,1)' } }, elements: [] },
 		{ id: 'db01', elType: 'widget', widgetType: 'button', settings: { text: 'Book now', background_color: '#0000ff', background_color_phone_sm: '#00aa00', _border_border: 'solid', _border_width: { unit: 'px', top: '2', right: '2', bottom: '2', left: '2', isLinked: true }, _border_color: '#0000ff', _border_color_phone_md: '#ff0000' }, elements: [] },
 	],
 } ];
@@ -114,6 +114,7 @@ async function main() {
 				return {
 					heading: css( '.refraction-element-dh01 .refraction-heading-title', 'color' ),
 					plain: css( '.refraction-element-dh02 .refraction-heading-title', 'color' ),
+					shadow: css( '.refraction-element-dh02 .refraction-heading-title', 'textShadow' ),
 					button: css( '.refraction-element-db01 .refraction-button', 'backgroundColor' ),
 					border: css( document.querySelector( '.refraction-element-db01 > .refraction-widget-container' ) ? '.refraction-element-db01 > .refraction-widget-container' : '.refraction-element-db01', 'borderTopColor' ),
 					box: css( '.refraction-element-dc01', 'backgroundColor' ),
@@ -129,6 +130,7 @@ async function main() {
 		check( 'site', 'Button background: 393 and below their own, above it the desktop one', BLUE === site[ 430 ].button && GREEN === site[ 393 ].button && GREEN === site[ 375 ].button, JSON.stringify( site ) );
 		check( 'site', 'Advanced > Border colour per device (430 and below)', BLUE === site[ 480 ].border && RED === site[ 430 ].border && RED === site[ 375 ].border, JSON.stringify( site ) );
 		check( 'site', 'Container background per device (375)', 'rgb(255, 255, 255)' === site[ 393 ].box && 'rgb(255, 238, 238)' === site[ 375 ].box, JSON.stringify( site ) );
+		check( 'site', 'a text shadow set on desktop stays the same on phones (shadows keep one value)', 'rgb(0, 0, 0) 1px 1px 0px' === site[ 1200 ].shadow && site[ 1200 ].shadow === site[ 375 ].shadow && site[ 1200 ].shadow === site[ 430 ].shadow, JSON.stringify( site ) );
 		check( 'site', 'a desktop colour over the site colour stays on phones', 'rgb(18, 52, 86)' === site[ 1200 ].plain && 'rgb(18, 52, 86)' === site[ 375 ].plain, JSON.stringify( site ) );
 
 		const { ctx, p } = await login( browser );

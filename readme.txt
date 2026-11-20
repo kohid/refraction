@@ -47,7 +47,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 == Changelog ==
 
 = 0.130.0 =
-* Every Style and Advanced setting now has a value per device (Desktop, 1024, 820, 768, 480, 430, 393 and 375), not only sizes: colours, backgrounds, borders, shadows, opacity and the like, on every widget and element, including the Form Builder fields and buttons, the Event widgets, the Records widgets, containers and the Advanced tab's Background, Border, Transform and Mask. Choose 430 in the top bar, change a colour, and it changes at 430 (and below, until a smaller device has its own) while desktop keeps its own. It shows at once in Edit Mode and on the site.
+* Every Style and Advanced setting now has a value per device (Desktop, 1024, 820, 768, 480, 430, 393 and 375), not only sizes: colours, backgrounds, borders, opacity and the like (shadows keep one value for every device), on every widget and element, including the Form Builder fields and buttons, the Event widgets, the Records widgets, containers and the Advanced tab's Background, Border, Transform and Mask. Choose 430 in the top bar, change a colour, and it changes at 430 (and below, until a smaller device has its own) while desktop keeps its own. It shows at once in Edit Mode and on the site.
 * Pages keep their look: what was set before is the desktop value, and the other devices use it until they are given their own. A site colour set as the default stays the desktop's, so a colour changed on desktop is not set back to the site colour on phones.
 
 = 0.129.0 =

@@ -2506,7 +2506,13 @@ abstract class Controls_Stack extends Base_Object {
 			return false;
 		}
 
-		$section = $this->injection_point['section']['section'] ?? ( $this->current_section['section'] ?? '' );
+		// A control type that starts with a value (box and text shadows) would give that value to every device copy,
+		// and the copies would replace the desktop's on smaller screens: such controls keep one value.
+		if ( self::type_has_starting_value( (string) ( $args['type'] ?? '' ) ) ) {
+			return false;
+		}
+
+				$section = $this->injection_point['section']['section'] ?? ( $this->current_section['section'] ?? '' );
 		$tab = $this->section_tabs[ $section ] ?? '';
 
 		if ( ! in_array( $tab, [ Controls_Manager::TAB_STYLE, Controls_Manager::TAB_ADVANCED ], true ) ) {
@@ -2538,6 +2544,26 @@ abstract class Controls_Stack extends Base_Object {
 		}
 
 		return true;
+	}
+
+	/** Whether a control type's own default value would write CSS (box shadow, text shadow). */
+	private static function type_has_starting_value( string $type ): bool {
+		static $cache = [];
+
+		if ( ! isset( $cache[ $type ] ) ) {
+			$control = '' !== $type ? Plugin::$instance->controls_manager->get_control( $type ) : null;
+			$value = $control && method_exists( $control, 'get_default_value' ) ? $control->get_default_value() : '';
+
+			if ( is_array( $value ) ) {
+				$value = array_filter( array_diff_key( $value, [ 'unit' => 1, 'isLinked' => 1, 'sizes' => 1 ] ), static function ( $part ) {
+					return '' !== $part && null !== $part && [] !== $part;
+				} );
+			}
+
+			$cache[ $type ] = is_array( $value ) ? (bool) $value : '' !== (string) $value;
+		}
+
+		return $cache[ $type ];
 	}
 
 	protected function handle_control_position( array $args, $control_id, $overwrite ) {

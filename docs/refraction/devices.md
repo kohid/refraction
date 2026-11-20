@@ -58,7 +58,8 @@ Transform, Mask...).
 - Where: `Controls_Stack::auto_responsive()`, called by `add_control()`. A control is added as a responsive control
   when it has `selectors`, sits in a section of the `style` or `advanced` tab, is not responsive already, and is not
   drawn into the HTML (`render_type` template), read by a script (`frontend_available`), adding a class
-  (`prefix_class`), a code / text-editor box, a repeater field or a UI-only control. The section tabs are kept in
+  (`prefix_class`), a code / text-editor box, a repeater field, a UI-only control, or a control type that starts
+  with a value of its own (box and text shadows: every device copy would get that value and replace the desktop's). The section tabs are kept in
   `$section_tabs` because the stored sections lose their `tab` on the front end, where the page CSS is written.
 - With the responsive duplication mode `off`, such a control is one control with `is_responsive`: the editor makes the
   device copies (`editor-base.js generateResponsiveControls()`), the CSS file makes them while it writes (mode `on`).
