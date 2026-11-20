@@ -42,6 +42,7 @@ export const BASE_ENTRIES = {
 	'focus-stack': 'modules/focus-stack/assets/js/editor/index.js',
 	'showcase-wheel': 'modules/showcase-wheel/assets/js/editor/index.js',
 	'dynamic-container': 'modules/dynamic-container/assets/js/editor/index.js',
+	'records-dashboard': 'modules/records-dashboard/assets/js/editor/index.js',
 	'container-converter': 'modules/container-converter/assets/js/editor/module.js',
 	'web-cli': 'modules/web-cli/assets/js/index.js',
 	'import-export-admin': 'app/modules/import-export/assets/js/admin.js',

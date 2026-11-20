@@ -140,6 +140,7 @@ class Modules_Manager {
 			'dynamic-container',
 			'woocommerce',
 			'form-builder',
+			'records-dashboard',
 			'events',
 			'build-scene',
 			'ask-claude',

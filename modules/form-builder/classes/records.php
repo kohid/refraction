@@ -165,6 +165,19 @@ class Records {
 			$query_args['s'] = (string) $args['search'];
 		}
 
+		// From / to (Y-m-d): records created on those days, both included (Records Table, 0.129.0).
+		$dates = [];
+
+		foreach ( [ 'from' => 'after', 'to' => 'before' ] as $arg => $side ) {
+			if ( ! empty( $args[ $arg ] ) && preg_match( '/^\d{4}-\d{2}-\d{2}$/', (string) $args[ $arg ] ) ) {
+				$dates[ $side ] = (string) $args[ $arg ];
+			}
+		}
+
+		if ( $dates ) {
+			$query_args['date_query'] = [ $dates + [ 'inclusive' => true ] ];
+		}
+
 		$meta = $query_args['meta_query'];
 
 		if ( ! empty( $args['status'] ) && Schema::status( $definition, (string) $args['status'] ) ) {
