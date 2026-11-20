@@ -2487,8 +2487,9 @@ abstract class Controls_Stack extends Base_Object {
 	 *
 	 * Left as they are: controls already responsive; controls without `selectors` (read by PHP or a script); controls
 	 * drawn into the HTML (`render_type` template), read by a script (`frontend_available`) or that add a class
-	 * (`prefix_class`), except the transform flips, whose class only switches the transform on; text, link, code and
-	 * text-editor boxes; and UI-only controls.
+	 * (`prefix_class`), except the transform flips, whose class only switches the transform on; controls whose empty
+	 * value writes CSS (`selectors_dictionary` with an empty key); text, link, code and text-editor boxes; and UI-only
+	 * controls.
 	 *
 	 * @param string $id      The control id.
 	 * @param array  $args    The control arguments, before their section is merged in.
@@ -2506,6 +2507,9 @@ abstract class Controls_Stack extends Base_Object {
 			|| ( ! empty( $args['prefix_class'] ) && ! $flip )
 			|| 'template' === ( $args['render_type'] ?? '' )
 			|| in_array( $args['type'] ?? '', self::NOT_PER_DEVICE_TYPES, true )
+			// An empty value that writes CSS of its own (a switch whose "off" is `none`): the copies on smaller views
+			// start empty, so they would write it on every one of them.
+			|| ( isset( $args['selectors_dictionary'] ) && array_key_exists( '', (array) $args['selectors_dictionary'] ) )
 		) {
 			return false;
 		}

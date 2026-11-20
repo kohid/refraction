@@ -79,7 +79,9 @@ Check: `node scripts/check-device-styles.mjs --site DIR --port N`.
 
 - `auto_responsive()` now also covers the Content and Layout tabs (a setting there that only changes CSS, such as an
   alignment or a colour), list items (a repeater field styled per item with `{{CURRENT_ITEM}}`, such as a slide's
-  background), Advanced > Transform > Flip Horizontal / Vertical (their class only switches the transform on; the
+  background), Advanced > Transform > Flip Horizontal / Vertical. A control whose empty value writes CSS of its own
+  (`selectors_dictionary` with an empty key, such as Dynamic Container's Stop at each item) keeps one value: its empty
+  copies would write that CSS on every smaller view. Also covered: Advanced > Transform > Flip Horizontal / Vertical (their class only switches the transform on; the
   flip itself is a CSS variable), and box and text shadows. Text, link and code boxes stay one value.
 - Shadows: their copies on smaller views start blank (`{device}_default` with every part empty), so they write no
   CSS and the larger view's shadow shows. When one part is changed there (`fill_from_parent`), the editor fills the
