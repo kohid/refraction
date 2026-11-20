@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.129.0
+Stable tag: 0.130.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.130.0 =
+* Every Style and Advanced setting now has a value per device (Desktop, 1024, 820, 768, 480, 430, 393 and 375), not only sizes: colours, backgrounds, borders, shadows, opacity and the like, on every widget and element, including the Form Builder fields and buttons, the Event widgets, the Records widgets, containers and the Advanced tab's Background, Border, Transform and Mask. Choose 430 in the top bar, change a colour, and it changes at 430 (and below, until a smaller device has its own) while desktop keeps its own. It shows at once in Edit Mode and on the site.
+* Pages keep their look: what was set before is the desktop value, and the other devices use it until they are given their own. A site colour set as the default stays the desktop's, so a colour changed on desktop is not set back to the site colour on phones.
 
 = 0.129.0 =
 * New Records widgets (their own Records category) for working with bookings and other Builder records on a page:

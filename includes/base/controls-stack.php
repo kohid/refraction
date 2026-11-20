@@ -149,6 +149,15 @@ abstract class Controls_Stack extends Base_Object {
 	 */
 	private $injection_point;
 
+	/**
+	 * The tab of each section of this stack, by section id, as it was declared (0.130.0). The stored section loses its
+	 * `tab` on the front end (Performance::should_optimize_controls()), where the page CSS is written, so it is kept
+	 * here for auto_responsive().
+	 *
+	 * @var array<string,string>
+	 */
+	private $section_tabs = [];
+
 
 	/**
 	 * Data sanitized.
@@ -421,6 +430,12 @@ abstract class Controls_Stack extends Base_Object {
 		}
 
 		$options = array_merge( $default_options, $options );
+
+		if ( $this->auto_responsive( $args, $options ) ) {
+			$this->add_responsive_control( $id, $args, $options );
+
+			return true;
+		}
 
 		if ( $options['position'] ) {
 			$this->start_injection( $options['position'] );
@@ -1600,6 +1615,8 @@ abstract class Controls_Stack extends Base_Object {
 
 		$args['type'] = Controls_Manager::SECTION;
 
+		$this->section_tabs[ $section_id ] = (string) ( $args['tab'] ?? Controls_Manager::TAB_CONTENT );
+
 		$this->add_control( $section_id, $args );
 
 		if ( null !== $this->current_section ) {
@@ -2458,6 +2475,69 @@ abstract class Controls_Stack extends Base_Object {
 		 * @param Controls_Stack $this The element.
 		 */
 		do_action( 'refraction/element/after_register_controls', $this );
+	}
+
+	/**
+	 * Every Style and Advanced setting that only changes CSS gets its own value per device (0.130.0): colours,
+	 * borders, shadows, backgrounds, opacity... and not only sizes. Such a control is added as a responsive control,
+	 * so the editor shows the device switcher on it (Desktop, 1024, 820, 768, 480, 430, 393, 375) and the page CSS
+	 * writes each device's value in its media query. Saved values keep their keys: the desktop value is the one there
+	 * was before.
+	 *
+	 * Left as they are: controls already responsive; controls without `selectors` (read by PHP or a script); controls
+	 * drawn into the HTML (`render_type` template), read by a script (`frontend_available`) or that add a class
+	 * (`prefix_class`); code and text-editor boxes; repeater fields; and Content / Layout / Settings tabs.
+	 *
+	 * @param array $args    The control arguments, before their section is merged in.
+	 * @param array $options add_control() options.
+	 */
+	private function auto_responsive( array &$args, array $options ): bool {
+		if (
+			! empty( $options['overwrite'] )
+			|| array_key_exists( 'responsive', $args )
+			|| ! empty( $args['is_responsive'] )
+			|| empty( $args['selectors'] )
+			|| ! empty( $args['frontend_available'] )
+			|| ! empty( $args['prefix_class'] )
+			|| 'template' === ( $args['render_type'] ?? '' )
+			|| $this instanceof Repeater
+			|| in_array( $args['type'] ?? '', [ Controls_Manager::SECTION, Controls_Manager::TABS, Controls_Manager::TAB, Controls_Manager::REPEATER, Controls_Manager::HIDDEN, Controls_Manager::POPOVER_TOGGLE, Controls_Manager::CODE, Controls_Manager::WYSIWYG, Controls_Manager::RAW_HTML, Controls_Manager::HEADING ], true )
+		) {
+			return false;
+		}
+
+		$section = $this->injection_point['section']['section'] ?? ( $this->current_section['section'] ?? '' );
+		$tab = $this->section_tabs[ $section ] ?? '';
+
+		if ( ! in_array( $tab, [ Controls_Manager::TAB_STYLE, Controls_Manager::TAB_ADVANCED ], true ) ) {
+			return false;
+		}
+
+		/**
+		 * Whether a Style / Advanced control gets a value per device.
+		 *
+		 * @param bool           $responsive
+		 * @param array          $args  The control arguments.
+		 * @param Controls_Stack $stack
+		 */
+		if ( ! apply_filters( 'refraction/controls/auto_responsive', true, $args, $this ) ) {
+			return false;
+		}
+
+		// A global default (a site colour or font) is the desktop's: the other devices start empty, so a colour
+		// changed on desktop is not set back to the global one on smaller screens.
+		if ( isset( $args['global']['default'] ) ) {
+			$device_global = [ 'active' => true ] + $args['global'];
+			unset( $device_global['default'] );
+
+			foreach ( Plugin::$instance->breakpoints->get_active_devices_list() as $device ) {
+				if ( 'desktop' !== $device && ! isset( $args['device_args'][ $device ]['global'] ) ) {
+					$args['device_args'][ $device ]['global'] = $device_global;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	protected function handle_control_position( array $args, $control_id, $overwrite ) {
