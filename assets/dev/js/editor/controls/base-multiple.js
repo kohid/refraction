@@ -66,7 +66,63 @@ ControlBaseMultipleItemView = ControlBaseDataView.extend( {
 			values[ key ] = value;
 		}
 
+		const filled = this.fillFromParent( values );
+
 		this.setSettingsModel( values );
+
+		if ( filled ) {
+			this.applySavedValue();
+		}
+	},
+
+	/**
+	 * A box or text shadow on a smaller device starts blank (a blank part writes no CSS, so the larger device's
+	 * shadow shows). When one part is changed there, the blank parts take the larger device's (or the desktop's)
+	 * values, so the shadow is complete at once (0.131.0, Controls_Stack::auto_responsive()).
+	 *
+	 * @param {Object} values The new value, changed in place.
+	 * @return {boolean} Whether any part was filled.
+	 */
+	fillFromParent( values ) {
+		const isBlank = ( v ) => '' === v || undefined === v || null === v;
+
+		if ( ! this.model.get( 'fill_from_parent' ) || ! this.model.get( 'parent' ) ) {
+			return false;
+		}
+
+		const blank = Object.keys( values ).filter( ( k ) => isBlank( values[ k ] ) );
+
+		if ( ! blank.length || blank.length === Object.keys( values ).length ) {
+			return false;
+		}
+
+		const controls = this.container.settings.controls || {},
+			typeDefault = refraction.config.controls[ this.model.get( 'type' ) ]?.default_value || {};
+
+		let name = this.model.get( 'parent' );
+
+		while ( name ) {
+			const raw = this.container.settings.get( name ),
+				plain = raw && raw.toJSON ? raw.toJSON() : raw;
+
+			if ( plain && 'object' === typeof plain ) {
+				blank.forEach( ( k ) => {
+					if ( isBlank( values[ k ] ) && ! isBlank( plain[ k ] ) ) {
+						values[ k ] = plain[ k ];
+					}
+				} );
+			}
+
+			name = controls[ name ]?.parent;
+		}
+
+		blank.forEach( ( k ) => {
+			if ( isBlank( values[ k ] ) && undefined !== typeDefault[ k ] ) {
+				values[ k ] = typeDefault[ k ];
+			}
+		} );
+
+		return true;
 	},
 
 	updateElementModel( value, input ) {

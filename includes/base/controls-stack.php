@@ -431,7 +431,7 @@ abstract class Controls_Stack extends Base_Object {
 
 		$options = array_merge( $default_options, $options );
 
-		if ( $this->auto_responsive( $args, $options ) ) {
+		if ( $this->auto_responsive( (string) $id, $args, $options ) ) {
 			$this->add_responsive_control( $id, $args, $options );
 
 			return true;
@@ -2478,57 +2478,65 @@ abstract class Controls_Stack extends Base_Object {
 	}
 
 	/**
-	 * Every Style and Advanced setting that only changes CSS gets its own value per device (0.130.0): colours,
-	 * borders, shadows, backgrounds, opacity... and not only sizes. Such a control is added as a responsive control,
+	 * Every setting that only changes CSS gets its own value per device (0.130.0, widened in 0.131.0): colours,
+	 * borders, backgrounds, shadows, opacity, alignment, flips... and not only sizes, on the Content, Style, Advanced and
+	 * Layout tabs and in list items (repeater fields styled per item). Such a control is added as a responsive control,
 	 * so the editor shows the device switcher on it (Desktop, 1024, 820, 768, 480, 430, 393, 375) and the page CSS
 	 * writes each device's value in its media query. Saved values keep their keys: the desktop value is the one there
-	 * was before.
+	 * was before, the other devices start empty and use the next larger device's value.
 	 *
 	 * Left as they are: controls already responsive; controls without `selectors` (read by PHP or a script); controls
 	 * drawn into the HTML (`render_type` template), read by a script (`frontend_available`) or that add a class
-	 * (`prefix_class`); code and text-editor boxes; repeater fields; and Content / Layout / Settings tabs.
+	 * (`prefix_class`), except the transform flips, whose class only switches the transform on; text, link, code and
+	 * text-editor boxes; and UI-only controls.
 	 *
-	 * @param array $args    The control arguments, before their section is merged in.
-	 * @param array $options add_control() options.
+	 * @param string $id      The control id.
+	 * @param array  $args    The control arguments, before their section is merged in.
+	 * @param array  $options add_control() options.
 	 */
-	private function auto_responsive( array &$args, array $options ): bool {
+	private function auto_responsive( string $id, array &$args, array $options ): bool {
+		$flip = 1 === preg_match( '/^_transform_flip[XY]_effect/', $id );
+
 		if (
 			! empty( $options['overwrite'] )
 			|| array_key_exists( 'responsive', $args )
 			|| ! empty( $args['is_responsive'] )
 			|| empty( $args['selectors'] )
-			|| ! empty( $args['frontend_available'] )
-			|| ! empty( $args['prefix_class'] )
+			|| ( ! empty( $args['frontend_available'] ) && ! $flip )
+			|| ( ! empty( $args['prefix_class'] ) && ! $flip )
 			|| 'template' === ( $args['render_type'] ?? '' )
-			|| $this instanceof Repeater
-			|| in_array( $args['type'] ?? '', [ Controls_Manager::SECTION, Controls_Manager::TABS, Controls_Manager::TAB, Controls_Manager::REPEATER, Controls_Manager::HIDDEN, Controls_Manager::POPOVER_TOGGLE, Controls_Manager::CODE, Controls_Manager::WYSIWYG, Controls_Manager::RAW_HTML, Controls_Manager::HEADING ], true )
+			|| in_array( $args['type'] ?? '', self::NOT_PER_DEVICE_TYPES, true )
 		) {
 			return false;
 		}
 
-		// A control type that starts with a value (box and text shadows) would give that value to every device copy,
-		// and the copies would replace the desktop's on smaller screens: such controls keep one value.
-		if ( self::type_has_starting_value( (string) ( $args['type'] ?? '' ) ) ) {
-			return false;
-		}
+		if ( $this instanceof Repeater ) {
+			// A list item's field styles its own item (`{{CURRENT_ITEM}}`); other fields are read as content.
+			if ( false === strpos( (string) wp_json_encode( $args['selectors'] ), '{{CURRENT_ITEM}}' ) ) {
+				return false;
+			}
+		} else {
+			$section = $this->injection_point['section']['section'] ?? ( $this->current_section['section'] ?? '' );
+			$tab = $this->section_tabs[ $section ] ?? '';
 
-				$section = $this->injection_point['section']['section'] ?? ( $this->current_section['section'] ?? '' );
-		$tab = $this->section_tabs[ $section ] ?? '';
-
-		if ( ! in_array( $tab, [ Controls_Manager::TAB_STYLE, Controls_Manager::TAB_ADVANCED ], true ) ) {
-			return false;
+			if ( ! in_array( $tab, [ Controls_Manager::TAB_CONTENT, Controls_Manager::TAB_STYLE, Controls_Manager::TAB_ADVANCED, Controls_Manager::TAB_LAYOUT ], true ) ) {
+				return false;
+			}
 		}
 
 		/**
-		 * Whether a Style / Advanced control gets a value per device.
+		 * Whether a control gets a value per device.
 		 *
 		 * @param bool           $responsive
 		 * @param array          $args  The control arguments.
 		 * @param Controls_Stack $stack
+		 * @param string         $id    The control id.
 		 */
-		if ( ! apply_filters( 'refraction/controls/auto_responsive', true, $args, $this ) ) {
+		if ( ! apply_filters( 'refraction/controls/auto_responsive', true, $args, $this, $id ) ) {
 			return false;
 		}
+
+		$devices = array_diff( Plugin::$instance->breakpoints->get_active_devices_list(), [ 'desktop' ] );
 
 		// A global default (a site colour or font) is the desktop's: the other devices start empty, so a colour
 		// changed on desktop is not set back to the global one on smaller screens.
@@ -2536,14 +2544,52 @@ abstract class Controls_Stack extends Base_Object {
 			$device_global = [ 'active' => true ] + $args['global'];
 			unset( $device_global['default'] );
 
-			foreach ( Plugin::$instance->breakpoints->get_active_devices_list() as $device ) {
-				if ( 'desktop' !== $device && ! isset( $args['device_args'][ $device ]['global'] ) ) {
+			foreach ( $devices as $device ) {
+				if ( ! isset( $args['device_args'][ $device ]['global'] ) ) {
 					$args['device_args'][ $device ]['global'] = $device_global;
 				}
 			}
 		}
 
+		// A control type that starts with a value of its own (box and text shadows) would give that value to every
+		// device copy, and the copies would replace the desktop's on smaller screens: the copies start blank (a blank
+		// part writes no CSS). The editor fills the other parts from the larger device's when one part is changed
+		// (`fill_from_parent`, see controls/base-multiple.js).
+		$blank = self::blank_starting_value( (string) ( $args['type'] ?? '' ) );
+
+		if ( $blank ) {
+			foreach ( $devices as $device ) {
+				if ( ! isset( $args[ $device . '_default' ] ) ) {
+					$args[ $device . '_default' ] = $blank;
+				}
+			}
+
+			$args['fill_from_parent'] = true;
+		}
+
 		return true;
+	}
+
+	/** Control types that never get a value per device. */
+	const NOT_PER_DEVICE_TYPES = [ 'section', 'tabs', 'tab', 'repeater', 'hidden', 'popover_toggle', 'code', 'wysiwyg', 'raw_html', 'heading', 'text', 'textarea', 'url' ];
+
+	/**
+	 * For a control type whose own default value would write CSS (box shadow, text shadow): the same parts, all blank.
+	 * Empty for any other type.
+	 */
+	private static function blank_starting_value( string $type ): array {
+		static $cache = [];
+
+		if ( ! isset( $cache[ $type ] ) ) {
+			$cache[ $type ] = [];
+
+			if ( self::type_has_starting_value( $type ) ) {
+				$value = Plugin::$instance->controls_manager->get_control( $type )->get_default_value();
+				$cache[ $type ] = is_array( $value ) ? array_fill_keys( array_keys( $value ), '' ) : [];
+			}
+		}
+
+		return $cache[ $type ];
 	}
 
 	/** Whether a control type's own default value would write CSS (box shadow, text shadow). */

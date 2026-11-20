@@ -81,6 +81,119 @@ EditorView = ControlsStack.extend( {
 		ControlsStack.prototype.onRenderCollection.apply( this, arguments );
 
 		this.groupSection();
+		this.renderDeviceStrip();
+		this.markDeviceControls();
+	},
+
+	/**
+	 * Which screen size the settings being changed are for (0.131.0): a strip under the tabs names the view chosen in
+	 * the top bar (its width and name), says what a change there does, and on a smaller view offers the way back to
+	 * Desktop. The strip takes the accent colour on any view but Desktop.
+	 */
+	renderDeviceStrip() {
+		const device = refraction.channels.deviceMode.request( 'currentMode' ) || 'desktop',
+			breakpoint = refraction.config.responsive.activeBreakpoints[ device ],
+			icon = refraction.config.responsive.icons_map?.[ device ] || 'rficon-device-desktop',
+			isDesktop = 'desktop' === device,
+			width = isDesktop || ! breakpoint || 'widescreen' === device ? '' : breakpoint.value + 'px',
+			name = isDesktop ? __( 'Desktop', 'refraction' ) : breakpoint?.label || device;
+
+		this.$el.children( '.rf-device-strip' ).remove();
+
+		const $strip = jQuery( '<div>', { class: 'rf-device-strip' + ( isDesktop ? '' : ' is-device' ), 'data-device': device, role: 'status' } );
+		const $head = jQuery( '<div>', { class: 'rf-device-strip__head' } ).append(
+			jQuery( '<i>', { class: icon + ' rf-device-strip__icon', 'aria-hidden': 'true' } ),
+			jQuery( '<span>', { class: 'rf-device-strip__view', text: width || name } ),
+			width ? jQuery( '<span>', { class: 'rf-device-strip__name', text: name } ) : null,
+		);
+
+		if ( ! isDesktop ) {
+			jQuery( '<button>', { type: 'button', class: 'rf-device-strip__back', text: __( 'Desktop', 'refraction' ) } )
+				.attr( 'aria-label', __( 'Back to Desktop', 'refraction' ) )
+				.on( 'click', () => refraction.changeDeviceMode( 'desktop' ) )
+				.appendTo( $head );
+		}
+
+		// Translators: %s: A screen width, for example 430px.
+		const deviceNote = __( 'Settings marked with the device icon change at %s and smaller screens only.', 'refraction' ),
+			note = isDesktop ? __( 'Changes here show on every screen size that has no value of its own.', 'refraction' ) : wp.i18n.sprintf( deviceNote, width || name );
+
+		$strip.append( $head, jQuery( '<p>', { class: 'rf-device-strip__note', text: note } ) );
+
+		const $nav = this.$el.children( '.refraction-panel-navigation' );
+
+		if ( $nav.length ) {
+			$nav.after( $strip );
+		} else {
+			this.$el.prepend( $strip );
+		}
+	},
+
+	/**
+	 * Marks the settings of the view being edited: a per-screen setting that has its own value on this view (not
+	 * inherited from a larger one) gets a dot by its device icon, and a popover row (Typography, Rotate, Scale,
+	 * Shadow...) whose settings are per screen gets the view's device icon, with the dot when any of them is set here.
+	 */
+	markDeviceControls() {
+		if ( this.isDestroyed || ! this.isRendered ) {
+			return;
+		}
+
+		const device = refraction.channels.deviceMode.request( 'currentMode' ) || 'desktop',
+			isDesktop = 'desktop' === device,
+			settings = this.model.get( 'settings' ),
+			icon = refraction.config.responsive.icons_map?.[ device ] || 'rficon-device-desktop',
+			models = this.collection.models,
+			copyOf = ( model ) => {
+				const responsive = model.get( 'responsive' );
+
+				return responsive ? responsive.max || responsive.min || 'desktop' : '';
+			},
+			hasOwn = ( model ) => ! isDesktop && device === copyOf( model ) && this.hasValue( settings.get( model.get( 'name' ) ) );
+
+		this.children.each( ( view ) => {
+			const model = view.model;
+
+			if ( copyOf( model ) ) {
+				view.$el.toggleClass( 'rf-own-value', hasOwn( model ) );
+
+				return;
+			}
+
+			if ( 'popover_toggle' !== model.get( 'type' ) ) {
+				return;
+			}
+
+			const inside = [];
+
+			for ( let i = models.indexOf( model ) + 1; i < models.length; i++ ) {
+				inside.push( models[ i ] );
+
+				if ( models[ i ].get( 'popover' )?.end ) {
+					break;
+				}
+			}
+
+			const perDevice = inside.some( ( m ) => copyOf( m ) ),
+				$title = view.$el.find( '.refraction-control-title' ).first();
+
+			$title.find( '.rf-device-mark' ).remove();
+			view.$el.toggleClass( 'rf-own-value', perDevice && inside.some( hasOwn ) );
+
+			if ( perDevice ) {
+				$title.append( jQuery( '<i>', { class: icon + ' rf-device-mark', 'aria-hidden': 'true', title: __( 'Set per screen size', 'refraction' ) } ) );
+			}
+		} );
+	},
+
+	hasValue( value ) {
+		const plain = value && value.toJSON ? value.toJSON() : value;
+
+		if ( plain && 'object' === typeof plain ) {
+			return Object.entries( plain ).some( ( [ key, part ] ) => ! [ 'unit', 'isLinked', 'sizes' ].includes( key ) && '' !== part && null !== part && undefined !== part && ! ( Array.isArray( part ) && ! part.length ) );
+		}
+
+		return '' !== plain && null !== plain && undefined !== plain;
 	},
 
 	/**
@@ -180,6 +293,7 @@ EditorView = ControlsStack.extend( {
 			this.conditionsFrame = requestAnimationFrame( () => {
 				this.conditionsFrame = 0;
 				this.syncShownControls();
+				this.markDeviceControls();
 			} );
 		}
 	},
@@ -282,6 +396,9 @@ EditorView = ControlsStack.extend( {
 
 	onDeviceModeChange() {
 		ControlsStack.prototype.onDeviceModeChange.apply( this, arguments );
+
+		this.renderDeviceStrip();
+		this.markDeviceControls();
 
 		this.scrollToEditedElement();
 	},

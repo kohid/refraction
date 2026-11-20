@@ -1,0 +1,116 @@
+//
+// The view being edited (0.131.0, regions/panel/pages/editor.js renderDeviceStrip() / markDeviceControls()).
+//
+// A strip under the tabs names the screen size chosen in the top bar. On Desktop it is quiet; on any other view it
+// takes the accent colour, so a change made there is never mistaken for a change to every screen. Per-screen
+// settings with their own value on this view carry a dot by their device icon; popover rows whose settings are per
+// screen carry the view's icon.
+//
+
+#refraction-panel-page-editor {
+	--rf-device-accent: var(--e-a-color-primary-bold, #f0abfc);
+}
+
+.rf-device-strip {
+	margin: 0 0 4px;
+	padding: 10px 20px 11px;
+	border-block-end: 1px solid var(--e-a-border-color);
+	color: var(--e-a-color-txt-muted);
+
+	&__head {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+	}
+
+	&__icon {
+		align-self: center;
+		font-size: 15px;
+	}
+
+	&__view {
+		color: var(--e-a-color-txt-accent);
+		font-size: 14px;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__name {
+		font-size: 12px;
+	}
+
+	&__back {
+		margin-inline-start: auto;
+		padding: 3px 8px;
+		border: 1px solid currentcolor;
+		border-radius: 4px;
+		background: none;
+		color: inherit;
+		font: inherit;
+		font-size: 11px;
+		line-height: 1.3;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			background: color-mix(in srgb, currentcolor 14%, transparent);
+			outline: none;
+		}
+	}
+
+	&__note {
+		margin: 4px 0 0;
+		font-size: 11px;
+		line-height: 1.45;
+	}
+
+	&.is-device {
+		border-inline-start: 3px solid var(--rf-device-accent);
+		background: color-mix(in srgb, var(--rf-device-accent) 12%, transparent);
+		padding-inline-start: 17px;
+
+		.rf-device-strip__icon,
+		.rf-device-strip__view,
+		.rf-device-strip__back {
+			color: var(--rf-device-accent);
+		}
+	}
+}
+
+// A popover row whose settings are per screen: the view's icon after its label.
+.rf-device-mark {
+	margin-inline-start: 6px;
+	font-size: 12px;
+	opacity: 0.55;
+	vertical-align: -1px;
+}
+
+// Set on this view (not inherited from a larger one): a dot by the device icon (or by a popover row's label).
+.refraction-control.rf-own-value {
+	.refraction-control-responsive-switchers,
+	.rf-device-mark {
+		position: relative;
+	}
+
+	.rf-device-mark {
+		color: var(--rf-device-accent);
+		opacity: 1;
+	}
+
+	.refraction-control-responsive-switchers::after,
+	.rf-device-mark::after {
+		position: absolute;
+		inset-block-start: -2px;
+		inset-inline-end: -4px;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--rf-device-accent);
+		content: "";
+		pointer-events: none;
+	}
+
+	.refraction-control-responsive-switchers .refraction-responsive-switcher {
+		color: var(--rf-device-accent);
+	}
+}
