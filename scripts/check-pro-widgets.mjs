@@ -146,6 +146,9 @@ async function editorBasics( ctx, admin, key, widgetType, title ) {
 	const idsBefore = await admin.page.evaluate( () => refraction.documents.getCurrent().container.children[ 0 ].children.map( ( c ) => c.id ) );
 	const src = admin.page.locator( `#refraction-panel-elements .refraction-element[data-library-element-type="${ widgetType }"]` );
 	const tgt = frameOf( admin ).locator( '.refraction-widget' ).first();
+	// An autoplaying slider under the pointer can swallow the drop mid-transition: hold the carousels still first.
+	await frameOf( admin ).evaluate( () => document.querySelectorAll( '.swiper' ).forEach( ( el ) => el.swiper?.autoplay?.stop() ) );
+	await sleep( 1200 );
 	const sb = await src.boundingBox();
 	const tb = await tgt.boundingBox();
 	await admin.page.mouse.move( sb.x + sb.width / 2, sb.y + sb.height / 2 );

@@ -46,3 +46,31 @@ Popups' and display conditions' device choices stay Desktop / Tablet / Mobile (d
 view on the site at each width (and fallbacks), "Hide on" per phone view and "Hide on Mobile", the device mode, the top
 bar's eight views with widths, each view's preview width, the device picker of a widget setting, and motion device
 lists.
+
+## A value per view for every Style and Advanced setting (0.130.0)
+
+Before 0.130 only the settings made responsive one by one (sizes, spacing, alignment...) had a value per view; a
+colour, a background, a border or a shadow set while looking at 430 changed every screen. Now every setting of a Style
+or Advanced tab that only changes CSS has the device picker, on every widget and element (core widgets, Form Builder
+fields and buttons, Event widgets, Records widgets, containers, and the Advanced tab's own Background, Border,
+Transform, Mask...).
+
+- Where: `Controls_Stack::auto_responsive()`, called by `add_control()`. A control is added as a responsive control
+  when it has `selectors`, sits in a section of the `style` or `advanced` tab, is not responsive already, and is not
+  drawn into the HTML (`render_type` template), read by a script (`frontend_available`), adding a class
+  (`prefix_class`), a code / text-editor box, a repeater field, a UI-only control, or a control type that starts
+  with a value of its own (box and text shadows: every device copy would get that value and replace the desktop's). The section tabs are kept in
+  `$section_tabs` because the stored sections lose their `tab` on the front end, where the page CSS is written.
+- With the responsive duplication mode `off`, such a control is one control with `is_responsive`: the editor makes the
+  device copies (`editor-base.js generateResponsiveControls()`), the CSS file makes them while it writes (mode `on`).
+  So the editor config hardly grows; opening a panel takes a few tens of milliseconds more.
+- Saved settings keep their keys: the desktop value is the value there was before, and the views start empty
+  (they use the next larger view's value).
+- A site colour or font that is a control's default stays the desktop's: the other views get the site-colour button
+  without the default, so a desktop colour is not replaced by the site colour on smaller screens.
+- `refraction/controls/auto_responsive` (`bool $responsive, array $args, Controls_Stack $stack`) can turn it off for a
+  control.
+- Advanced tab effects driven by scripts (Motion Effects, Reveal, Scrolling and Mouse Effects, Sticky) already choose
+  their devices from every view.
+
+Check: `node scripts/check-device-styles.mjs --site DIR --port N`.
