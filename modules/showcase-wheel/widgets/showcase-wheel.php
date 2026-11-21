@@ -946,6 +946,14 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-sw' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
 		] );
 
+		// 0.135.0: room inside the box, per screen size, around the slides and the thumbnails.
+		$this->add_responsive_control( 'box_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'em', 'vw' ],
+			'selectors' => [ '{{WRAPPER}} .rf-sw' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+
 		$this->add_group_control( Group_Control_Border::get_type(), [
 			'name' => 'box_border',
 			'selector' => '{{WRAPPER}} .rf-sw',

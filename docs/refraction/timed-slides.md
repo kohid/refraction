@@ -97,3 +97,11 @@ rounded). Check: `node scripts/check-box-style.mjs --site DIR --port N`.
 - Cards > **Cards and arrows** (responsive Show / Hide): the cards, arrows, line and numbers at each screen size.
 - Edit Mode shows each at once in the chosen view's preview. Check: the "per view" part of
   `scripts/check-timed-slides.mjs`.
+
+## Padding in Style > Slider (0.135.0)
+
+- Style > Slider, after the Box settings: **Padding** (`slider_padding`, moved from Content > Slider) and **Text padding**
+  (`content_padding`, moved from Content Position, where it was "Space from the edges"). Both keep their saved values.
+- Text padding has no phone default any more (it was 48 20 0 20 px at 768px): a view without its own value uses the
+  next larger one's, ending at the desktop's 0 0 0 6%. Pages that relied on the old phone padding set it in Text
+  padding at 768px.

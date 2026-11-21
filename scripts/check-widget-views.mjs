@@ -71,6 +71,11 @@ const PAGE = [
 	row( widget( 'tc1', 'refraction-testimonial-carousel', { layout: 'aside' } ), widget( 'tc2', 'refraction-testimonial-carousel', { layout: 'below', layout_phone_md: 'aside' } ) ),
 	row( widget( 'vp1', 'refraction-video-playlist', { layout: 'right', videos: VIDEOS } ), widget( 'vp2', 'refraction-video-playlist', { layout: 'right', layout_tablet: 'left', videos: VIDEOS } ) ),
 	row( widget( 'ed1', 'refraction-event-details', { layout: 'row', layout_phone_md: 'list' } ) ),
+	// 0.135.0
+	row( { ...heading( 'Cascade' ), id: 'hc1', settings: { title: 'Cascade', typography_typography: 'custom', typography_font_size: { unit: 'px', size: 18 }, typography_font_size_phone_lg: { unit: 'px', size: 16 }, typography_font_size_phone_sm: { unit: 'px', size: 12 } } } ),
+	row( widget( 'ps1', 'refraction-phone-showcase', { steps: [ { _id: 'pst1', title: 'Book' } ], cards: [], button_text: 'App Store', button2_text: 'Google Play', buttons_align: 'center', buttons_align_phone_md: 'stretch' } ) ),
+	row( widget( 'sw2', 'refraction-showcase-wheel', { slides: [ { _id: 'sw2s', slide_title: 'Saloon', deco: 'arc', deco_color: '#ff0000' } ], autoplay: '', box_padding: { unit: 'px', top: '10', right: '10', bottom: '10', left: '10', isLinked: true }, box_padding_phone_md: { unit: 'px', top: '24', right: '16', bottom: '24', left: '16', isLinked: false } }, [ box( { _title: 'Slide #1', background_background: 'classic', background_color: '#f4efe9' }, [ heading( 'Wheelchair Accessible Cars' ) ] ) ] ) ),
+	row( widget( 'ts1', 'refraction-timed-slides', { slides: [ { _id: 'tss1', slide_title: 'One' } ], autoplay: '' }, [ box( { _title: 'Slide #1' }, [ heading( 'Loch Ness' ) ] ) ] ) ),
 ];
 
 async function main() {
@@ -104,6 +109,17 @@ async function main() {
 					vp2: cs( '[data-id="vp2"] .refraction-vp', 'flexDirection' ),
 					vp2List: Math.round( q( '[data-id="vp2"] .refraction-vp__list' )?.getBoundingClientRect().width || 0 ),
 					vp2Width: Math.round( q( '[data-id="vp2"] .refraction-vp' )?.getBoundingClientRect().width || 0 ),
+					cascade: cs( '[data-id="hc1"] .refraction-heading-title', 'fontSize' ),
+					psJustify: cs( '[data-id="ps1"] .rf-showcase__buttons', 'justifyContent' ),
+					psButtons: [ ...document.querySelectorAll( '[data-id="ps1"] .rf-showcase__button' ) ].map( ( b ) => Math.round( b.getBoundingClientRect().width ) ),
+					psRow: Math.round( q( '[data-id="ps1"] .rf-showcase__buttons' )?.getBoundingClientRect().width || 0 ),
+					swPad: cs( '[data-id="sw2"] .rf-sw', 'paddingTop' ) + ' ' + cs( '[data-id="sw2"] .rf-sw', 'paddingLeft' ),
+					swLayers: ( () => {
+						const z = ( sel ) => ( q( sel ) ? getComputedStyle( q( sel ) ).zIndex : 'missing' );
+						const visual = q( '[data-id="sw2"] .rf-sw__visual' );
+						return [ visual ? getComputedStyle( visual ).isolation : 'missing', z( '[data-id="sw2"] .rf-sw__slot.is-active .rf-sw__visual, [data-id="sw2"] .rf-sw__visual' ), z( '[data-id="sw2"] .rf-sw__deco' ), z( '[data-id="sw2"] .rf-sw__slot > .e-con > .refraction-element, [data-id="sw2"] .rf-sw__slot > .e-con > .e-con-inner' ), z( '[data-id="sw2"] .rf-sw__picture' ) ].join( ',' );
+					} )(),
+					tsPad: cs( '[data-id="ts1"] .rf-ts__layer--content', 'paddingTop' ),
 				};
 			} );
 			if ( 430 === width ) {
@@ -121,6 +137,13 @@ async function main() {
 		check( 'testimonial', 'beside chosen at 430 stays beside there (below on desktop)', 'column-reverse' === r[ 1280 ].tc2 && 'row' === r[ 430 ].tc2 && 'row' === r[ 375 ].tc2, JSON.stringify( r ) );
 		check( 'video playlist', 'Right on desktop goes below on tablets and phones, as before', 'row' === r[ 1280 ].vp1 && 'column' === r[ 1024 ].vp1 && 'column' === r[ 430 ].vp1, JSON.stringify( r ) );
 		check( 'video playlist', 'Left chosen at 1024 stays beside there (list on the left, not full width)', 'row' === r[ 1280 ].vp2 && 'row-reverse' === r[ 1024 ].vp2 && r[ 1024 ].vp2List < r[ 1024 ].vp2Width * 0.5, JSON.stringify( r ) );
+
+		// 0.135.0
+		check( 'cascade', 'a font size set at 480 is used at 430, one set at 393 at 375; desktop above', '18px' === r[ 1280 ].cascade && '16px' === r[ 480 ].cascade && '16px' === r[ 430 ].cascade && '12px' === r[ 375 ].cascade, JSON.stringify( r ) );
+		check( 'phone showcase', 'Buttons > Alignment: in the middle on desktop, full width from 430 (both buttons share the row)', 'center' === r[ 1280 ].psJustify && 2 === r[ 430 ].psButtons.length && Math.abs( r[ 430 ].psButtons[ 0 ] + r[ 430 ].psButtons[ 1 ] + 12 - r[ 430 ].psRow ) <= 2, JSON.stringify( r ) );
+		check( 'showcase wheel', 'Box > Padding per screen size: 10px on desktop, 24 / 16px from 430', '10px 10px' === r[ 1280 ].swPad && '24px 16px' === r[ 430 ].swPad, JSON.stringify( r ) );
+		check( 'showcase wheel', 'layers: the picture area has none of its own (no z-index, no isolation); arc 1, the slide\'s text 2, picture 3 (the arc behind the text, above the slide background)', 'auto,auto,1,2,3' === r[ 430 ].swLayers, JSON.stringify( r ) );
+		check( 'timed slides', 'no hidden phone padding on the text at 768px and below (the desktop\'s 0 top)', '0px' === r[ 480 ].tsPad && '0px' === r[ 375 ].tsPad, JSON.stringify( r ) );
 
 		const css = readFileSync( join( WPDIR, 'wp-content/uploads/refraction/css', `post-${ views.id }.css` ), 'utf8' ).replace( /\s+/g, '' );
 		check( 'event details', 'Layout: in a row on desktop, one under another from 430 (in the page CSS)', /\.refraction-element-ed1\{[^}]*--rf-ed-dir:row/.test( css ) && /@media\(max-width:430px\)\{[^@]*\.refraction-element-ed1\{[^}]*--rf-ed-dir:column/.test( css ), css.match( /[^}]*rf-ed-dir[^}]*/g )?.join( ' | ' ) );
@@ -149,6 +172,13 @@ async function main() {
 		check( 'editor', 'Price List Image Position set to Left at 393 shows at once at 393; 430 keeps Above', 'column' === before && 'row' === at393 && 'column' === at430, JSON.stringify( { before, at393, at430 } ) );
 		const fsEditor = await e.evaluate( () => document.getElementById( 'refraction-preview-iframe' ).contentDocument.querySelector( '[data-id="fs1"]' ).classList.contains( 'rf-fs-o-horizontal' ) );
 		check( 'editor', 'the Focus Stack in the 430 preview is side by side (its 430 choice)', fsEditor );
+		const boxSection = await e.evaluate( () => {
+			const c = refraction.getContainer( 'ts1' );
+			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
+			const controls = c.settings.controls;
+			return { slider: controls.slider_padding?.section, text: controls.content_padding?.section, tab: controls.slider_padding?.tab, swPad: refraction.getContainer( 'sw2' ).settings.controls.box_padding?.section };
+		} );
+		check( 'editor', 'Timed Slides: Padding and Text padding are in Style > Slider (the Box settings); Showcase Wheel Padding in Style > Box', 'section_style_slider' === boxSection.slider && 'section_style_slider' === boxSection.text && 'style' === boxSection.tab && 'section_style_box' === boxSection.swPad, JSON.stringify( boxSection ) );
 		await e.screenshot( { path: join( SHOTS, 'editor-430.png' ) } );
 		await ectx.close();
 

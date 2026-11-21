@@ -57,6 +57,13 @@
 	> .e-con {
 		order: var(--rf-sw-o-content, 0);
 		height: var(--rf-sw-con-h, 100%);
+
+		// Above the arc or blob, which is above the slide's own background (see .rf-sw__visual).
+		> .e-con-inner,
+		> .refraction-element {
+			position: relative;
+			z-index: 2;
+		}
 	}
 
 	&.is-active {
@@ -93,7 +100,10 @@
 	top: var(--rf-sw-v-top, 5%);
 	bottom: var(--rf-sw-v-bottom, 5%);
 	right: var(--rf-sw-v-right, var(--rf-sw-picture-edge));
-	z-index: 2;
+	// No layer of its own (0.135.0), so its parts take their places among the slide's: from the back, the slide's
+	// background, the arc or blob (z-index 1), the slide's text and widgets (2), the picture and its floats (3).
+	// The arc no longer covers the text when the parts go one under another (phones).
+	z-index: auto;
 	order: var(--rf-sw-o-picture, 0);
 	display: flex;
 	align-items: center;
@@ -101,7 +111,7 @@
 	width: var(--rf-sw-v-width, var(--rf-sw-picture-w));
 	height: var(--rf-sw-v-height, auto);
 	margin-inline: var(--rf-sw-v-margin, 0px);
-	isolation: isolate;
+	// No isolation either (it made a layer of its own, under the slide's text).
 	pointer-events: none;
 
 	.rf-sw__slot--right > & {
@@ -119,6 +129,7 @@
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	z-index: 3;
 	width: 100%;
 	height: 100%;
 	will-change: transform;
@@ -154,7 +165,7 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	z-index: -1;
+	z-index: 1;
 	width: calc(var(--rf-sw-deco) * 1% * var(--rf-sw-deco-k, 1));
 	aspect-ratio: 1;
 	color: var(--rf-sw-deco-color);
