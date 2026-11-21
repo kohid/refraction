@@ -53,18 +53,49 @@ class Connector extends Pro_Widget {
 			'next' => esc_html__( 'The container after it', 'refraction' ),
 			'previous' => esc_html__( 'The container before it', 'refraction' ),
 			'id' => esc_html__( 'An element by its CSS ID', 'refraction' ),
+			'element' => esc_html__( 'An element picked on the page', 'refraction' ),
 		];
 	}
 
-	private static function sides(): array {
-		return [
-			'auto' => esc_html__( 'Facing the other one', 'refraction' ),
-			'right' => esc_html__( 'Right', 'refraction' ),
-			'bottom' => esc_html__( 'Bottom', 'refraction' ),
-			'left' => esc_html__( 'Left', 'refraction' ),
-			'top' => esc_html__( 'Top', 'refraction' ),
-		];
+	/** A small picture for the visual pickers (an SVG as a data URI). */
+	private static function picture( string $svg, int $w = 44, int $h = 30 ): string {
+		return 'data:image/svg+xml,' . rawurlencode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $w . ' ' . $h . '">' . $svg . '</svg>' );
 	}
+
+	/** The sides as pictures: a box with the handle on that side (all four for "facing the other one"). */
+	private static function side_choices(): array {
+		$box = '<rect x="8" y="5" width="28" height="20" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1.5"/>';
+		$handle = static fn( $x, $y, $c = '#2563EB' ) => '<rect x="' . ( $x - 3.5 ) . '" y="' . ( $y - 3.5 ) . '" width="7" height="7" rx="2" fill="' . $c . '"/>';
+		$at = [ 'top' => [ 22, 5 ], 'right' => [ 36, 15 ], 'bottom' => [ 22, 25 ], 'left' => [ 8, 15 ] ];
+		$out = [ 'auto' => [ 'title' => esc_html__( 'Facing the other one', 'refraction' ), 'image' => self::picture( $box . implode( '', array_map( static fn( $p ) => $handle( $p[0], $p[1], '#93C5FD' ), $at ) ) ) ] ];
+
+		foreach ( [ 'top' => esc_html__( 'Top', 'refraction' ), 'right' => esc_html__( 'Right', 'refraction' ), 'bottom' => esc_html__( 'Bottom', 'refraction' ), 'left' => esc_html__( 'Left', 'refraction' ) ] as $side => $title ) {
+			$out[ $side ] = [ 'title' => $title, 'image' => self::picture( $box . $handle( $at[ $side ][0], $at[ $side ][1] ) ) ];
+		}
+
+		return $out;
+	}
+
+	/** The end shapes as pictures: a line with the shape at its end (as connector.js draws them). */
+	private static function head_choices(): array {
+		$shapes = [
+			'arrow' => '<path d="M0,0 L10,5 L0,10 Z" fill="#374151"/>',
+			'open' => '<path d="M1,1 L9,5 L1,9" fill="none" stroke="#374151" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+			'thin' => '<path d="M3,2 L9,5 L3,8" fill="none" stroke="#374151" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+			'circle' => '<circle cx="5" cy="5" r="3.5" fill="#374151"/>',
+			'diamond' => '<path d="M1,5 L5,1 L9,5 L5,9 Z" fill="#374151"/>',
+			'square' => '<path d="M2,2 H8 V8 H2 Z" fill="#374151"/>',
+			'none' => '',
+		];
+		$out = [];
+
+		foreach ( self::heads() as $key => $title ) {
+			$out[ $key ] = [ 'title' => $title, 'image' => self::picture( '<path d="M4,10 H' . ( 'none' === $key ? 40 : 31 ) . '" stroke="#374151" stroke-width="2" stroke-linecap="round"/><g transform="translate(28 5)">' . $shapes[ $key ] . '</g>', 44, 20 ) ];
+		}
+
+		return $out;
+	}
+
 
 	private static function heads(): array {
 		return [
@@ -100,11 +131,25 @@ class Connector extends Pro_Widget {
 				'description' => esc_html__( 'The element\'s CSS ID (its Advanced tab), without #.', 'refraction' ),
 				'condition' => [ $end => 'id' ],
 			] );
+			$this->add_control( $end . '_element', $js + [
+				'type' => Controls_Manager::HIDDEN,
+				'default' => '',
+			] );
+			$this->add_control( $end . '_pick', [
+				'type' => Controls_Manager::BUTTON,
+				'label' => 'from' === $end ? esc_html__( 'Start At', 'refraction' ) : esc_html__( 'Point To', 'refraction' ),
+				'text' => esc_html__( 'Pick on the page', 'refraction' ),
+				'event' => 'refraction:connectorPick:' . $end,
+				'description' => esc_html__( 'Then click a container on the page (hold Alt for the exact widget under the pointer; Esc cancels). With a Connector selected, the two elements it joins are outlined.', 'refraction' ),
+			] );
 			$this->add_responsive_control( $end . '_side', [
 				'label' => esc_html__( 'Side', 'refraction' ),
-				'type' => Controls_Manager::SELECT,
+				'type' => Controls_Manager::VISUAL_CHOICE,
+				'label_block' => true,
+				'columns' => 5,
+				'toggle' => false,
 				'default' => 'auto',
-				'options' => self::sides(),
+				'options' => self::side_choices(),
 				'description' => 'from' === $end ? esc_html__( 'Per screen size. "Facing the other one" turns with the layout (side by side: left or right; one under another: top or bottom).', 'refraction' ) : '',
 				'selectors' => [ $host => '--rf-cn-' . $end . '-side: {{VALUE}};' ],
 				// The script reads it: Edit Mode tells it when it changes.
@@ -120,6 +165,14 @@ class Connector extends Pro_Widget {
 				'frontend_available' => true,
 			] );
 		}
+
+		$this->add_control( 'swap', [
+			'type' => Controls_Manager::BUTTON,
+			'label' => esc_html__( 'Reverse The Arrow', 'refraction' ),
+			'text' => esc_html__( 'Swap start and end', 'refraction' ),
+			'event' => 'refraction:connectorSwap',
+			'separator' => 'before',
+		] );
 
 		$this->end_section();
 
@@ -180,15 +233,21 @@ class Connector extends Pro_Widget {
 
 		$this->add_control( 'head_end', $js + [
 			'label' => esc_html__( 'At The End', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
+			'type' => Controls_Manager::VISUAL_CHOICE,
+			'label_block' => true,
+			'columns' => 4,
+			'toggle' => false,
 			'default' => 'arrow',
-			'options' => self::heads(),
+			'options' => self::head_choices(),
 		] );
 		$this->add_control( 'head_start', $js + [
 			'label' => esc_html__( 'At The Start', 'refraction' ),
-			'type' => Controls_Manager::SELECT,
+			'type' => Controls_Manager::VISUAL_CHOICE,
+			'label_block' => true,
+			'columns' => 4,
+			'toggle' => false,
 			'default' => 'none',
-			'options' => self::heads(),
+			'options' => self::head_choices(),
 		] );
 
 		$this->end_section();
@@ -227,6 +286,13 @@ class Connector extends Pro_Widget {
 			'type' => Controls_Manager::COLOR,
 			'default' => '#6B7280',
 			'selectors' => [ $host => '--rf-cn-color: {{VALUE}};' ],
+		] );
+		$this->add_control( 'opacity', [
+			'label' => esc_html__( 'Opacity', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ],
+			'default' => [ 'size' => 100 ],
+			'selectors' => [ $host => '--rf-cn-opacity: calc({{SIZE}} / 100);' ],
 		] );
 		$this->add_responsive_control( 'width', [
 			'label' => esc_html__( 'Width', 'refraction' ) . ' (px)',

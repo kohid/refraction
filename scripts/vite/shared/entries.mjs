@@ -96,6 +96,7 @@ export const BASE_ENTRIES = {
 	'highlight-preview': 'modules/highlight-words/assets/js/highlight-preview.js',
 	'organic-fx': 'modules/organic-fx/assets/js/organic-fx.js',
 	'organic-fx-editor': 'modules/organic-fx/assets/js/organic-fx-editor.js',
+	'connector-editor': 'modules/connector/assets/js/editor.js',
 	'agents-ready': 'modules/agents/assets/js/admin/agents-ready.js',
 };
 
