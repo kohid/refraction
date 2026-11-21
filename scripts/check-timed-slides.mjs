@@ -365,7 +365,8 @@ async function main() {
 		const m = await visit( main.url, 390, 844 );
 		s = await state( m.p, 'wa' );
 		const gap = ( s.h - s.rail.b - s.rail.h ) - ( s.content.t + s.content.h );
-		check( 'phone', 'content at the top, cards at the bottom, no overlap; 640 px high', s.content.t < s.rail.t && gap >= 0 && near( s.h, 640, 1 ) && near( s.content.w, s.w - 40, 2 ), JSON.stringify( { s, gap } ) );
+		// 0.135.0: no hidden phone padding (it was 48 20 0 20 at 768px): the text keeps the desktop's (6% on the left).
+		check( 'phone', 'content at the top, cards at the bottom, no overlap; 640 px high; the desktop text padding', s.content.t < s.rail.t && gap >= 0 && near( s.h, 640, 1 ) && near( s.content.w, s.w * 0.94, 2 ), JSON.stringify( { s, gap } ) );
 		await m.p.screenshot( { path: join( SHOTS, 'site-phone.png' ) } );
 		await m.ctx.close();
 

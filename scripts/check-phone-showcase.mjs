@@ -365,13 +365,14 @@ async function main() {
 				const dev = root.querySelector( '.rf-showcase__device' ).getBoundingClientRect();
 				const side = root.querySelector( '.rf-showcase__side' ).getBoundingClientRect();
 				const timer = root.querySelector( '.rf-showcase__timer' );
-				return { phoneLeft: dev.right <= side.left + 1, phoneRight: dev.left >= side.right - 1, phoneFirst: dev.bottom <= side.top + 1, stepsFirst: side.bottom <= dev.top + 1, timerTop: timer ? getComputedStyle( timer ).top : 'none' };
+				// A positioned element's top / bottom read back as pixels: the side that is set reads the gap (0px).
+				return { phoneLeft: dev.right <= side.left + 1, phoneRight: dev.left >= side.right - 1, phoneFirst: dev.bottom <= side.top + 1, stepsFirst: side.bottom <= dev.top + 1, timerTop: timer ? getComputedStyle( timer ).top : 'none', timerBottom: timer ? getComputedStyle( timer ).bottom : 'none' };
 			} );
 			await vp.context().close();
 		}
 		check( 'per view', 'Phone On The: left on desktop, right from 1024 (its own setting)', views[ 1280 ].phoneLeft && views[ 1024 ].phoneRight, JSON.stringify( views ) );
 		check( 'per view', 'On Small Screens: steps first at 430, the phone first at 393 (its own setting)', views[ 430 ].stepsFirst && views[ 393 ].phoneFirst, JSON.stringify( views ) );
-		check( 'per view', 'Progress Bar at the bottom on desktop, at the top from 430', 'auto' === views[ 1280 ].timerTop && '0px' === views[ 430 ].timerTop && '0px' === views[ 393 ].timerTop, JSON.stringify( views ) );
+		check( 'per view', 'Progress Bar at the bottom on desktop, at the top from 430', '0px' === views[ 1280 ].timerBottom && '0px' !== views[ 1280 ].timerTop && '0px' === views[ 430 ].timerTop && '0px' === views[ 393 ].timerTop, JSON.stringify( views ) );
 		check( 'phone screen', 'Order Of The Parts on phones: the phone, then the text above; Steps hidden on phones', order.device < order.intro && 'none' === order.steps && ! order.sideways, JSON.stringify( order ) );
 		await p.screenshot( { path: join( SHOTS, 'small-reordered.png' ), fullPage: true } );
 		const wide = await browser.newContext( { viewport: { width: 1280, height: 900 } } );

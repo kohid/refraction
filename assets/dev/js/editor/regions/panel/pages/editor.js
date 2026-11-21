@@ -115,7 +115,7 @@ EditorView = ControlsStack.extend( {
 		}
 
 		// Translators: %s: A screen width, for example 430px.
-		const deviceNote = __( 'Settings marked with the device icon change at %s and smaller screens only.', 'refraction' ),
+		const deviceNote = __( 'Settings marked with the device icon change at %s and smaller screens only. Empty ones use the next larger view\'s value, shown in grey.', 'refraction' ),
 			note = isDesktop ? __( 'Changes here show on every screen size that has no value of its own.', 'refraction' ) : wp.i18n.sprintf( deviceNote, width || name );
 
 		$strip.append( $head, jQuery( '<p>', { class: 'rf-device-strip__note', text: note } ) );

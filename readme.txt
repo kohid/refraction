@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.134.0
+Stable tag: 0.135.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.135.0 =
+* Timed Slides: Style > Slider (the slider's box settings) now holds Padding (inside the slider, for the text and the cards) and Text padding (around the slides' text), each per screen size. The text no longer gets a hidden 48 20 0 20 px padding at 768px and below: it uses the desktop's until you set your own, and an emptied value goes back to the larger screen's.
+* Showcase Wheel: Style > Box > Padding, per screen size. The arc or blob behind the picture is now at the very back: above the slide's background, under its text and widgets (it covered the text when the parts went one under another on phones). The picture still comes above.
+* Phone Showcase: Style > Buttons > Alignment, per screen size: left, middle, right, or full width (the buttons share the row).
+* The editor's view strip says that an empty setting uses the next larger view's value, shown in grey (a value set at 480 is used at 430, one set at 393 at 375).
 
 = 0.134.0 =
 * Layout choices per screen size on our widgets (each view can have its own; a view without one follows the next larger view), shown at once in Edit Mode:

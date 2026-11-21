@@ -1162,6 +1162,26 @@ class Phone_Showcase extends Widget_Base {
 		$button = '{{WRAPPER}} .rf-showcase__button--primary';
 		$second = '{{WRAPPER}} .rf-showcase__button--secondary';
 
+		// Per screen size (0.135.0): where the buttons sit in their row, or each as wide as the row shares.
+		$this->add_responsive_control( 'buttons_align', [
+			'label' => esc_html__( 'Alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'start' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Middle', 'refraction' ), 'icon' => 'rficon-h-align-center' ],
+				'end' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
+				'stretch' => [ 'title' => esc_html__( 'Full width', 'refraction' ), 'icon' => 'rficon-h-align-stretch' ],
+			],
+			'description' => esc_html__( 'Per screen size.', 'refraction' ),
+			'selectors_dictionary' => [
+				'start' => '--rf-ps-btn-justify: flex-start; --rf-ps-btn-flex: 0 0 auto;',
+				'center' => '--rf-ps-btn-justify: center; --rf-ps-btn-flex: 0 0 auto;',
+				'end' => '--rf-ps-btn-justify: flex-end; --rf-ps-btn-flex: 0 0 auto;',
+				'stretch' => '--rf-ps-btn-justify: stretch; --rf-ps-btn-flex: 1 1 0;',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
+		] );
+
 		$this->add_responsive_control( 'buttons_gap', [
 			'label' => esc_html__( 'Space Between The Buttons', 'refraction' ),
 			'type' => Controls_Manager::SLIDER,

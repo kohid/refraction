@@ -284,14 +284,6 @@ class Timed_Slides extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 		] );
 
-		// The slider box's own padding (0.133.0): the text and the cards keep inside it, the pictures still fill the box.
-		$this->add_responsive_control( 'slider_padding', [
-			'label' => esc_html__( 'Padding', 'refraction' ),
-			'type' => Controls_Manager::DIMENSIONS,
-			'size_units' => [ 'px', '%', 'em', 'vw' ],
-			'description' => esc_html__( 'Room inside the slider, per screen size, for both the text and the cards.', 'refraction' ),
-			'selectors' => [ '{{WRAPPER}}' => '--rf-ts-pad-top: {{TOP}}{{UNIT}}; --rf-ts-pad-right: {{RIGHT}}{{UNIT}}; --rf-ts-pad-bottom: {{BOTTOM}}{{UNIT}}; --rf-ts-pad-left: {{LEFT}}{{UNIT}};' ],
-		] );
 
 		$this->add_control( 'autoplay', [
 			'label' => esc_html__( 'Autoplay', 'refraction' ),
@@ -425,14 +417,6 @@ class Timed_Slides extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-ts__content' => 'width: {{SIZE}}{{UNIT}};' ],
 		] );
 
-		$this->add_responsive_control( 'content_padding', [
-			'label' => esc_html__( 'Space from the edges', 'refraction' ),
-			'type' => Controls_Manager::DIMENSIONS,
-			'size_units' => [ 'px', '%', 'vw', 'vh' ],
-			'default' => self::padding( '0', '0', '0', '6', '%' ),
-			'mobile_default' => self::padding( '48', '20', '0', '20', 'px' ),
-			'selectors' => [ $layer => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-		] );
 
 		$this->add_control( 'content_animation', [
 			'label' => esc_html__( 'Content comes in', 'refraction' ),
@@ -673,6 +657,26 @@ class Timed_Slides extends Widget_Nested_Base {
 
 		// The slider's box: it already cuts its content to its corners.
 		Box_Style::controls( $this, 'ts_box', '{{WRAPPER}} .rf-tco', [ 'background' => false, 'padding' => false, 'clip' => false ] );
+
+		// The slider box's own padding (0.133.0; here in Style > Box since 0.135.0): the text and the cards keep inside it,
+		// the pictures still fill the box.
+		$this->add_responsive_control( 'slider_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'em', 'vw' ],
+			'description' => esc_html__( 'Room inside the slider, per screen size, for both the text and the cards.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}}' => '--rf-ts-pad-top: {{TOP}}{{UNIT}}; --rf-ts-pad-right: {{RIGHT}}{{UNIT}}; --rf-ts-pad-bottom: {{BOTTOM}}{{UNIT}}; --rf-ts-pad-left: {{LEFT}}{{UNIT}};' ],
+		] );
+
+		// The text's own padding (0.135.0: here, and with no hidden phone value; 768px had 48 20 0 20 before).
+		$this->add_responsive_control( 'content_padding', [
+			'label' => esc_html__( 'Text padding', 'refraction' ),
+			'description' => esc_html__( 'Around the slides\' text, per screen size. Empty: the next larger screen size\'s.', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'vw', 'vh' ],
+			'default' => self::padding( '0', '0', '0', '6', '%' ),
+			'selectors' => [ '{{WRAPPER}} .rf-ts__layer--content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
 
 		$this->end_controls_section();
 

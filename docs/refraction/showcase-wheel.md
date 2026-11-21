@@ -98,3 +98,11 @@ choice sets CSS custom properties on `.rf-sw` (`--rf-sw-display`, `--rf-sw-v-*`,
 back to `initial`. So each screen size keeps its own and Edit Mode shows it at once. Picture width (one under
 another), Space between the parts and Space above and below the text go with it; the picture's height is Style >
 Picture > Height on phones. On phones the thumbnails scroll without a scroll bar. Check: `scripts/check-showcase-wheel.mjs`.
+
+## Box padding and the arc at the back (0.135.0)
+
+- Style > Box > **Padding** (`box_padding`, responsive) on `.rf-sw`.
+- Layers inside a slide: `.rf-sw__visual` has no z-index (no layer of its own), so from the back: the slide
+  container's background, the arc or blob (`.rf-sw__deco`, z-index 1), the slide container's children (z-index 2),
+  the picture with its floats (`.rf-sw__picture`, z-index 3). Before, the whole picture area was above the slide
+  content, so a large arc covered the text when the parts were one under another.

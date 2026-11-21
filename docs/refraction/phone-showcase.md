@@ -135,3 +135,8 @@ another (text above, phone, steps; phone, text above, steps; text above, steps, 
 side's box steps aside (`display: contents` through `--rf-ps-side`) so the text above, the steps, the buttons and the
 phone each take an `order` (`--rf-ps-o-*`) in a single column (`--rf-ps-cols`). Layout > Steps (responsive): shown or
 hidden; hidden steps still let the phone go through every screen. Check: `scripts/check-phone-showcase.mjs`.
+
+## Buttons alignment (0.135.0)
+
+Style > Buttons > **Alignment** (`buttons_align`, responsive): Left, Middle, Right, or Full width (each button takes an
+equal share of the row). It sets `--rf-ps-btn-justify` and `--rf-ps-btn-flex` on the widget.

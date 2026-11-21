@@ -993,8 +993,15 @@ html.rf-hp-on body {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
+	// Style > Buttons > Alignment, per screen size (0.135.0).
+	justify-content: var(--rf-ps-btn-justify, flex-start);
 	gap: 12px;
 	margin-top: 6px;
+
+	> .rf-showcase__button {
+		flex: var(--rf-ps-btn-flex, 0 0 auto);
+		justify-content: center;
+	}
 }
 
 .rf-showcase__button {
