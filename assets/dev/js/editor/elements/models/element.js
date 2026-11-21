@@ -186,7 +186,15 @@ ElementModel = BaseElementModel.extend( {
 
 		const item = refraction.helpers.getNestedItem?.( this.get( 'id' ) );
 
-		return item ? String( item.item.settings.get( item.titleKey ) || '' ).trim() : '';
+		if ( ! item ) {
+			return '';
+		}
+
+		const title = String( item.item.settings.get( item.titleKey ) || '' ).trim();
+		const names = refraction.helpers.nestedDefaultTitle( item.owner );
+
+		// Still a default name ("Slide #4"): the number of its place, also on a page saved before 0.138.0.
+		return names && names.test( title ) ? names.at( item.index + 1 ) : title;
 	},
 
 	getVisibility() {

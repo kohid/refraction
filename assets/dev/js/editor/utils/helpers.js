@@ -591,6 +591,63 @@ module.exports = {
 		return item && titleKey ? { owner, name, index, item, titleKey, container } : null;
 	},
 
+	/**
+	 * The widget's default item name ("Slide #%d") as a test for "is still a default name", and as a maker of the
+	 * name for a place (1-based). Null when the widget has none.
+	 *
+	 * @param {Object} owner The nested widget's container.
+	 */
+	nestedDefaultTitle( owner ) {
+		const format = refraction.widgetsCache?.[ owner.model.get( 'widgetType' ) ]?.defaults?.elements_title;
+
+		if ( ! format || ! /%[ds]/.test( format ) ) {
+			return null;
+		}
+
+		const pattern = new RegExp( '^' + format.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ).replace( /%[ds]/, '\\d+' ) + '$' );
+
+		return {
+			test: ( title ) => pattern.test( String( title || '' ).trim() ),
+			at: ( place ) => format.replace( /%[ds]/, place ),
+		};
+	},
+
+	/**
+	 * Items still named by default ("Slide #4") take the number of their place after slides are added, moved,
+	 * duplicated or removed (0.138.0), in the widget's list and on their containers; names given by hand stay.
+	 *
+	 * @param {Object} owner The nested widget's container.
+	 */
+	renumberNestedTitles( owner ) {
+		const names = this.nestedDefaultTitle( owner );
+		const first = owner?.children?.[ 0 ] && this.getNestedItem( owner.children[ 0 ].id );
+
+		if ( ! names || ! first ) {
+			return;
+		}
+
+		let changed = false;
+
+		owner.repeaters[ first.name ].children.forEach( ( row, index ) => {
+			const name = names.at( index + 1 );
+			const child = owner.children[ index ];
+
+			if ( names.test( row.settings.get( first.titleKey ) ) && name !== row.settings.get( first.titleKey ) ) {
+				row.settings.set( first.titleKey, name );
+				changed = true;
+			}
+
+			if ( child && names.test( child.settings.get( '_title' ) ) && name !== child.settings.get( '_title' ) ) {
+				child.settings.set( '_title', name );
+				changed = true;
+			}
+		} );
+
+		if ( changed ) {
+			$e.internal( 'document/save/set-is-modified', { status: true } );
+		}
+	},
+
 	scrollToView( $element, timeout, $parent ) {
 		if ( undefined === timeout ) {
 			timeout = 500;

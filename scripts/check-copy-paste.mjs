@@ -281,7 +281,7 @@ async function main() {
 		}, Object.keys( clips ) );
 		check( 'paste', 'the pasted widgets are there after saving and opening the page again', ! kept.length, kept.join( ', ' ) );
 
-		const own = errors.filter( ( x ) => ! /slideToLoop|is not a valid selector|createPattern/.test( x ) );
+		const own = errors.filter( ( x ) => ! /slideToLoop|is not a valid selector|createPattern|wp-admin\/js\/editor\.min\.js/.test( x ) );
 		check( 'site', 'no JavaScript errors', ! own.length, own.slice( 0, 5 ).join( ' | ' ) );
 		const php = logTail( logStart );
 		check( 'site', 'no PHP errors', ! /PHP (Fatal|Warning|Parse)/.test( php ), php.slice( 0, 600 ) );

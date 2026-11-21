@@ -30,6 +30,10 @@ export default class extends BaseRegion {
 			const owner = this.nestedOwnerOf( command, args );
 
 			if ( owner ) {
+				if ( /^document\/repeater\/(insert|move|duplicate|remove)$/.test( command ) ) {
+					refraction.helpers.renumberNestedTitles( owner );
+				}
+
 				_.defer( () => owner.children.forEach( ( child ) => child.model.trigger( 'title_external_change' ) ) );
 			}
 		} );

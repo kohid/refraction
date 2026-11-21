@@ -512,7 +512,11 @@ async function main() {
 			return fs.children.map( ( s ) => s.children.map( ( part ) => part.model.get( 'settings' ).get( '_title' ) ).join( '/' ) );
 		} );
 		check( 'editor', 'a new Focus Stack starts with three slides of Header, Content and Footer containers', 3 === made.length && made.every( ( m ) => 'Header/Content/Footer' === m ), JSON.stringify( made ) );
-		await p.waitForTimeout( 1500 );
+		// The editor draws a new widget in 1.5 to 4 s here: wait for it rather than a fixed time.
+		await frame.waitForFunction( () => {
+			const stacks = document.querySelectorAll( '.rf-fs' );
+			return stacks.length && stacks[ stacks.length - 1 ].classList.contains( 'is-ready' );
+		}, null, { timeout: 10000 } ).catch( () => {} );
 		const fresh = await frame.evaluate( () => {
 			const stacks = document.querySelectorAll( '.rf-fs' );
 			const s = stacks[ stacks.length - 1 ];
