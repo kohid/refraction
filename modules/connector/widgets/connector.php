@@ -27,7 +27,9 @@ class Connector extends Pro_Widget {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Connector', 'refraction' );
+		// 0.142.0: "Connector" is now the steps widget (steps with an arrow from each to the next); this one links any
+		// two elements.
+		return esc_html__( 'Arrow Link', 'refraction' );
 	}
 
 	public function get_icon() {
@@ -35,7 +37,7 @@ class Connector extends Pro_Widget {
 	}
 
 	public function get_keywords() {
-		return [ 'connector', 'arrow', 'line', 'link', 'flow', 'diagram', 'process', 'steps', 'path', 'point' ];
+		return [ 'arrow link', 'arrow', 'line', 'link', 'diagram', 'point', 'connect', 'path' ];
 	}
 
 	public function get_style_depends(): array {

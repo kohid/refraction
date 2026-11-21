@@ -140,6 +140,7 @@ class Modules_Manager {
 			'dynamic-container',
 			'timeline',
 			'connector',
+			'connector-steps',
 			'woocommerce',
 			'form-builder',
 			'records-dashboard',
