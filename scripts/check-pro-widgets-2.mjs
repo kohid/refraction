@@ -311,7 +311,8 @@ SECTIONS[ 'testimonial-carousel' ] = async ( { browser, admin, pages } ) => {
 	await editorBasics( null, admin, k, 'refraction-testimonial-carousel', 'Testimonial Carousel' );
 	await setSetting( admin, 'tc000001', { layout: 'above' } );
 	await sleep( 2500 );
-	check( k, 'changing Layout re-renders the preview (above)', ( await frameOf( admin ).locator( '[data-id="tc000001"].refraction-tc-layout-above' ).count() ) === 1 );
+	// Per screen size since 0.134.0: the layout is a style (custom properties), not a class.
+	check( k, 'changing Layout shows at once in the preview (above: the photo over the quote)', 'column' === await frameOf( admin ).locator( '[data-id="tc000001"] .refraction-tc' ).first().evaluate( ( el ) => getComputedStyle( el ).flexDirection ) );
 
 	const v = await visitor( browser, rel( pages[ k ].url ), 1280 );
 	const p = v.page;
@@ -599,7 +600,8 @@ SECTIONS[ 'video-playlist' ] = async ( { browser, admin, pages } ) => {
 	await editorBasics( null, admin, k, 'refraction-video-playlist', 'Video Playlist' );
 	await setSetting( admin, 'vp000001', { layout: 'left' } );
 	await sleep( 2500 );
-	check( k, 'changing Playlist Position re-renders the preview', ( await frameOf( admin ).locator( '[data-id="vp000001"].refraction-vp-layout-left' ).count() ) === 1 );
+	// Per screen size since 0.134.0: the position is a style (custom properties), not a class.
+	check( k, 'changing Playlist Position shows at once in the preview (the list on the left)', 'row-reverse' === await frameOf( admin ).locator( '[data-id="vp000001"] .refraction-vp' ).first().evaluate( ( el ) => getComputedStyle( el ).flexDirection ) );
 
 	const before = requested.length;
 	const v = await visitor( browser, rel( pages[ k ].url ), 1280, 900 );

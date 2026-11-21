@@ -103,7 +103,7 @@ custom properties the widget's styles read (or, for Focus Stack, a class the scr
 | Widget | Setting | How |
 |---|---|---|
 | Phone Showcase | Phone On The, On Small Screens, Progress Bar > Position | `--rf-ps-side-order`, `--rf-ps-stack-device` (used at 767px and less), `--rf-ps-timer-top/-bottom`. Phone On The has `mobile_default` right, so phones keep the steps first as before. |
-| Focus Stack | Stack | `frontend_available` and responsive: the script reads the current view's choice (`getCurrentDeviceSetting`), sets `rf-fs-o-horizontal/-vertical` on the widget and builds again when the size crosses into another choice. The server writes the desktop class. Both directions' settings stay shown. |
+| Focus Stack | Stack | `frontend_available` and responsive: the script reads the current view's choice (`getCurrentDeviceSetting`), sets `rf-fs-o-horizontal/-vertical` on the widget and builds again when the size crosses into another choice, or (Edit Mode) when any `orientation*` setting changes, from the panel, undo or redo. The server writes the desktop class. Both directions' settings stay shown. |
 | Showcase Wheel | Shape behind the current one, Labels | `--rf-sw-sh-box`, `--rf-sw-sh-circle`, `--rf-sw-sh-radius`; `--rf-sw-lbl-all`, `--rf-sw-lbl-cur`. |
 | Price List | Image Position (new: Above) | `--rf-pl-dir`, `--rf-pl-img`. |
 | Event Details | Layout | `--rf-ed-dir`, `--rf-ed-wrap`, `--rf-ed-col-k`. |

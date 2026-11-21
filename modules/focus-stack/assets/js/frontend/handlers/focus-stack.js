@@ -520,6 +520,20 @@ export default class FocusStack extends Base {
 		};
 		window.addEventListener( 'resize', this.onResize );
 
+		// Edit Mode: a Stack changed in any way (the panel, undo, redo) lays the stack out again.
+		const model = this.isEdit && window.refractionFrontend?.config?.elements?.data?.[ this.getModelCID() ];
+
+		if ( model ) {
+			this.settingsModel = model;
+			this.onModelChange = () => {
+				if ( Object.keys( model.changed || {} ).some( ( key ) => 0 === key.indexOf( 'orientation' ) ) ) {
+					window.clearTimeout( this.rebuildTimer );
+					this.rebuildTimer = window.setTimeout( () => this.build(), 0 );
+				}
+			};
+			model.on( 'change', this.onModelChange );
+		}
+
 		// The editor adds, removes and re-renders slide containers and their parts without rendering the widget again.
 		if ( this.isEdit && window.MutationObserver && this.elements.$slides[ 0 ] ) {
 			const box = this.elements.$slides[ 0 ];
@@ -540,6 +554,10 @@ export default class FocusStack extends Base {
 		window.clearTimeout( this.rebuildTimer );
 		window.clearTimeout( this.resizeTimer );
 		window.removeEventListener( 'resize', this.onResize );
+
+		if ( this.settingsModel ) {
+			this.settingsModel.off( 'change', this.onModelChange );
+		}
 
 		if ( this.mutations ) {
 			this.mutations.disconnect();
