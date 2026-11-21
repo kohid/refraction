@@ -139,6 +139,7 @@ class Modules_Manager {
 			'showcase-wheel',
 			'dynamic-container',
 			'timeline',
+			'connector',
 			'woocommerce',
 			'form-builder',
 			'records-dashboard',

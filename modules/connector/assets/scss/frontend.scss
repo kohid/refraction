@@ -1,0 +1,133 @@
+// Connector (widgets/connector.php, assets/js/frontend/handlers/connector.js). The widget takes no room: it sits at its
+// container's top left corner with no size, and the arrow (an SVG drawn by the script, in coordinates from that corner)
+// overflows it to reach the two elements.
+
+.refraction-widget-refraction-connector,
+.e-con > .refraction-widget-refraction-connector {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	width: 0;
+	max-width: none;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	pointer-events: none;
+}
+
+.rf-cn {
+	position: relative;
+	width: 0;
+	height: 0;
+}
+
+.rf-cn__svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1px;
+	height: 1px;
+	overflow: visible;
+	pointer-events: none;
+
+	path.rf-cn__line {
+		fill: none;
+		stroke: var(--rf-cn-color, #6b7280);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.rf-cn__head-fill {
+		fill: var(--rf-cn-color, #6b7280);
+		stroke: none;
+	}
+
+	.rf-cn__head-line {
+		fill: none;
+		stroke: var(--rf-cn-color, #6b7280);
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.rf-cn__dot {
+		fill: var(--rf-cn-dot, var(--rf-cn-color, #6b7280));
+	}
+}
+
+// Flowing dashes.
+@keyframes rf-cn-flow {
+	to {
+		stroke-dashoffset: calc(-1 * var(--rf-cn-dash-total, 20px));
+	}
+}
+
+.rf-cn--flow path.rf-cn__line {
+	animation: rf-cn-flow var(--rf-cn-speed, 1.6s) linear infinite;
+}
+
+// Drawn when it comes into view: the line's length is its dash (connector.js), slid in.
+.rf-cn--draw path.rf-cn__line {
+	stroke-dasharray: var(--rf-cn-len, 1000);
+	stroke-dashoffset: var(--rf-cn-len, 1000);
+	transition: stroke-dashoffset var(--rf-cn-speed, 1.6s) ease-in-out;
+}
+
+.rf-cn--draw.is-drawn path.rf-cn__line {
+	stroke-dashoffset: 0;
+}
+
+.rf-cn--draw .rf-cn__head-fill,
+.rf-cn--draw .rf-cn__head-line {
+	opacity: 0;
+	transition: opacity 0.3s ease var(--rf-cn-speed, 1.6s);
+}
+
+.rf-cn--draw.is-drawn .rf-cn__head-fill,
+.rf-cn--draw.is-drawn .rf-cn__head-line {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-cn--flow path.rf-cn__line {
+		animation: none;
+	}
+
+	.rf-cn--draw path.rf-cn__line {
+		stroke-dashoffset: 0;
+		transition: none;
+	}
+
+	.rf-cn--draw .rf-cn__head-fill,
+	.rf-cn--draw .rf-cn__head-line {
+		opacity: 1;
+		transition: none;
+	}
+
+	.rf-cn__dot {
+		display: none;
+	}
+}
+
+// Edit Mode: a small chip at the corner, to select the widget (it has no size of its own).
+.rf-cn__chip {
+	display: none;
+}
+
+.refraction-editor-active .rf-cn__chip {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: rgba(37, 99, 235, 0.9);
+	color: #fff;
+	font: 600 10px/1.4 system-ui, sans-serif;
+	white-space: nowrap;
+	pointer-events: auto;
+	cursor: pointer;
+}

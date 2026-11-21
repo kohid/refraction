@@ -42,6 +42,7 @@ module.exports = function( $ ) {
 	this.elementsHandlers[ 'refraction-timed-slides.default' ] = () => import( /* webpackChunkName: 'timed-slides' */ 'refraction/modules/timed-slides/assets/js/frontend/handlers/timed-slides' );
 	this.elementsHandlers[ 'refraction-focus-stack.default' ] = () => import( /* webpackChunkName: 'focus-stack' */ 'refraction/modules/focus-stack/assets/js/frontend/handlers/focus-stack' );
 	this.elementsHandlers[ 'refraction-showcase-wheel.default' ] = () => import( /* webpackChunkName: 'showcase-wheel' */ 'refraction/modules/showcase-wheel/assets/js/frontend/handlers/showcase-wheel' );
+	this.elementsHandlers[ 'refraction-connector.default' ] = () => import( /* webpackChunkName: 'connector' */ 'refraction/modules/connector/assets/js/frontend/handlers/connector' );
 	this.elementsHandlers[ 'refraction-timeline.default' ] = () => import( /* webpackChunkName: 'timeline' */ 'refraction/modules/timeline/assets/js/frontend/handlers/timeline' );
 	this.elementsHandlers[ 'refraction-dynamic-container.default' ] = () => import( /* webpackChunkName: 'dynamic-container' */ 'refraction/modules/dynamic-container/assets/js/frontend/handlers/dynamic-container' );
 	this.elementsHandlers[ 'refraction-sidebar-panel.default' ] = () => import( /* webpackChunkName: 'sidebar-panel' */ 'refraction/modules/records-dashboard/assets/js/frontend/handlers/sidebar-panel' );
