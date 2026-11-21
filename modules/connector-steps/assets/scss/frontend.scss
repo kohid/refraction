@@ -1,0 +1,144 @@
+// Connector (widgets/connector-steps.php): steps with an arrow from each to the next. The steps share the row (or stand
+// one under another); each arrow sits in the gap after its step, centred on it. The layout writes where, per screen
+// size: --rf-cs-cx / --rf-cs-cy (the middle of the gap), --rf-cs-rot (0 in a row, 90deg one under another).
+
+.rf-cs {
+	--rf-cs-arrow: max(0px, calc(var(--rf-cs-gap, 64px) - 2 * var(--rf-cs-inset, 8px)));
+
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	gap: var(--rf-cs-gap, 64px);
+	width: 100%;
+}
+
+.rf-cs__step {
+	position: relative;
+	display: flex;
+	flex: var(--rf-cs-flex, 1 1 0);
+	flex-direction: column;
+	min-width: 0;
+
+	// The step's container fills its slot.
+	> .e-con {
+		flex: 1 1 auto;
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+// ---------------------------------------------------------------- the arrow to the next step
+.rf-cs__arrow {
+	position: absolute;
+	top: var(--rf-cs-cy, 50%);
+	left: var(--rf-cs-cx, calc(100% + 32px));
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--rf-cs-arrow);
+	height: max(var(--rf-cs-head, 14px), var(--rf-cs-w, 3px));
+	color: var(--rf-cs-color, #1f2937);
+	transform: translate(-50%, -50%) rotate(var(--rf-cs-rot, 0deg));
+	pointer-events: none;
+}
+
+.rf-cs__line {
+	flex: 1 1 auto;
+	min-width: 0;
+	height: var(--rf-cs-w, 3px);
+	background-repeat: repeat-x;
+	background-position: 0 50%;
+}
+
+.rf-cs--line-solid .rf-cs__line {
+	background-color: currentcolor;
+	border-radius: var(--rf-cs-w, 3px);
+}
+
+.rf-cs--line-dotted .rf-cs__line {
+	--rf-cs-dash: calc(var(--rf-cs-w, 3px) * 2.4);
+
+	background-image: radial-gradient(circle closest-side, currentcolor 98%, transparent);
+	background-size: var(--rf-cs-dash) 100%;
+}
+
+.rf-cs--line-dashed .rf-cs__line {
+	--rf-cs-dash: calc(var(--rf-cs-w, 3px) * 4);
+
+	background-image: linear-gradient(90deg, currentcolor 60%, transparent 60%);
+	background-size: var(--rf-cs-dash) 100%;
+}
+
+.rf-cs--line-none .rf-cs__line {
+	display: none;
+}
+
+.rf-cs__head {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: var(--rf-cs-head, 14px);
+	height: var(--rf-cs-head, 14px);
+	// Overlaps the line's end a little, so the two read as one arrow.
+	margin-left: calc(var(--rf-cs-head, 14px) * -0.2);
+
+	svg,
+	i {
+		width: 100%;
+		height: 100%;
+		font-size: var(--rf-cs-head, 14px);
+		line-height: 1;
+	}
+
+	svg {
+		overflow: visible;
+	}
+}
+
+.rf-cs--line-none .rf-cs__head {
+	margin-left: 0;
+}
+
+.rf-cs--head-double .rf-cs__head {
+	width: calc(var(--rf-cs-head, 14px) * 1.3);
+}
+
+.rf-cs--head-dot .rf-cs__head {
+	margin-left: 0;
+}
+
+.rf-cs--head-circle .rf-cs__head {
+	width: calc(var(--rf-cs-head, 14px) * 1.9);
+	height: calc(var(--rf-cs-head, 14px) * 1.9);
+	margin-left: 0;
+	padding: calc(var(--rf-cs-head, 14px) * 0.35);
+	border-radius: 50%;
+	background: var(--rf-cs-circle, currentcolor);
+	box-sizing: border-box;
+}
+
+// ---------------------------------------------------------------- motion
+@keyframes rf-cs-flow {
+	to {
+		background-position: var(--rf-cs-dash, 12px) 50%;
+	}
+}
+
+@keyframes rf-cs-nudge {
+	50% {
+		translate: calc(var(--rf-cs-head, 14px) * 0.35) 0;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-cs--flow .rf-cs__line {
+		animation: rf-cs-flow var(--rf-cs-speed, 1.2s) linear infinite;
+	}
+
+	.rf-cs--nudge .rf-cs__head {
+		animation: rf-cs-nudge var(--rf-cs-speed, 1.2s) ease-in-out infinite;
+	}
+}

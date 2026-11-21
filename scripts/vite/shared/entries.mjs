@@ -43,6 +43,7 @@ export const BASE_ENTRIES = {
 	'showcase-wheel': 'modules/showcase-wheel/assets/js/editor/index.js',
 	'dynamic-container': 'modules/dynamic-container/assets/js/editor/index.js',
 	timeline: 'modules/timeline/assets/js/editor/index.js',
+	'connector-steps': 'modules/connector-steps/assets/js/editor/index.js',
 	'records-dashboard': 'modules/records-dashboard/assets/js/editor/index.js',
 	'container-converter': 'modules/container-converter/assets/js/editor/module.js',
 	'web-cli': 'modules/web-cli/assets/js/index.js',
