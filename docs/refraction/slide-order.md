@@ -24,6 +24,9 @@ move, duplicate and remove the container with the row.
 - A slide's title in Structure is its row's title (`elementModel.getNestedItemTitle()`); Structure redraws the titles
   after any `document/repeater/*` command and any change of a row (`navigator.js`).
 - Renaming a slide in Structure also sets its row's title (`exitTitleEditing()`).
+- Default names (`elements_title`, "Slide #%d") follow their place: `renumberNestedTitles()` runs after
+  `document/repeater/insert|move|duplicate|remove` on the rows and the containers' `_title`; Structure also shows a
+  default name with its place's number (pages saved before). Names given by hand are left alone.
 - Its context menu (Structure and the canvas): Duplicate runs `document/repeater/duplicate`, Delete
   `document/repeater/remove` (disabled for the last slide); "Copy <widget>" copies the widget (0.137.0).
 - A click scrolls to the outermost nested widget holding the element (`getScrollTarget()`), not to the slide, which

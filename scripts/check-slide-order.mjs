@@ -236,6 +236,29 @@ await e.evaluate( ( m ) => Object.values( m ).forEach( ( info ) => {
 await e.waitForTimeout( 1500 );
 report( 'rm+move', await state() );
 
+// ---------------------------------------------------------------- default names follow their place
+const names = await e.evaluate( async () => {
+	const doc = refraction.documents.getCurrent().container;
+	const box = $e.run( 'document/elements/create', { container: doc, model: { elType: 'container' }, options: { edit: false } } );
+	const w = $e.run( 'document/elements/create', { container: box, model: { elType: 'widget', widgetType: 'refraction-timed-slides' }, options: { edit: false } } );
+	const rows = () => w.repeaters.slides.children.map( ( r ) => r.settings.get( 'slide_title' ) ).join( ',' );
+	const tree = () => w.children.map( ( c ) => c.model.getTitle() ).join( ',' );
+	const wait = () => new Promise( ( r ) => setTimeout( r, 300 ) );
+	const out = { start: rows() };
+	// Name the slides by default, as new ones are ("Slide #1"...), but the last by hand.
+	w.repeaters.slides.children.forEach( ( r, i ) => r.settings.set( 'slide_title', 'Slide #' + ( i + 1 ) ) );
+	w.repeaters.slides.children[ 2 ].settings.set( 'slide_title', 'Our boat' );
+	$e.run( 'document/repeater/remove', { container: w, name: 'slides', index: 0 } );
+	await wait();
+	out.removed = rows() + ' / ' + tree();
+	$e.run( 'document/repeater/duplicate', { container: w, name: 'slides', index: 0 } );
+	await wait();
+	out.duplicated = rows() + ' / ' + tree();
+	return out;
+} );
+check( 'names', 'a default name takes the number of its place after a removal (Slide #2 -> Slide #1), a hand-given name stays, in the list and in Structure', 'Slide #1,Our boat / Slide #1,Our boat' === names.removed, JSON.stringify( names ) );
+check( 'names', '... and after a duplicate (Slide #1, Slide #2, Our boat)', 'Slide #1,Slide #2,Our boat / Slide #1,Slide #2,Our boat' === names.duplicated, JSON.stringify( names ) );
+
 // Save, open again, and the site.
 await e.evaluate( async () => {
 	await $e.run( 'document/save/publish' );

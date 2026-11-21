@@ -48,6 +48,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 
 = 0.138.0 =
 * Slides stay together with their settings: after a slide was moved or added in Timed Slides, Focus Stack, Showcase Wheel, Dynamic Container, Nested Carousel, Mega Menu or Tabs, moving, duplicating or removing another took the wrong slide's content, so slides swapped content against their title, picture and background. Showcase Wheel also put a moved slide's content in its neighbour's slot.
+* Slides still named by default (Slide #1, Slide #2...) are numbered by their place again after a slide is added, moved, duplicated or deleted (no more Slide #1, #2, #4); names you gave stay.
 * Structure: a slide shows the name it has in the widget's list (and follows it when slides move); clicking it shows that slide and scrolls to the widget instead of where a hidden slide sits; renaming it renames the slide in the list; Duplicate and Delete in its menu duplicate or remove the slide (the last one stays).
 
 = 0.137.0 =
