@@ -343,6 +343,40 @@ const ContainerView = BaseElementView.extend( {
 			} );
 		}
 
+		// A nested widget's slide or item: Duplicate and Delete work on the widget's list (as its buttons in the panel
+		// do), since the slide itself is locked to its widget (0.138.0).
+		const nested = () => refraction.helpers.getNestedItem( this.getContainer().id );
+		const actionOf = ( name ) => groups.flatMap( ( group ) => group.actions || [] ).find( ( action ) => name === action.name );
+		const duplicate = actionOf( 'duplicate' );
+		const remove = actionOf( 'delete' );
+
+		if ( duplicate ) {
+			const { isEnabled, callback } = duplicate;
+
+			duplicate.isEnabled = () => ( nested() ? true : isEnabled() );
+			duplicate.callback = () => {
+				const item = nested();
+
+				return item ? $e.run( 'document/repeater/duplicate', { container: item.owner, name: item.name, index: item.index } ) : callback();
+			};
+		}
+
+		if ( remove ) {
+			const { isEnabled, callback } = remove;
+
+			// The last slide stays: a widget with no slides has nothing to show or to add to.
+			remove.isEnabled = () => {
+				const item = nested();
+
+				return item ? item.owner.children.length > 1 : isEnabled();
+			};
+			remove.callback = () => {
+				const item = nested();
+
+				return item ? $e.run( 'document/repeater/remove', { container: item.owner, name: item.name, index: item.index } ) : callback();
+			};
+		}
+
 		groups.splice( transferGroupGeneralIndex + 1, 0, {
 			name: 'newContainerGroup',
 			actions: [

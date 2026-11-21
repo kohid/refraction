@@ -1047,13 +1047,35 @@ BaseElementView = BaseContainer.extend( {
 		}
 
 		if ( options.scrollIntoView ) {
-			refraction.helpers.scrollToView( this.getDomElement(), 200 );
+			refraction.helpers.scrollToView( this.getScrollTarget(), 200 );
 		}
 
 		$e.run( 'document/elements/toggle-selection', {
 			container: this.getContainer(),
 			append: options.append,
 		} );
+	},
+
+	/**
+	 * Where Structure scrolls the page for this element (0.138.0). Inside a nested widget's slide or item it is the
+	 * outermost such widget: the slide may be hidden or off to the side until the widget shows it (which follows the
+	 * selection), so scrolling to the slide itself took the page somewhere else.
+	 *
+	 * @return {jQuery} The element to scroll to.
+	 */
+	getScrollTarget() {
+		let target = null;
+		let container = this.getContainer();
+
+		while ( container?.parent ) {
+			if ( refraction.helpers.getNestedItem( container.id ) ) {
+				target = container.parent;
+			}
+
+			container = container.parent;
+		}
+
+		return target?.view ? target.view.getDomElement() : this.getDomElement();
 	},
 
 	/**

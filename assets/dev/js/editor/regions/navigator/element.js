@@ -326,6 +326,14 @@ export default class extends Marionette.CompositeView {
 			settingsModel.set( '_title', newTitle );
 		}
 
+		// A nested widget's slide or item: its name is the one in the widget's list (Slides, Tabs...), so renaming it
+		// here renames the row there too (0.138.0).
+		const nested = newTitle ? refraction.helpers.getNestedItem( this.model.get( 'id' ) ) : null;
+
+		if ( nested && newTitle !== nested.item.settings.get( nested.titleKey ) ) {
+			$e.run( 'document/elements/settings', { container: nested.item, settings: { [ nested.titleKey ]: newTitle } } );
+		}
+
 		// TODO: Remove - After merge pull request #13605.
 		$e.internal( 'document/save/set-is-modified', {
 			status: true,

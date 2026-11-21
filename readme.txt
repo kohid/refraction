@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.137.0
+Stable tag: 0.138.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.138.0 =
+* Slides stay together with their settings: after a slide was moved or added in Timed Slides, Focus Stack, Showcase Wheel, Dynamic Container, Nested Carousel, Mega Menu or Tabs, moving, duplicating or removing another took the wrong slide's content, so slides swapped content against their title, picture and background. Showcase Wheel also put a moved slide's content in its neighbour's slot.
+* Structure: a slide shows the name it has in the widget's list (and follows it when slides move); clicking it shows that slide and scrolls to the widget instead of where a hidden slide sits; renaming it renames the slide in the list; Duplicate and Delete in its menu duplicate or remove the slide (the last one stays).
 
 = 0.137.0 =
 * Copy and paste work for every widget, on the same page and from one page to another. Widgets holding slides or items (Focus Stack, Showcase Wheel, Timed Slides, Mega Menu, tabs, accordions, carousels, Dynamic Container...) copied every default setting of every screen size of every slide: millions of characters, more than the browser keeps, so Copy did nothing. A copy now holds what a save holds (a Showcase Wheel: 148,000 characters instead of 1.5 million); a copy still too big says so.

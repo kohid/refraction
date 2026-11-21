@@ -39,7 +39,11 @@ export function widgetNodes( widgetType ) {
 }
 
 export function findChildContainerOrFail( container, index ) {
-	const childView = container.view.children.findByIndex( index );
+	// By the elements' order (the list's), not the views' (0.138.0): the views are kept in the order they were made,
+	// so after a slide was moved or added, moving, duplicating or removing another took the wrong slide's container,
+	// and slides swapped their content against their settings (picture, background, title).
+	const model = container.model.get( 'elements' ).at( index );
+	const childView = model ? container.view.children.findByModel( model ) : null;
 
 	if ( ! childView ) {
 		throw new Error( 'Child container was not found for the current repeater item.' );
