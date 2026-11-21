@@ -72,3 +72,17 @@ Style > Logo or Site Title has two tabs. Before Scrolling holds the settings of 
 same settings with ids ending in `_scrolled`, applied under `.refraction-nav-menu.is-scrolled`, which `nav-menu.js`
 sets once the page is scrolled past the Scroll point (`bar_brand_offset`, now shown whenever there is a brand). The
 brand, its logo and title transition over `--refraction-nav-brand-speed`.
+
+## The current page's item, and the logo per view (0.132.0)
+
+- The Nav Menu is rendered for each page, never from the element cache (`Nav_Menu::is_dynamic_content()` is true;
+  `Pro_Widget` makes the other Pro widgets cacheable). WordPress marks the item of the page being viewed
+  (`.current-menu-item`, `.current-menu-ancestor`, and the walker adds `aria-current="page"`), and the Active colours
+  style it. Before, a Nav Menu in a Theme Builder header was cached with the rest of the header on the first page
+  visited, so that page's item (often Home) stayed marked on every page. Share Buttons and Blockquote (its share
+  link) read the page being viewed too, and are rendered for each page as well.
+- Content > Logo or Site Title > **Visible** (`bar_brand_visible`, responsive): Show or Hide per view. It sets
+  `--refraction-nav-brand-display` (flex / none) on the widget; the brand, and its copy in the collapsed menu, use it.
+  A view without its own choice takes the next larger view's.
+
+Check: `node scripts/check-nav-current.mjs --site DIR --port N`.

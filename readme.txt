@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.131.0
+Stable tag: 0.132.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.132.0 =
+* Nav Menu: the page being viewed is marked as the current item (its active style and aria-current) on every page. In a header made with the Theme Builder the menu was kept in the element cache from the first page visited, so that page (often Home) stayed marked everywhere. Share Buttons and Blockquote's share link had the same problem in headers and footers: they now share the page being viewed.
+* Nav Menu: Content > Logo or Site Title > Visible, per screen size: show or hide the logo or title at each view (for example hidden from 430 down, or shown only on desktop). It shows at once in Edit Mode.
 
 = 0.131.0 =
 * The editor panel now shows which screen size you are editing: a strip under the Content / Style / Advanced tabs names the view chosen in the top bar (for example 430px Large Phone) and says what a change there does; on any view but Desktop it is in the accent colour, with a Desktop button to go back. Popover rows such as Typography, Rotate, Offset, Scale, Skew and shadows carry the view's device icon, and a setting that has its own value on this view (not taken from a larger one) gets a dot by its device icon.
