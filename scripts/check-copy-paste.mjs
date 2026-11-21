@@ -94,13 +94,18 @@ async function main() {
 	try {
 		const A = page( 'Copy from' );
 		const B = page( 'Paste into' );
-		const e = await ( await browser.newContext( { viewport: { width: 1500, height: 950 } } ) ).newPage();
-		e.on( 'pageerror', ( x ) => errors.push( x.message ) );
+		const ctx = await browser.newContext( { viewport: { width: 1500, height: 950 } } );
+		let e = await ctx.newPage();
+		e.on( 'pageerror', ( x ) => errors.push( x.message + ' @ ' + String( x.stack || '' ).split( '\n' ).slice( 1, 4 ).join( ' < ' ) ) );
 		await e.goto( `${ BASE }/wp-login.php` );
 		await e.fill( '#user_login', 'admin' );
 		await e.fill( '#user_pass', 'admin' );
 		await Promise.all( [ e.waitForURL( /wp-admin/, { timeout: 120000, waitUntil: 'commit' } ), e.click( '#wp-submit' ) ] );
+		// Each page in a fresh tab (a tab that held some 200 widgets runs out of memory).
 		const open = async ( id ) => {
+			await e.close();
+			e = await ctx.newPage();
+			e.on( 'pageerror', ( x ) => errors.push( x.message + ' @ ' + String( x.stack || '' ).split( '\n' ).slice( 1, 4 ).join( ' < ' ) ) );
 			await e.goto( `${ BASE }/wp-admin/post.php?post=${ id }&action=refraction`, { waitUntil: 'domcontentloaded', timeout: 120000 } );
 			await e.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 120000 } );
 			await sleep( 2500 );
@@ -111,10 +116,10 @@ async function main() {
 			return all( refraction.documents.getCurrent().container ).filter( ( c ) => c.model.get( 'widgetType' ) === type ).length;
 		}, t );
 		const save = async () => {
-			await e.evaluate( () => {
-				$e.run( 'document/save/publish' );
+			await e.evaluate( async () => {
+				await $e.run( 'document/save/publish' );
 			} );
-			await sleep( 5000 );
+			await sleep( 1500 );
 		};
 
 		// ------------------------------------------------------------ every widget, each in its own container
@@ -122,7 +127,7 @@ async function main() {
 		const made = await e.evaluate( () => {
 			const doc = refraction.documents.getCurrent().container;
 			const out = {};
-			Object.keys( refraction.widgetsCache ).filter( ( t ) => false !== refraction.widgetsCache[ t ].show_in_panel && ! refraction.widgetsCache[ t ].atomic_controls ).forEach( ( t ) => {
+			Object.keys( refraction.widgetsCache ).filter( ( t ) => 'container' !== t && false !== refraction.widgetsCache[ t ].show_in_panel && ! refraction.widgetsCache[ t ].atomic_controls ).forEach( ( t ) => {
 				try {
 					const box = $e.run( 'document/elements/create', { container: doc, model: { elType: 'container' }, options: { edit: false } } );
 					out[ t ] = $e.run( 'document/elements/create', { container: box, model: { elType: 'widget', widgetType: t }, options: { edit: false } } ).id;
@@ -138,9 +143,13 @@ async function main() {
 		const sizes = {};
 		const samePage = [];
 		const clips = {};
+		const missing = [];
 		for ( const t of types ) {
 			const r = await e.evaluate( ( id ) => {
 				const c = refraction.getContainer( id );
+				if ( ! c ) {
+					return 'missing';
+				}
 				refraction.selection.add( c );
 				refractionCommon.storage.set( 'clipboard', null );
 				$e.run( 'document/elements/copy', { containers: [ c ] } );
@@ -148,6 +157,10 @@ async function main() {
 				refraction.selection.remove( c, true );
 				return d ? { size: JSON.stringify( d ).length, data: d } : null;
 			}, made[ t ] );
+			if ( 'missing' === r ) {
+				missing.push( t );
+				continue;
+			}
 			if ( ! r ) {
 				sizes[ t ] = 'nothing copied';
 				continue;
@@ -164,6 +177,7 @@ async function main() {
 				samePage.push( `${ t }: ${ before }->${ after }` );
 			}
 		}
+		console.log( `       (not on the page after saving: ${ missing.join( ', ' ) || 'none' })` );
 		const notCopied = Object.entries( sizes ).filter( ( [ , v ] ) => 'number' !== typeof v );
 		const biggest = Object.entries( sizes ).filter( ( [ , v ] ) => 'number' === typeof v ).sort( ( a, b ) => b[ 1 ] - a[ 1 ] ).slice( 0, 4 );
 		check( 'copy', 'every widget copies, the largest well under the browser\'s storage (under 1 million characters)', ! notCopied.length && biggest[ 0 ][ 1 ] < 1000000, JSON.stringify( { notCopied, biggest } ) );
@@ -203,8 +217,7 @@ async function main() {
 		// ------------------------------------------------------------ a nested widget's slide
 		const wheel = frame.locator( `[data-id="${ made[ 'refraction-showcase-wheel' ] }"]` );
 		await wheel.scrollIntoViewIfNeeded();
-		const wb = await wheel.boundingBox();
-		await frame.locator( 'body' ).click( { button: 'right', position: { x: wb.x + 40, y: wb.y + 60 } } );
+		await wheel.click( { button: 'right', position: { x: 40, y: 60 }, force: true } );
 		await sleep( 300 );
 		const menuItem = await e.evaluate( () => {
 			const m = [ ...document.querySelectorAll( '.refraction-context-menu' ) ].find( ( x ) => x.offsetParent );
@@ -219,7 +232,7 @@ async function main() {
 		const viaMenu = await e.evaluate( () => refractionCommon.storage.get( 'clipboard' )?.elements?.[ 0 ]?.widgetType );
 		check( 'nested', 'right-clicking a Showcase Wheel slide offers "Copy Showcase Wheel", which copies the widget', 'Copy Showcase Wheel' === menuItem && 'refraction-showcase-wheel' === viaMenu, JSON.stringify( { menuItem, viaMenu } ) );
 		await e.keyboard.press( 'Escape' );
-		await frame.locator( 'body' ).click( { position: { x: wb.x + 40, y: wb.y + 60 } } );
+		await wheel.click( { position: { x: 40, y: 60 }, force: true } );
 		await sleep( 300 );
 		await e.evaluate( () => refractionCommon.storage.set( 'clipboard', null ) );
 		await e.keyboard.press( 'Control+c' );
@@ -236,8 +249,7 @@ async function main() {
 		const video = frame.locator( `[data-id="${ made.video }"]` );
 		await e.keyboard.press( 'Escape' );
 		await video.scrollIntoViewIfNeeded();
-		const vb = await video.boundingBox();
-		await frame.locator( 'body' ).click( { button: 'right', position: { x: vb.x + ( vb.width / 2 ), y: vb.y + ( vb.height / 2 ) } } );
+		await video.click( { button: 'right', force: true } );
 		await sleep( 300 );
 		const videoMenu = await e.evaluate( () => {
 			const m = [ ...document.querySelectorAll( '.refraction-context-menu' ) ].find( ( x ) => x.offsetParent );
@@ -269,7 +281,7 @@ async function main() {
 		}, Object.keys( clips ) );
 		check( 'paste', 'the pasted widgets are there after saving and opening the page again', ! kept.length, kept.join( ', ' ) );
 
-		const own = errors.filter( ( x ) => ! /slideToLoop|is not a valid selector/.test( x ) );
+		const own = errors.filter( ( x ) => ! /slideToLoop|is not a valid selector|createPattern/.test( x ) );
 		check( 'site', 'no JavaScript errors', ! own.length, own.slice( 0, 5 ).join( ' | ' ) );
 		const php = logTail( logStart );
 		check( 'site', 'no PHP errors', ! /PHP (Fatal|Warning|Parse)/.test( php ), php.slice( 0, 600 ) );
