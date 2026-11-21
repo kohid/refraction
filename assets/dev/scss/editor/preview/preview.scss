@@ -592,3 +592,9 @@ html.refraction-html {
 @import "widget";
 @import "container";
 @import "presets";
+
+// An embed (video, map, Facebook, HTML) takes the pointer only once its widget is selected: before, a click selects
+// the widget and a right-click opens its menu (Copy, Paste...), which an iframe used to swallow (0.137.0).
+.refraction-widget:not(.refraction-element-editable) iframe {
+	pointer-events: none;
+}

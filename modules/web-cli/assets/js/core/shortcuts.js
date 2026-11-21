@@ -73,7 +73,14 @@ export default class Shortcuts {
 			if ( handler.exclude && -1 !== handler.exclude.indexOf( 'input' ) ) {
 				const $target = jQuery( event.target );
 
-				if ( $target.is( ':input, .refraction-input' ) || $target.closest( '[contenteditable="true"]' ).length ) {
+				if ( $target.is( ':input, .refraction-input' ) ) {
+					return false;
+				}
+
+				// In editable text (a widget's inline editing): the text's own copy, unless the shortcut works on the
+				// element when no text is selected (Copy: a click on a heading puts the caret in it, and Ctrl+C there
+				// is meant for the heading).
+				if ( $target.closest( '[contenteditable="true"]' ).length && ! ( handler.noTextSelected && ! this.hasSelectedText( event ) ) ) {
 					return false;
 				}
 			}
@@ -101,6 +108,18 @@ export default class Shortcuts {
 		event.preventDefault();
 
 		filteredHandlers[ 0 ].callback( event );
+	}
+
+	/**
+	 * Whether text is selected where the key was pressed (its own window: the editor or the preview).
+	 *
+	 * @param {Event} event
+	 */
+	hasSelectedText( event ) {
+		const doc = event.target && event.target.ownerDocument;
+		const selection = doc && doc.getSelection ? doc.getSelection() : null;
+
+		return !! ( selection && ! selection.isCollapsed && selection.toString() );
 	}
 
 	isControlEvent( event ) {

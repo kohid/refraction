@@ -201,7 +201,10 @@ class Widget_Menu_Anchor extends Widget_Base {
 	}
 
 	protected function on_save( array $settings ) {
-		$settings['anchor'] = sanitize_html_class( $settings['anchor'] );
+		// Saved without its default (empty), the key is not there.
+		if ( isset( $settings['anchor'] ) ) {
+			$settings['anchor'] = sanitize_html_class( $settings['anchor'] );
+		}
 
 		return $settings;
 	}

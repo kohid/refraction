@@ -323,6 +323,26 @@ const ContainerView = BaseElementView.extend( {
 			],
 		} );
 
+		// A nested widget's own slide or item (Showcase Wheel, carousels, tabs...) covers its widget: it offers to copy
+		// the widget, since the slide itself goes with it.
+		// The menu is built before the container exists: the widget is found when it opens.
+		const owner = () => {
+			const container = this.getContainer();
+
+			return container.isLocked() && 'widget' === container.parent?.model?.get( 'elType' ) ? container.parent : null;
+		};
+		const clipboard = _.findWhere( groups, { name: 'clipboard' } );
+
+		if ( clipboard ) {
+			clipboard.actions.unshift( {
+				name: 'copyWidget',
+				/* Translators: %s: Widget name. */
+				title: () => ( owner() ? sprintf( __( 'Copy %s', 'refraction' ), owner().model.getTitle() ) : '' ),
+				isVisible: () => !! owner(),
+				callback: () => $e.run( 'document/elements/copy', { containers: [ owner() ] } ),
+			} );
+		}
+
 		groups.splice( transferGroupGeneralIndex + 1, 0, {
 			name: 'newContainerGroup',
 			actions: [
