@@ -707,7 +707,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}} .rf-sw__nav' => 'justify-content: {{VALUE}};' ],
 		] );
 
-		$this->add_control( 'thumb_shape', [
+		// Per screen size (0.134.0; a class before): custom properties the thumbnails read.
+		$this->add_responsive_control( 'thumb_shape', [
 			'label' => esc_html__( 'Shape behind the current one', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'rounded',
@@ -717,11 +718,17 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'rounded' => esc_html__( 'Rounded rectangle', 'refraction' ),
 				'square' => esc_html__( 'Rectangle', 'refraction' ),
 			],
-			'prefix_class' => 'rf-sw-shape-',
+			'selectors_dictionary' => [
+				'none' => '--rf-sw-sh-box: none; --rf-sw-sh-circle: none;',
+				'circle' => '--rf-sw-sh-box: none; --rf-sw-sh-circle: block;',
+				'rounded' => '--rf-sw-sh-box: block; --rf-sw-sh-circle: none; --rf-sw-sh-radius: var(--rf-sw-shape-radius);',
+				'square' => '--rf-sw-sh-box: block; --rf-sw-sh-circle: none; --rf-sw-sh-radius: 0px;',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			'render_type' => 'ui',
 		] );
 
-		$this->add_control( 'labels', [
+		$this->add_responsive_control( 'labels', [
 			'label' => esc_html__( 'Labels', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'current',
@@ -730,7 +737,12 @@ class Showcase_Wheel extends Widget_Nested_Base {
 				'all' => esc_html__( 'Under every thumbnail', 'refraction' ),
 				'none' => esc_html__( 'None', 'refraction' ),
 			],
-			'prefix_class' => 'rf-sw-labels-',
+			'selectors_dictionary' => [
+				'current' => '--rf-sw-lbl-all: none; --rf-sw-lbl-cur: block;',
+				'all' => '--rf-sw-lbl-all: block; --rf-sw-lbl-cur: block;',
+				'none' => '--rf-sw-lbl-all: none; --rf-sw-lbl-cur: none;',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			'render_type' => 'ui',
 		] );
 

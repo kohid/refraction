@@ -34,14 +34,21 @@ export default class FocusStack extends Base {
 	options() {
 		const root = this.elements.$root[ 0 ];
 
+		const horizontal = 'horizontal' === this.orientation();
+
 		if ( ! this.isEdit && root && root.dataset.rfFs ) {
 			try {
-				return JSON.parse( root.dataset.rfFs );
+				const saved = JSON.parse( root.dataset.rfFs );
+
+				if ( undefined !== saved.reverse_h ) {
+					saved.reverse = horizontal ? saved.reverse_h : saved.reverse_v;
+				}
+
+				return saved;
 			} catch ( e ) {}
 		}
 
 		const s = this.getElementSettings();
-		const horizontal = 'horizontal' === s.orientation;
 
 		return {
 			// Reversed: the next slides wait after the current one (below, or on the right).
@@ -93,6 +100,26 @@ export default class FocusStack extends Base {
 
 	horizontal() {
 		return this.$element[ 0 ].classList.contains( 'rf-fs-o-horizontal' );
+	}
+
+	/** The stack of the current screen size (Layout > Stack is per screen size since 0.134.0). */
+	orientation() {
+		const settings = this.getElementSettings();
+		const value = window.refractionFrontend?.getCurrentDeviceSetting ? refractionFrontend.getCurrentDeviceSetting( settings, 'orientation' ) : settings.orientation;
+
+		return 'horizontal' === value ? 'horizontal' : 'vertical';
+	}
+
+	/** Puts the current screen size's class on the widget; true when it changed. */
+	applyOrientation() {
+		const el = this.$element[ 0 ],
+			orientation = this.orientation(),
+			changed = ! el.classList.contains( 'rf-fs-o-' + orientation );
+
+		el.classList.toggle( 'rf-fs-o-horizontal', 'horizontal' === orientation );
+		el.classList.toggle( 'rf-fs-o-vertical', 'horizontal' !== orientation );
+
+		return changed;
 	}
 
 	/**
@@ -362,6 +389,7 @@ export default class FocusStack extends Base {
 	build() {
 		this.unbind();
 		this.finishMotion();
+		this.applyOrientation();
 
 		const root = this.elements.$root[ 0 ];
 
@@ -481,6 +509,31 @@ export default class FocusStack extends Base {
 		super.onInit( ...args );
 		this.build();
 
+		// Another screen size can have another stack: built again when the size crosses into it.
+		this.onResize = () => {
+			window.clearTimeout( this.resizeTimer );
+			this.resizeTimer = window.setTimeout( () => {
+				if ( this.orientation() !== ( this.$element[ 0 ].classList.contains( 'rf-fs-o-horizontal' ) ? 'horizontal' : 'vertical' ) ) {
+					this.build();
+				}
+			}, 120 );
+		};
+		window.addEventListener( 'resize', this.onResize );
+
+		// Edit Mode: a Stack changed in any way (the panel, undo, redo) lays the stack out again.
+		const model = this.isEdit && window.refractionFrontend?.config?.elements?.data?.[ this.getModelCID() ];
+
+		if ( model ) {
+			this.settingsModel = model;
+			this.onModelChange = () => {
+				if ( Object.keys( model.changed || {} ).some( ( key ) => 0 === key.indexOf( 'orientation' ) ) ) {
+					window.clearTimeout( this.rebuildTimer );
+					this.rebuildTimer = window.setTimeout( () => this.build(), 0 );
+				}
+			};
+			model.on( 'change', this.onModelChange );
+		}
+
 		// The editor adds, removes and re-renders slide containers and their parts without rendering the widget again.
 		if ( this.isEdit && window.MutationObserver && this.elements.$slides[ 0 ] ) {
 			const box = this.elements.$slides[ 0 ];
@@ -499,6 +552,12 @@ export default class FocusStack extends Base {
 
 	onDestroy() {
 		window.clearTimeout( this.rebuildTimer );
+		window.clearTimeout( this.resizeTimer );
+		window.removeEventListener( 'resize', this.onResize );
+
+		if ( this.settingsModel ) {
+			this.settingsModel.off( 'change', this.onModelChange );
+		}
 
 		if ( this.mutations ) {
 			this.mutations.disconnect();
@@ -510,7 +569,7 @@ export default class FocusStack extends Base {
 	}
 
 	onElementChange( propertyName ) {
-		if ( [ 'slides', 'focus_shows', 'orientation', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
+		if ( 0 === propertyName.indexOf( 'orientation' ) || [ 'slides', 'focus_shows', 'direction_v', 'direction_h', 'next_part', 'prev_part', 'visible', 'loop', 'duration', 'easing', 'fade_content', 'click_waiting' ].includes( propertyName ) ) {
 			// After the wrapper got its new classes (orientation).
 			window.setTimeout( () => this.build(), 0 );
 		}

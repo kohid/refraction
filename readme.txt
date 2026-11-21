@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.133.0
+Stable tag: 0.134.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,16 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.134.0 =
+* Layout choices per screen size on our widgets (each view can have its own; a view without one follows the next larger view), shown at once in Edit Mode:
+* Phone Showcase: Phone On The (left or right), On Small Screens (the phone or the steps first) and the Progress Bar position.
+* Focus Stack: Stack (up and down, or side by side).
+* Showcase Wheel: the shape behind the current thumbnail, and Labels.
+* Price List: Image Position, with a new choice, Above (the picture over the text, for narrow screens).
+* Event Details: Layout (in a row, or one under another).
+* Testimonial Carousel: Layout. Photo beside the quote chosen for a larger screen still stacks on phones, as before; chosen on a phone's view, it stays beside.
+* Video Playlist: Playlist Position. Right or Left chosen for the desktop still goes below on tablets and phones, as before; chosen on a tablet's or phone's view, it stays beside.
 
 = 0.133.0 =
 * Timed Slides, per screen size: Slider > Layout can stack the text and then the cards, with the slider growing to fit the text (no more long text running under the cards on phones); Slider > Padding sets the room inside the slider for the text and the cards; Cards > Cards and arrows can be shown or hidden. All show at once in Edit Mode at the chosen view.

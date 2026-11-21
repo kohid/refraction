@@ -716,8 +716,9 @@ html.rf-hp-on body {
 	row-gap: var(--rf-ps-row-gap, 40px);
 }
 
-.rf-showcase-phone-left .rf-showcase__side {
-	order: 2;
+// Layout > Phone On The, per screen size (--rf-ps-side-order: 2 puts the steps after the phone).
+.rf-showcase__side {
+	order: var(--rf-ps-side-order, 0);
 }
 
 // Layout > Order of the parts (0.128.0): the text above, the steps and the phone each take their own place, in the
@@ -957,7 +958,8 @@ html.rf-hp-on body {
 // Playing by itself: a line times the current step.
 .rf-showcase__timer {
 	position: absolute;
-	bottom: var(--rf-showcase-timer-gap, 0px);
+	top: var(--rf-ps-timer-top, auto);
+	bottom: var(--rf-ps-timer-bottom, var(--rf-showcase-timer-gap, 0px));
 	left: 0;
 	height: 2px;
 	width: 100%;
@@ -974,11 +976,7 @@ html.rf-hp-on body {
 	animation-play-state: paused;
 }
 
-// Progress Bar: hidden by its switch, or at the top of the step.
-.rf-showcase-progress-at-top .rf-showcase__timer {
-	top: var(--rf-showcase-timer-gap, 0px);
-	bottom: auto;
-}
+// Progress Bar > Position: per screen size through --rf-ps-timer-top / -bottom (0.134.0).
 
 // Off (or no autoplay, where the switch is not in use): no class, no bar. Saved pages get the default (on).
 .refraction-widget-refraction-phone-showcase:not(.rf-showcase-progress-yes) .rf-showcase__timer {
@@ -1653,12 +1651,10 @@ html.rf-hp-on body {
 		grid-template-columns: var(--rf-ps-cols, minmax(0, 1fr));
 	}
 
-	.rf-showcase-phone-left .rf-showcase__side {
-		order: 0;
-	}
-
-	.rf-showcase-stack-phone .rf-showcase__device {
-		order: var(--rf-ps-o-device, -1);
+	// On Small Screens: the phone first or the steps first (--rf-ps-stack-device, per screen size). Order Of The
+	// Parts, when set, takes over.
+	.rf-showcase__device {
+		order: var(--rf-ps-o-device, var(--rf-ps-stack-device, 0));
 	}
 
 	.rf-showcase__device {

@@ -327,19 +327,16 @@
 	font-size: 14px;
 }
 
+// Layout per screen size (0.134.0): --rf-ed-dir, --rf-ed-wrap and --rf-ed-col-k (a row doubles the space across).
 .rf-ed-rows {
 	display: flex;
-	flex-direction: column;
+	flex-direction: var(--rf-ed-dir, column);
+	flex-wrap: var(--rf-ed-wrap, nowrap);
 	gap: var(--rf-ed-gap);
+	column-gap: calc(var(--rf-ed-gap) * var(--rf-ed-col-k, 1));
 	margin: 0;
 	padding: 0;
 	list-style: none;
-}
-
-.rf-ed-layout-row .rf-ed-rows {
-	flex-direction: row;
-	flex-wrap: wrap;
-	column-gap: calc(var(--rf-ed-gap) * 2);
 }
 
 .rf-ed-row {

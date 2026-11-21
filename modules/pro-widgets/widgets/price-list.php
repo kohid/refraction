@@ -122,17 +122,25 @@ class Price_List extends Pro_Widget {
 			]
 		);
 
-		$this->add_control(
+		// Per screen size (0.134.0; a class before), with Above for narrow screens.
+		$this->add_responsive_control(
 			'image_position',
 			[
 				'label' => esc_html__( 'Image Position', 'refraction' ),
 				'type' => Controls_Manager::CHOOSE,
 				'default' => 'left',
+				'toggle' => false,
 				'options' => [
 					'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
+					'top' => [ 'title' => esc_html__( 'Above', 'refraction' ), 'icon' => 'rficon-v-align-top' ],
 					'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
 				],
-				'prefix_class' => 'refraction-price-list--image-',
+				'selectors_dictionary' => [
+					'left' => '--rf-pl-dir: row; --rf-pl-img: 0 0 25%;',
+					'top' => '--rf-pl-dir: column; --rf-pl-img: 0 0 auto;',
+					'right' => '--rf-pl-dir: row-reverse; --rf-pl-img: 0 0 25%;',
+				],
+				'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			]
 		);
 

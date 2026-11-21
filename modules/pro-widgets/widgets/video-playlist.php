@@ -107,7 +107,27 @@ class Video_Playlist extends Pro_Widget {
 			]
 		);
 
-		$this->add_control(
+		// Per screen size (0.134.0; a class before). Right or Left chosen for the desktop still goes below on tablets
+		// and phones (as before); chosen on a tablet's or phone's own view, it stays beside there.
+		$positions = static function ( bool $small ): array {
+			$stacked = '--rf-vp-dir-sm: column; --rf-vp-flex-sm: none; --rf-vp-width-sm: 100%;';
+			$beside = static function ( string $dir ) use ( $small, $stacked ): string {
+				return '--rf-vp-dir: ' . $dir . '; --rf-vp-flex: initial; --rf-vp-width: initial; ' . ( $small ? '--rf-vp-dir-sm: ' . $dir . '; --rf-vp-flex-sm: initial; --rf-vp-width-sm: initial;' : $stacked );
+			};
+
+			return [
+				'right' => $beside( 'row' ),
+				'left' => $beside( 'row-reverse' ),
+				'below' => '--rf-vp-dir: column; --rf-vp-flex: none; --rf-vp-width: 100%; ' . $stacked,
+			];
+		};
+		$small = [];
+
+		foreach ( [ 'tablet', 'mobile_extra', 'mobile', 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ] as $device ) {
+			$small[ $device ] = [ 'selectors_dictionary' => $positions( true ) ];
+		}
+
+		$this->add_responsive_control(
 			'layout',
 			[
 				'label' => esc_html__( 'Playlist Position', 'refraction' ),
@@ -118,7 +138,9 @@ class Video_Playlist extends Pro_Widget {
 					'left' => esc_html__( 'Left', 'refraction' ),
 					'below' => esc_html__( 'Below', 'refraction' ),
 				],
-				'prefix_class' => 'refraction-vp-layout-',
+				'selectors_dictionary' => $positions( false ),
+				'device_args' => $small,
+				'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			]
 		);
 
