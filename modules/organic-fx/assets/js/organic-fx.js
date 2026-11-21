@@ -349,10 +349,22 @@ import { SHAPES } from './shapes-data';
 		const style = s.rf_blob_style || 'solid';
 		const b = layer( 'rf-ofx-blob rf-shape--' + id, false );
 
+		// Morph On Hover (0.136.0): the fill is drawn as a path, so it can turn into the other shape.
+		const into = on( s.rf_blob_morph ) ? bigShape( chosen( s, 'rf_blob_morph_source', 'rf_blob_morph_shape', 'rf_blob_morph_mine' ) ) : null;
+		let fillPath = null;
+
 		if ( 'outline' !== style ) {
-			const fill = document.createElement( 'div' );
-			fill.className = 'rf-ofx-blob__fill';
-			b.appendChild( fill );
+			if ( into ) {
+				const shape = bigShape( id );
+				const svg = svgEl( 'svg', { viewBox: shape[ 1 ], preserveAspectRatio: 'none', class: 'rf-ofx-blob__shape' } );
+				fillPath = svgEl( 'path', { d: shape[ 0 ], 'fill-rule': shape[ 2 ] } );
+				svg.appendChild( fillPath );
+				b.appendChild( svg );
+			} else {
+				const fill = document.createElement( 'div' );
+				fill.className = 'rf-ofx-blob__fill';
+				b.appendChild( fill );
+			}
 
 			if ( on( s.rf_blob_grain ) ) {
 				b.appendChild( grainLayer( el, s, true ) );
@@ -369,6 +381,20 @@ import { SHAPES } from './shapes-data';
 
 		if ( line ) {
 			b.appendChild( line );
+		}
+
+		if ( into && ( fillPath || line ) ) {
+			const shape = bigShape( id );
+
+			attachMorph( {
+				paths: [ fillPath, 'outline' === style && line ? line.querySelector( 'path' ) : null ].filter( Boolean ),
+				from: shape,
+				into,
+				host: el,
+				ms: int( s.rf_blob_morph_ms, 700 ),
+				// The grain inside the blob is cut by --rf-shape: it follows.
+				onShape: ( d, vb, rule ) => b.style.setProperty( '--rf-shape', maskOf( d, vb, rule ) ),
+			} );
 		}
 
 		// Flat edge (containers): held in a layer the container's size that cuts it straight at that side.
@@ -1164,6 +1190,281 @@ import { SHAPES } from './shapes-data';
 		state.blobSeen = seen;
 	}
 
+	// ----------------------------------------------------------------- shape morph (0.136.0)
+
+	const MORPH_POINTS = 120;
+	let scratchPath = null;
+
+	/**
+	 * Points along a shape's outline, in a 0-100 box (its viewBox stretched, as the shape is drawn).
+	 *
+	 * @param {string} d  Path data.
+	 * @param {string} vb viewBox.
+	 */
+	function samplePath( d, vb ) {
+		if ( ! scratchPath ) {
+			const svg = svgEl( 'svg', { width: '0', height: '0', 'aria-hidden': 'true', style: 'position:absolute;width:0;height:0;overflow:hidden' } );
+			scratchPath = svgEl( 'path', {} );
+			svg.appendChild( scratchPath );
+			document.body.appendChild( svg );
+		}
+
+		const box = String( vb || '0 0 100 100' ).trim().split( /[\s,]+/ ).map( Number );
+		const [ x, y, w, h ] = 4 === box.length && box[ 2 ] > 0 && box[ 3 ] > 0 ? box : [ 0, 0, 100, 100 ];
+
+		scratchPath.setAttribute( 'd', d );
+		const total = scratchPath.getTotalLength();
+		const pts = [];
+
+		for ( let i = 0; i < MORPH_POINTS; i++ ) {
+			const pt = scratchPath.getPointAtLength( ( total * i ) / MORPH_POINTS );
+			pts.push( [ ( ( pt.x - x ) / w ) * 100, ( ( pt.y - y ) / h ) * 100 ] );
+		}
+
+		return pts;
+	}
+
+	/**
+	 * The second list of points turned (and, if closer, reversed) so that its points meet the first's with the least
+	 * travel.
+	 *
+	 * @param {Array} a Points.
+	 * @param {Array} b Points of the other shape.
+	 */
+	function alignPoints( a, b ) {
+		const n = a.length;
+		let best = null;
+		let bestCost = Infinity;
+
+		[ b, b.slice().reverse() ].forEach( ( list ) => {
+			for ( let shift = 0; shift < n; shift += 2 ) {
+				let cost = 0;
+
+				for ( let i = 0; i < n; i += 4 ) {
+					const q = list[ ( i + shift ) % n ];
+					cost += ( ( a[ i ][ 0 ] - q[ 0 ] ) ** 2 ) + ( ( a[ i ][ 1 ] - q[ 1 ] ) ** 2 );
+				}
+
+				if ( cost < bestCost ) {
+					bestCost = cost;
+					best = list.slice( shift ).concat( list.slice( 0, shift ) );
+				}
+			}
+		} );
+
+		return best;
+	}
+
+	/**
+	 * A closed, smooth path through the points (Catmull-Rom as cubic curves).
+	 *
+	 * @param {Array} pts Points.
+	 */
+	function smoothPoints( pts ) {
+		const n = pts.length;
+		const f = ( v ) => v.toFixed( 2 );
+		let d = `M${ f( pts[ 0 ][ 0 ] ) } ${ f( pts[ 0 ][ 1 ] ) }`;
+
+		for ( let i = 0; i < n; i++ ) {
+			const p0 = pts[ ( i - 1 + n ) % n ];
+			const p1 = pts[ i ];
+			const p2 = pts[ ( i + 1 ) % n ];
+			const p3 = pts[ ( i + 2 ) % n ];
+			d += `C${ f( p1[ 0 ] + ( ( p2[ 0 ] - p0[ 0 ] ) / 6 ) ) } ${ f( p1[ 1 ] + ( ( p2[ 1 ] - p0[ 1 ] ) / 6 ) ) } ${ f( p2[ 0 ] - ( ( p3[ 0 ] - p1[ 0 ] ) / 6 ) ) } ${ f( p2[ 1 ] - ( ( p3[ 1 ] - p1[ 1 ] ) / 6 ) ) } ${ f( p2[ 0 ] ) } ${ f( p2[ 1 ] ) }`;
+		}
+
+		return d + 'Z';
+	}
+
+	const maskOf = ( d, vb, rule ) => `url("data:image/svg+xml,${ encodeURIComponent( `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${ vb }" preserveAspectRatio="none"><path fill="#000" fill-rule="${ rule || 'nonzero' }" d="${ d }"/></svg>` ) }")`;
+
+	/**
+	 * Turns shape A into shape B while the pointer is over the host, and back when it leaves. Every path given is
+	 * drawn as the shape (the fill and an outline of the same shape); onShape( d, viewBox, rule ) lets the caller
+	 * follow it (the grain's clip). The start and end are the exact shapes; between them, matched points.
+	 *
+	 * @param {Object} o { paths: SVGPathElement[], from: [ d, vb, rule ], into: [ d, vb, rule ], host, ms, onShape }.
+	 */
+	function attachMorph( o ) {
+		if ( ! o.paths.length || ! o.into || ! o.host ) {
+			return;
+		}
+
+		// Drawn again (the editor, a new width): the host keeps its listeners and takes the new shapes.
+		if ( o.host.__rfMorph ) {
+			o.host.__rfMorph( o );
+			return;
+		}
+
+		let a = null;
+		let b = null;
+		let t = 0;
+		let goal = 0;
+		let frame = 0;
+		let last = 0;
+		const ease = ( x ) => ( x < 0.5 ? 4 * x * x * x : 1 - ( Math.pow( ( -2 * x ) + 2, 3 ) / 2 ) );
+		const draw = ( d, vb, rule ) => {
+			o.paths.forEach( ( path ) => {
+				path.setAttribute( 'd', d );
+				path.setAttribute( 'fill-rule', rule || 'nonzero' );
+				path.ownerSVGElement.setAttribute( 'viewBox', vb );
+			} );
+
+			if ( o.onShape ) {
+				o.onShape( d, vb, rule );
+			}
+		};
+		const show = () => {
+			if ( t <= 0 ) {
+				draw( o.from[ 0 ], o.from[ 1 ], o.from[ 2 ] );
+			} else if ( t >= 1 ) {
+				draw( o.into[ 0 ], o.into[ 1 ], o.into[ 2 ] );
+			} else {
+				const k = ease( t );
+				draw( smoothPoints( a.map( ( p, i ) => [ p[ 0 ] + ( ( b[ i ][ 0 ] - p[ 0 ] ) * k ), p[ 1 ] + ( ( b[ i ][ 1 ] - p[ 1 ] ) * k ) ] ) ), '0 0 100 100', 'nonzero' );
+			}
+		};
+		const step = ( now ) => {
+			const dt = last ? now - last : 16;
+			last = now;
+			const ms = Math.max( 100, Number( o.ms ) || 700 );
+			t = goal > t ? Math.min( goal, t + ( dt / ms ) ) : Math.max( goal, t - ( dt / ms ) );
+			show();
+			frame = t === goal ? 0 : window.requestAnimationFrame( step );
+		};
+		const go = ( to ) => {
+			goal = to;
+
+			if ( reduced.matches ) {
+				t = to;
+				show();
+				return;
+			}
+
+			if ( ! a ) {
+				a = samplePath( o.from[ 0 ], o.from[ 1 ] );
+				b = alignPoints( a, samplePath( o.into[ 0 ], o.into[ 1 ] ) );
+			}
+
+			if ( ! frame ) {
+				last = 0;
+				frame = window.requestAnimationFrame( step );
+			}
+		};
+
+		o.host.__rfMorph = ( next ) => {
+			window.cancelAnimationFrame( frame );
+			frame = 0;
+			o = next;
+			a = null;
+			b = null;
+			t = goal = 0;
+		};
+		o.host.addEventListener( 'pointerenter', () => go( 1 ) );
+		o.host.addEventListener( 'pointerleave', () => go( 0 ) );
+		o.host.addEventListener( 'focusin', () => go( 1 ) );
+		o.host.addEventListener( 'focusout', () => go( 0 ) );
+	}
+
+	// ----------------------------------------------------------------- widget blobs and grain (0.136.0)
+
+	/**
+	 * Paints a grain texture on an element: a built-in one as its background, an uploaded one as a coloured mask.
+	 * extraMask: a mask to keep it inside too (a blob's shape), as a CSS value.
+	 *
+	 * @param {HTMLElement} g         The grain element.
+	 * @param {Object}      cfg       { t: texture, c: colour, s: size 1-100, p: pattern }.
+	 * @param {string}      seedText  What the random speckle comes from when the pattern is 0.
+	 * @param {string}      extraMask A CSS mask image, or ''.
+	 */
+	function paintGrain( g, cfg, seedText, extraMask ) {
+		const texture = cfg.t || 'film';
+		const scale = Math.max( 1, Math.min( 100, Number( cfg.s ) || 50 ) );
+		const seed = int( cfg.p, 0 ) || hash( seedText || 'rf' );
+		const uploaded = ( window.refractionGrainTextures || {} )[ texture ];
+
+		if ( 0 === texture.indexOf( 'tex-' ) && uploaded ) {
+			const masks = [ [ `url("${ encodeURI( uploaded.url ) }")`, `${ Math.round( ( ( uploaded.w || 400 ) * scale ) / 50 ) }px auto`, 'repeat' ] ];
+
+			if ( extraMask ) {
+				masks.push( [ extraMask, '100% 100%', 'no-repeat' ] );
+			}
+
+			g.style.backgroundColor = cfg.c || '#1E1E1E';
+			[ 'mask', '-webkit-mask' ].forEach( ( p ) => {
+				g.style.setProperty( p + '-image', masks.map( ( m ) => m[ 0 ] ).join( ', ' ) );
+				g.style.setProperty( p + '-size', masks.map( ( m ) => m[ 1 ] ).join( ', ' ) );
+				g.style.setProperty( p + '-repeat', masks.map( ( m ) => m[ 2 ] ).join( ', ' ) );
+			} );
+			g.style.setProperty( 'mask-composite', masks.map( () => 'intersect' ).join( ', ' ) );
+			g.style.setProperty( '-webkit-mask-composite', masks.map( () => 'source-in' ).join( ', ' ) );
+			return;
+		}
+
+		g.style.backgroundImage = textureUrl( TEXTURES.includes( texture ) ? texture : 'film', { seed, scale, color: cfg.c } );
+	}
+
+	const readJSON = ( v ) => {
+		try {
+			return JSON.parse( v || '' ) || null;
+		} catch ( e ) {
+			return null;
+		}
+	};
+
+	/**
+	 * Our widgets' blobs (.rf-wblob) and fill grain (.rf-wgrain) inside root: the grain painted, the morph attached.
+	 *
+	 * @param {Element|Document} root Where to look.
+	 */
+	function widgetFx( root ) {
+		if ( ! root || ! root.querySelectorAll ) {
+			return;
+		}
+
+		const seedOf = ( el ) => ( el.closest( '[data-id]' ) || el ).getAttribute( 'data-id' ) || 'rf';
+
+		root.querySelectorAll( '.rf-wgrain[data-rf-wgrain]' ).forEach( ( g ) => {
+			const cfg = readJSON( g.getAttribute( 'data-rf-wgrain' ) );
+
+			if ( cfg ) {
+				paintGrain( g, cfg, seedOf( g ), '' );
+			}
+		} );
+
+		root.querySelectorAll( '.rf-wblob[data-rf-wblob]' ).forEach( ( blobEl ) => {
+			const data = readJSON( blobEl.getAttribute( 'data-rf-wblob' ) ) || {};
+			const grain = blobEl.querySelector( '.rf-wblob__grain' );
+			const fill = blobEl.querySelector( '.rf-wblob__fill path' );
+			const sameLine = blobEl.classList.contains( 'rf-wblob--outline' ) ? blobEl.querySelector( '.rf-wblob__line path' ) : null;
+			const main = fill || sameLine;
+
+			if ( grain && data.grain ) {
+				// The editor's templates print no mask: it is made from the shape here.
+				if ( main && ! grain.style.getPropertyValue( '--rf-wblob-mask' ) ) {
+					grain.style.setProperty( '--rf-wblob-mask', maskOf( main.getAttribute( 'd' ), main.ownerSVGElement.getAttribute( 'viewBox' ), main.getAttribute( 'fill-rule' ) ) );
+				}
+
+				paintGrain( grain, data.grain, seedOf( blobEl ), 'var(--rf-wblob-mask)' );
+			}
+
+			if ( data.morph && main ) {
+				const host = blobEl.closest( '[data-rf-wblob-hover]' ) || blobEl.closest( '.refraction-element' ) || blobEl.parentElement;
+
+				attachMorph( {
+					paths: [ fill, sameLine ].filter( Boolean ),
+					from: [ main.getAttribute( 'd' ), main.ownerSVGElement.getAttribute( 'viewBox' ), main.getAttribute( 'fill-rule' ) ],
+					into: [ data.morph.d, data.morph.vb, data.morph.rule ],
+					host,
+					ms: data.ms,
+					onShape: grain ? ( d, vb, rule ) => grain.style.setProperty( '--rf-wblob-mask', maskOf( d, vb, rule ) ) : null,
+				} );
+			}
+		} );
+	}
+
+	window.refractionWidgetFx = widgetFx;
+
 	const SELECTOR = '.e-con, .refraction-widget-image';
 
 	function wanted( el ) {
@@ -1242,6 +1543,8 @@ import { SHAPES } from './shapes-data';
 
 			fe.hooks.addAction( 'frontend/element_ready/container', ready );
 			fe.hooks.addAction( 'frontend/element_ready/image.default', ready );
+			// Our widgets' blobs and grain, drawn again with the widget.
+			fe.hooks.addAction( 'frontend/element_ready/global', ( $scope ) => widgetFx( $scope && $scope[ 0 ] ) );
 			buildAll();
 			return;
 		}
@@ -1253,6 +1556,7 @@ import { SHAPES } from './shapes-data';
 
 	function boot() {
 		buildAll();
+		widgetFx( document );
 		window.addEventListener( 'resize', onResize );
 
 		if ( /[?&]refraction-preview=/.test( window.location.search ) ) {

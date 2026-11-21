@@ -140,3 +140,19 @@ hidden; hidden steps still let the phone go through every screen. Check: `script
 
 Style > Buttons > **Alignment** (`buttons_align`, responsive): Left, Middle, Right, or Full width (each button takes an
 equal share of the row). It sets `--rf-ps-btn-justify` and `--rf-ps-btn-flex` on the widget.
+
+## Deco Blob and Grain (0.136.0)
+
+Style > **Deco Blob**: a shape around the phone, with the same settings as every Deco Blob (Organic FX
+`Widget_Blob`): Built-in / Uploaded shape (with the library's upload button), Style (Solid, Outline, Solid with an
+offset outline), Colour, outline colour, width and shape. *Place (per screen size)*: **Show** behind the phone
+(z-index -1 inside the device's own layer, like the glow) or in front of it (z-index 4, under the floating cards; clicks
+pass through), Width (% of the phone's width, 140 by default), Height (% of the phone's height; empty: as tall as it is
+wide), Move Left Or Right, Move Up Or Down, Turn, Opacity. *Motion*: Float, Breathe, Turn slowly, Wobble, Duration.
+**Morph On Hover**: hovering the widget turns the blob into the chosen shape (built-in or uploaded) and back after.
+
+Style > **Grain**: None, on the widget fill (`.rf-wgrain` inside `.rf-showcase`, over its background and under
+everything else; the widget gets `isolation`), only on the Deco Blob shape, or both; Texture (built-in or uploaded,
+its own upload button), Colour, Amount, Size, Pattern, Blend.
+
+Checked by `scripts/check-blob-morph-grain.mjs`.

@@ -372,3 +372,92 @@
 .rf-ofx-paused .rf-ofx-fs svg {
 	animation-play-state: paused;
 }
+
+// ----------------------------------------------------------------- a container blob that morphs (0.136.0)
+
+// Morph On Hover draws the fill as a path (organic-fx.js), so it can turn into the other shape.
+.rf-ofx-blob > svg.rf-ofx-blob__shape path {
+	fill: var(--rf-blob-c, #f6c94a);
+	stroke: none;
+}
+
+// ----------------------------------------------------------------- our widgets' blobs and grain (0.136.0)
+//
+// Widget_Blob draws them; each widget places .rf-wblob (its size, place and motion) and sets --rf-wblob-c. Grain
+// textures are painted by organic-fx.js (the same textures as a container's grain).
+
+// The fill is --rf-wblob-c, else the text colour of the widget's own blob box (Showcase Wheel's deco colour).
+.rf-wblob {
+	pointer-events: none;
+
+	> svg,
+	> .rf-wblob__grain {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+
+	> .rf-wblob__fill path {
+		fill: var(--rf-wblob-c, currentcolor);
+	}
+
+	> .rf-wblob__line path {
+		fill: none;
+		stroke: var(--rf-wblob-line, #1e1e1e);
+		stroke-width: var(--rf-wblob-lw, 2px);
+		stroke-linejoin: round;
+		vector-effect: non-scaling-stroke;
+	}
+
+	> .rf-wblob__line--offset {
+		transform: translate(4%, -3%) rotate(-6deg);
+	}
+
+	// Grain only inside the shape: cut by the shape (followed by the morph).
+	> .rf-wblob__grain {
+		opacity: var(--rf-wgrain-a, 0.25);
+		mix-blend-mode: var(--rf-wgrain-blend, multiply);
+		background-repeat: repeat;
+		-webkit-mask-image: var(--rf-wblob-mask);
+		mask-image: var(--rf-wblob-mask);
+		-webkit-mask-size: 100% 100%;
+		mask-size: 100% 100%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+	}
+}
+
+// Grain on a widget's fill: over its background, under its content (the widget makes the layer: isolation).
+.rf-wgrain {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	overflow: hidden;
+	border-radius: inherit;
+	pointer-events: none;
+	opacity: var(--rf-wgrain-a, 0.25);
+	mix-blend-mode: var(--rf-wgrain-blend, multiply);
+	background-repeat: repeat;
+}
+
+// A widget blob's motion (the container blob's), on the shape's layers.
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-wblob--m-float > * {
+		animation: rf-ofx-float var(--rf-wblob-t, 9s) ease-in-out infinite alternate;
+	}
+
+	.rf-wblob--m-breathe > * {
+		animation: rf-ofx-breathe var(--rf-wblob-t, 9s) ease-in-out infinite alternate;
+	}
+
+	.rf-wblob--m-spin > * {
+		animation: rf-ofx-spin calc(var(--rf-wblob-t, 9s) * 4) linear infinite;
+	}
+
+	.rf-wblob--m-wobble > * {
+		animation: rf-ofx-wobble var(--rf-wblob-t, 9s) ease-in-out infinite;
+	}
+}

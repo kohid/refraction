@@ -6,6 +6,7 @@ use Refraction\Group_Control_Box_Shadow;
 use Refraction\Group_Control_Typography;
 use Refraction\Icons_Manager;
 use Refraction\Includes\Widgets\Traits\Icon_Box_Style;
+use Refraction\Modules\OrganicFx\Classes\Widget_Blob;
 use Refraction\Modules\ProWidgets\Module as ProWidgets;
 use Refraction\Repeater;
 use Refraction\Utils;
@@ -1067,6 +1068,8 @@ class Phone_Showcase extends Widget_Base {
 		] );
 		$this->end_controls_section();
 
+		$this->register_blob_controls();
+
 		$this->start_controls_section( 'section_style_cards', [
 			'label' => esc_html__( 'Floating Cards', 'refraction' ),
 			'tab' => Controls_Manager::TAB_STYLE,
@@ -1291,6 +1294,133 @@ class Phone_Showcase extends Widget_Base {
 	}
 
 	/**
+	 * Style > Deco Blob and Grain (0.136.0): a shape behind or in front of the phone, with the same shape, look, grain and
+	 * hover morph settings as every Deco Blob (Widget_Blob), and grain on the widget's fill and / or the blob's shape.
+	 */
+	private function register_blob_controls(): void {
+		$blob = '{{WRAPPER}} .rf-showcase__blob';
+		$on = [ 'ps_blob' => 'yes' ];
+		$k = Widget_Blob::keys( 'ps_blob' );
+
+		$this->start_controls_section( 'section_style_blob', [
+			'label' => esc_html__( 'Deco Blob', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+		$this->add_control( 'ps_blob', [
+			'label' => esc_html__( 'Deco Blob', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'A shape behind or in front of the phone, like a splash of colour.', 'refraction' ),
+		] );
+		Widget_Blob::shape_controls( $this, $k['source'], $k['shape'], $k['mine'], $on );
+		$this->update_control( $k['shape'], [ 'default' => 'blob-2' ] );
+		Widget_Blob::look_controls( $this, $k, $blob, $on, 'ps_blob_color' );
+		$this->update_control( $k['style'], [ 'separator' => 'before' ] );
+
+		$this->category( 'ps_blob_place_heading', esc_html__( 'Place (per screen size)', 'refraction' ), false, $on );
+		$this->add_responsive_control( 'ps_blob_place', [
+			'label' => esc_html__( 'Show', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'back' => [ 'title' => esc_html__( 'Behind the phone', 'refraction' ), 'icon' => 'rficon-arrow-down' ],
+				'front' => [ 'title' => esc_html__( 'In front of the phone', 'refraction' ), 'icon' => 'rficon-arrow-up' ],
+			],
+			'default' => 'back',
+			'toggle' => false,
+			'selectors_dictionary' => [ 'back' => '-1', 'front' => '4' ],
+			'selectors' => [ $blob => 'z-index: {{VALUE}};' ],
+			'description' => esc_html__( 'In front, it sits under the floating cards and clicks pass through it.', 'refraction' ),
+			'condition' => $on,
+		] );
+		$this->add_responsive_control( 'ps_blob_size', [
+			'label' => esc_html__( 'Width', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 10, 'max' => 300 ] ],
+			'default' => [ 'size' => 140 ],
+			'description' => esc_html__( 'A share of the phone\'s width.', 'refraction' ),
+			'selectors' => [ $blob => '--rf-ps-blob-w: {{SIZE}}%;' ],
+			'condition' => $on,
+		] );
+		$this->add_responsive_control( 'ps_blob_h', [
+			'label' => esc_html__( 'Height', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 10, 'max' => 200 ] ],
+			'description' => esc_html__( 'A share of the phone\'s height. Empty: as tall as it is wide.', 'refraction' ),
+			'selectors' => [ $blob => '--rf-ps-blob-h: {{SIZE}}%; --rf-ps-blob-ar: auto;' ],
+			'condition' => $on,
+		] );
+		$this->add_responsive_control( 'ps_blob_x', [
+			'label' => esc_html__( 'Move Left Or Right', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ $blob => '--rf-ps-blob-x: {{SIZE}}%;' ],
+			'condition' => $on,
+		] );
+		$this->add_responsive_control( 'ps_blob_y', [
+			'label' => esc_html__( 'Move Up Or Down', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -100, 'max' => 100 ] ],
+			'selectors' => [ $blob => '--rf-ps-blob-y: {{SIZE}}%;' ],
+			'condition' => $on,
+		] );
+		$this->add_responsive_control( 'ps_blob_rotate', [
+			'label' => esc_html__( 'Turn', 'refraction' ) . ' (deg)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -180, 'max' => 180 ] ],
+			'selectors' => [ $blob => '--rf-ps-blob-r: {{SIZE}}deg;' ],
+			'condition' => $on,
+		] );
+		$this->add_control( 'ps_blob_opacity', [
+			'label' => esc_html__( 'Opacity', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 1, 'step' => 0.05 ] ],
+			'selectors' => [ $blob => 'opacity: {{SIZE}};' ],
+			'condition' => $on,
+		] );
+
+		$this->category( 'ps_blob_motion_heading', esc_html__( 'Motion', 'refraction' ), false, $on );
+		$this->add_control( 'ps_blob_motion', [
+			'label' => esc_html__( 'Motion', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [ '' => esc_html__( 'None', 'refraction' ), 'float' => esc_html__( 'Float gently', 'refraction' ), 'breathe' => esc_html__( 'Breathe (grow and shrink)', 'refraction' ), 'spin' => esc_html__( 'Turn slowly', 'refraction' ), 'wobble' => esc_html__( 'Wobble', 'refraction' ) ],
+			'condition' => $on,
+		] );
+		$this->add_control( 'ps_blob_speed', [
+			'label' => esc_html__( 'Duration (s)', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0.5, 'max' => 40, 'step' => 0.5 ] ],
+			'default' => [ 'size' => 9 ],
+			'selectors' => [ $blob => '--rf-wblob-t: {{SIZE}}s;' ],
+			'condition' => $on + [ 'ps_blob_motion!' => '' ],
+		] );
+		Widget_Blob::morph_controls( $this, $k, $on );
+		$this->update_control( $k['morph_shape'], [ 'default' => 'blob-4' ] );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_style_grain', [
+			'label' => esc_html__( 'Grain', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+		Widget_Blob::grain_controls( $this, 'ps_grain', '{{WRAPPER}} .rf-showcase', [
+			'fill' => esc_html__( 'On the widget fill', 'refraction' ),
+			'shape' => esc_html__( 'Only on the Deco Blob shape', 'refraction' ),
+			'both' => esc_html__( 'On both', 'refraction' ),
+		] );
+		$this->end_controls_section();
+	}
+
+	/** The Deco Blob, or nothing. */
+	private function blob_html( array $s ): string {
+		if ( 'yes' !== ( $s['ps_blob'] ?? '' ) ) {
+			return '';
+		}
+
+		$motion = in_array( $s['ps_blob_motion'] ?? '', [ 'float', 'breathe', 'spin', 'wobble' ], true ) ? ' rf-wblob--m-' . $s['ps_blob_motion'] : '';
+
+		return Widget_Blob::html( $s, Widget_Blob::keys( 'ps_blob' ), Widget_Blob::grain( $s, 'ps_grain', 'shape' ), 'rf-showcase__blob' . $motion );
+	}
+
+	/**
 	 * A small heading that names a kind of settings (Colors, Text, Box, Icon...) inside a section or a state tab.
 	 *
 	 * @param string $id    Control id.
@@ -1473,6 +1603,7 @@ class Phone_Showcase extends Widget_Base {
 		}
 
 		echo '<div class="rf-showcase rf-showcase--numbers-' . esc_attr( $numbers ) . '" id="' . esc_attr( $id ) . '" data-rf-showcase="' . esc_attr( wp_json_encode( $config ) ) . '" style="--rf-showcase-interval:' . esc_attr( $config['interval'] ) . 's">';
+		echo Widget_Blob::fill_grain_html( Widget_Blob::grain( $s, 'ps_grain', 'fill' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in Widget_Blob.
 
 		// The steps.
 		echo '<div class="rf-showcase__side">';
@@ -1533,6 +1664,7 @@ class Phone_Showcase extends Widget_Base {
 
 		// The device and its screens.
 		echo '<div class="rf-showcase__device">';
+		echo $this->blob_html( $s ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in Widget_Blob.
 		$cutout = 'custom' === $device ? 'none' : $devices[ $device ][4];
 
 		echo '<div class="rf-phone rf-phone--' . esc_attr( $device ) . ' rf-phone--cut-' . esc_attr( $cutout ) . ' rf-phone--fit-' . esc_attr( $fit ) . ' rf-phone--change-' . esc_attr( $change ) . '" style="' . esc_attr( $phone_style ) . '">';

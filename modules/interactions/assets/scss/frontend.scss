@@ -1139,6 +1139,27 @@ html.rf-hp-on body {
 	}
 }
 
+// Style > Deco Blob (0.136.0): behind the phone (z-index -1, inside the device's layer) or in front of it, under the
+// floating cards. Its size and offset are shares of the phone; its shape, look, grain and morph come from Widget_Blob.
+.rf-showcase__blob {
+	position: absolute;
+	top: calc(50% + var(--rf-ps-blob-y, 0%));
+	left: calc(50% + var(--rf-ps-blob-x, 0%));
+	z-index: -1;
+	width: var(--rf-ps-blob-w, 140%);
+	height: var(--rf-ps-blob-h, auto);
+	aspect-ratio: var(--rf-ps-blob-ar, 1);
+	translate: -50% -50%;
+	rotate: var(--rf-ps-blob-r, 0deg);
+}
+
+// Style > Grain on the widget fill: the widget is the layer the grain sits in (over the background, under the rest).
+.rf-showcase:has(> .rf-wgrain) {
+	position: relative;
+	isolation: isolate;
+	border-radius: inherit;
+}
+
 .rf-phone {
 	--rf-phone-color: #17181b;
 

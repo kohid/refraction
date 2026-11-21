@@ -106,3 +106,14 @@ Picture > Height on phones. On phones the thumbnails scroll without a scroll bar
   container's background, the arc or blob (`.rf-sw__deco`, z-index 1), the slide container's children (z-index 2),
   the picture with its floats (`.rf-sw__picture`, z-index 3). Before, the whole picture area was above the slide
   content, so a large arc covered the text when the parts were one under another.
+
+## Deco Blob looks, morph, front or back, and grain (0.136.0)
+
+A slide's shape ("A shape (Deco Blob shapes)") is now a Deco Blob like every other (Organic FX `Widget_Blob`): Content
+tab: **Show** behind the picture (z-index 1, as before) or in front of it (4; clicks pass through), Morph On Hover
+(hovering the slide turns it into the chosen built-in or uploaded shape and back; Morph Duration). Style tab: Style
+(Solid, Outline, Solid with an offset outline), outline colour, width and shape; the fill colour stays Color.
+
+Style > **Grain**: on each slide's fill (a `.rf-wgrain` in the slot at z-index 1: over the slide container's background,
+under its text and widgets at 2), only on the slides' shapes, or both. The editor template prints the same markup;
+`refractionWidgetFx` paints it after each render.
