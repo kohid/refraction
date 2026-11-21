@@ -1544,6 +1544,25 @@ class Nav_Menu extends Pro_Widget {
 			]
 		);
 
+		// Per view (0.132.0): shown or hidden at each screen size, e.g. the logo on desktop only. A view without its
+		// own choice takes the next larger one's.
+		$this->add_responsive_control(
+			'bar_brand_visible',
+			[
+				'label' => esc_html__( 'Visible', 'refraction' ),
+				'type' => Controls_Manager::CHOOSE,
+				'default' => 'show',
+				'options' => [
+					'show' => [ 'title' => esc_html__( 'Show', 'refraction' ), 'icon' => 'rficon-eye' ],
+					'hide' => [ 'title' => esc_html__( 'Hide', 'refraction' ), 'icon' => 'rficon-ban' ],
+				],
+				'description' => esc_html__( 'Per screen size: choose a view in the top bar (or with the device icon) to show or hide it there.', 'refraction' ),
+				'selectors_dictionary' => [ 'show' => 'flex', 'hide' => 'none' ],
+				'selectors' => [ '{{WRAPPER}}' => '--refraction-nav-brand-display: {{VALUE}};' ],
+				'condition' => $on,
+			]
+		);
+
 		$this->add_control(
 			'bar_brand_link',
 			[
@@ -1778,6 +1797,14 @@ class Nav_Menu extends Pro_Widget {
 				'selectors' => [ $brand => 'border-radius: {{SIZE}}{{UNIT}};' ],
 			]
 		);
+	}
+
+	/**
+	 * Rendered for each page, never from the element cache: the item of the page being viewed is marked current
+	 * (`.current-menu-item`), and a cached copy kept the first page's marks everywhere, e.g. Home in a site header.
+	 */
+	protected function is_dynamic_content(): bool {
+		return true;
 	}
 
 	protected function render() {

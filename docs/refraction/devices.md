@@ -74,3 +74,23 @@ Transform, Mask...).
   their devices from every view.
 
 Check: `node scripts/check-device-styles.mjs --site DIR --port N`.
+
+## Every CSS setting per view, and which view is being edited (0.131.0)
+
+- `auto_responsive()` now also covers the Content and Layout tabs (a setting there that only changes CSS, such as an
+  alignment or a colour), list items (a repeater field styled per item with `{{CURRENT_ITEM}}`, such as a slide's
+  background), Advanced > Transform > Flip Horizontal / Vertical (their class only switches the transform on; the
+  flip itself is a CSS variable), and box and text shadows. Text, link and code boxes stay one value, and so does a control whose empty value writes
+  CSS of its own (`selectors_dictionary` with an empty key, such as Dynamic Container's Stop at each item): its empty
+  copies would write that CSS on every smaller view.
+- Shadows: their copies on smaller views start blank (`{device}_default` with every part empty), so they write no
+  CSS and the larger view's shadow shows. When one part is changed there (`fill_from_parent`), the editor fills the
+  blank parts from the next larger view that has them, else the desktop's, else the control's own start value
+  (`controls/base-multiple.js fillFromParent()`).
+- The panel shows which view is being edited (`regions/panel/pages/editor.js`, `scss/editor/panel/_device-strip.scss`):
+  - a strip under the tabs: the view's icon, its width and name ("430px Large Phone") and what a change there does;
+    on any view but Desktop it takes the accent colour and has a Desktop button to go back;
+  - a popover row (Typography, Rotate, Offset, Scale, Skew, shadows) whose settings are per view carries the view's
+    device icon after its label;
+  - a per-view setting with its own value on this view (not inherited) has a dot by its device icon; a popover row
+    has the dot when any of its settings is set on this view.

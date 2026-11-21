@@ -57,9 +57,12 @@ const PAGE = [ {
 	id: 'dc01', elType: 'container',
 	settings: { background_background: 'classic', background_color: '#ffffff', background_color_phone_xs: '#ffeeee' },
 	elements: [
-		{ id: 'dh01', elType: 'widget', widgetType: 'heading', settings: { title: 'Per device', title_color: '#0000ff', title_color_phone_md: '#ff0000', title_color_phone_sm: '#00aa00', title_color_phone_xs: '#aa00aa' }, elements: [] },
+		{ id: 'dh01', elType: 'widget', widgetType: 'heading', settings: { title: 'Per device', title_color: '#0000ff', title_color_phone_md: '#ff0000', title_color_phone_sm: '#00aa00', title_color_phone_xs: '#aa00aa', _transform_flipX_effect_phone_sm: 'transform' }, elements: [] },
 		{ id: 'dh02', elType: 'widget', widgetType: 'heading', settings: { title: 'Desktop colour only', title_color: '#123456', text_shadow_text_shadow_type: 'yes', text_shadow_text_shadow: { horizontal: 1, vertical: 1, blur: 0, color: 'rgba(0,0,0,1)' } }, elements: [] },
-		{ id: 'db01', elType: 'widget', widgetType: 'button', settings: { text: 'Book now', background_color: '#0000ff', background_color_phone_sm: '#00aa00', _border_border: 'solid', _border_width: { unit: 'px', top: '2', right: '2', bottom: '2', left: '2', isLinked: true }, _border_color: '#0000ff', _border_color_phone_md: '#ff0000' }, elements: [] },
+		{ id: 'db01', elType: 'widget', widgetType: 'button', settings: { text: 'Book now', background_color: '#0000ff', background_color_phone_sm: '#00aa00', _border_border: 'solid', _border_width: { unit: 'px', top: '2', right: '2', bottom: '2', left: '2', isLinked: true }, _border_color: '#0000ff', _border_color_phone_md: '#ff0000',
+			button_box_shadow_box_shadow_type: 'yes', button_box_shadow_box_shadow: { horizontal: 0, vertical: 4, blur: 0, spread: 0, color: 'rgba(0,0,255,1)' },
+			button_box_shadow_box_shadow_phone_xs: { horizontal: 0, vertical: 8, blur: 0, spread: 0, color: 'rgba(255,0,0,1)' } }, elements: [] },
+		{ id: 'ds01', elType: 'widget', widgetType: 'refraction-slides', settings: { slides: [ { _id: 'slA', heading: 'One', background_color: '#0000ff', background_color_phone_md: '#ff0000' } ], autoplay: '' }, elements: [] },
 	],
 } ];
 
@@ -118,6 +121,9 @@ async function main() {
 					button: css( '.refraction-element-db01 .refraction-button', 'backgroundColor' ),
 					border: css( document.querySelector( '.refraction-element-db01 > .refraction-widget-container' ) ? '.refraction-element-db01 > .refraction-widget-container' : '.refraction-element-db01', 'borderTopColor' ),
 					box: css( '.refraction-element-dc01', 'backgroundColor' ),
+					bshadow: css( '.refraction-element-db01 .refraction-button', 'boxShadow' ),
+					flip: [ '.refraction-element-dh01', '.refraction-element-dh01 > .refraction-widget-container' ].map( ( sel ) => document.querySelector( sel ) && getComputedStyle( document.querySelector( sel ) ).getPropertyValue( '--e-transform-flipX' ).trim() ).filter( Boolean ).join( '' ),
+					slide: css( '.refraction-element-ds01 .refraction-repeater-item-slA .refraction-slide__bg', 'backgroundColor' ),
 				};
 			} );
 			if ( 430 === width ) {
@@ -130,7 +136,10 @@ async function main() {
 		check( 'site', 'Button background: 393 and below their own, above it the desktop one', BLUE === site[ 430 ].button && GREEN === site[ 393 ].button && GREEN === site[ 375 ].button, JSON.stringify( site ) );
 		check( 'site', 'Advanced > Border colour per device (430 and below)', BLUE === site[ 480 ].border && RED === site[ 430 ].border && RED === site[ 375 ].border, JSON.stringify( site ) );
 		check( 'site', 'Container background per device (375)', 'rgb(255, 255, 255)' === site[ 393 ].box && 'rgb(255, 238, 238)' === site[ 375 ].box, JSON.stringify( site ) );
-		check( 'site', 'a text shadow set on desktop stays the same on phones (shadows keep one value)', 'rgb(0, 0, 0) 1px 1px 0px' === site[ 1200 ].shadow && site[ 1200 ].shadow === site[ 375 ].shadow && site[ 1200 ].shadow === site[ 430 ].shadow, JSON.stringify( site ) );
+		check( 'site', 'a text shadow set only on desktop stays the same on phones', 'rgb(0, 0, 0) 1px 1px 0px' === site[ 1200 ].shadow && site[ 1200 ].shadow === site[ 375 ].shadow && site[ 1200 ].shadow === site[ 430 ].shadow, JSON.stringify( site ) );
+		check( 'site', 'Button box shadow: 375 its own, 430 the desktop one (the empty phone copies write nothing)', 'rgb(0, 0, 255) 0px 4px 0px 0px' === site[ 430 ].bshadow && 'rgb(0, 0, 255) 0px 4px 0px 0px' === site[ 1200 ].bshadow && 'rgb(255, 0, 0) 0px 8px 0px 0px' === site[ 375 ].bshadow, JSON.stringify( site ) );
+		check( 'site', 'Advanced > Transform > Flip Horizontal per device (393 and below)', '' === site[ 430 ].flip && '-1' === site[ 393 ].flip && '-1' === site[ 375 ].flip, JSON.stringify( site ) );
+		check( 'site', 'a list item\'s own colour per device (a Slides slide background at 430)', BLUE === site[ 480 ].slide && RED === site[ 430 ].slide, JSON.stringify( site ) );
 		check( 'site', 'a desktop colour over the site colour stays on phones', 'rgb(18, 52, 86)' === site[ 1200 ].plain && 'rgb(18, 52, 86)' === site[ 375 ].plain, JSON.stringify( site ) );
 
 		const { ctx, p } = await login( browser );
@@ -187,6 +196,57 @@ async function main() {
 		await sleep( 1200 );
 		await p.screenshot( { path: join( SHOTS, 'editor-393.png' ) } );
 		await p.evaluate( () => refraction.changeDeviceMode( 'desktop' ) );
+
+		// The view being edited: the strip under the tabs, popover rows and settings set on this view.
+		const strip = () => p.evaluate( () => {
+			const el = document.querySelector( '#refraction-panel-page-editor .rf-device-strip' );
+			return el && { device: el.classList.contains( 'is-device' ), view: el.querySelector( '.rf-device-strip__view' )?.textContent, name: el.querySelector( '.rf-device-strip__name' )?.textContent || '', back: !! el.querySelector( '.rf-device-strip__back' ), note: el.querySelector( '.rf-device-strip__note' )?.textContent };
+		} );
+		let st = await strip();
+		check( 'indicator', 'on Desktop the strip says Desktop, quietly', st && ! st.device && 'Desktop' === st.view && ! st.back, JSON.stringify( st ) );
+		await p.evaluate( () => refraction.changeDeviceMode( 'phone_md' ) );
+		await sleep( 1500 );
+		st = await strip();
+		check( 'indicator', 'at 430 the strip names the view (430px, Large Phone) in the accent colour, with the way back to Desktop', st && st.device && '430px' === st.view && /Phone/.test( st.name ) && st.back && /430px/.test( st.note ), JSON.stringify( st ) );
+		const own = await p.evaluate( () => ( {
+			mine: document.querySelector( '.refraction-control-title_color_phone_md' )?.classList.contains( 'rf-own-value' ),
+		} ) );
+		check( 'indicator', 'a setting with its own value at 430 is marked (Text Color)', true === own.mine, JSON.stringify( own ) );
+
+		await p.click( '.refraction-tab-control-advanced' );
+		await sleep( 800 );
+		await p.evaluate( () => {
+			const page = refraction.getPanelView().getCurrentPageView();
+			page.activateSection( '_section_transform' );
+			page._renderChildren();
+		} );
+		await sleep( 900 );
+		const rotate = () => p.evaluate( () => {
+			const row = document.querySelector( '.refraction-control-_transform_rotate_popover' );
+			return row && { mark: !! row.querySelector( '.rf-device-mark' ), own: row.classList.contains( 'rf-own-value' ), flip: !! document.querySelector( '.refraction-control-_transform_flipX_effect_phone_md .refraction-control-responsive-switchers' ) };
+		} );
+		let rot = await rotate();
+		check( 'indicator', 'Advanced > Transform at 430: Rotate shows the 430 icon, Flip Horizontal has its own 430 control', rot && rot.mark && ! rot.own && rot.flip, JSON.stringify( rot ) );
+		await p.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'dh01' ), settings: { _transform_rotate_popover: 'transform', _transform_rotateZ_effect_phone_md: { unit: 'px', size: 12, sizes: [] } } } ) );
+		await sleep( 900 );
+		rot = await rotate();
+		check( 'indicator', 'a rotation set at 430 marks the Rotate row as set on this view', rot && rot.mark && rot.own, JSON.stringify( rot ) );
+		await p.screenshot( { path: join( SHOTS, 'editor-transform-430.png' ) } );
+
+		// A shadow changed on a smaller view fills its other parts from the larger view's shadow.
+		const filled = await p.evaluate( () => {
+			const container = refraction.getContainer( 'db01' ),
+				name = 'button_box_shadow_box_shadow_phone_sm',
+				config = container.settings.controls[ name ],
+				View = refraction.modules.controls.Box_shadow,
+				fake = { model: new Backbone.Model( config ), container },
+				values = { horizontal: '', vertical: '', blur: 6, spread: '', color: '' },
+				did = config && View.prototype.fillFromParent.call( fake, values );
+			return { fill: config?.fill_from_parent, did, values };
+		} );
+		check( 'indicator', 'a shadow part changed at 393 takes the other parts from the larger view (desktop: 0 4 0 0 blue)', filled.fill && filled.did && 0 === filled.values.horizontal && 4 === filled.values.vertical && 6 === filled.values.blur && 'rgba(0,0,255,1)' === filled.values.color, JSON.stringify( filled ) );
+		await p.evaluate( () => refraction.changeDeviceMode( 'desktop' ) );
+		await sleep( 1000 );
 
 		// Controls of our own widgets get the devices too.
 		const flags = await p.evaluate( async () => {

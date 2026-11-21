@@ -109,6 +109,9 @@
 // Docked right or floating
 @import "dock";
 
+// Which screen size the settings are for (0.131.0)
+@import "device-strip";
+
 #refraction-panel-inner {
 	position: relative;
 	height: 100%;

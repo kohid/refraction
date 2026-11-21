@@ -310,8 +310,8 @@ async function main() {
 
 		await p.fill( '.rf-rt__filters input[name=from]', '2026-06-03' );
 		await p.fill( '.rf-rt__filters input[name=to]', '2026-06-05' );
-		await waitIdle( p );
-		await sleep( 300 );
+		// The reload starts after the last change (both dates kept): wait for its rows rather than a fixed time.
+		await p.waitForFunction( () => 3 === document.querySelectorAll( '.rf-rt tbody tr.rf-rec-row' ).length, null, { timeout: 15000 } ).catch( () => {} );
 		await waitIdle( p );
 		info = await rowsInfo( p );
 		check( 'table', 'from / to dates: booked 3 to 5 June (3 rows)', 3 === info.count && 'ICT-1005,ICT-1004,ICT-1003' === info.refs.join( ',' ), JSON.stringify( info ) );

@@ -1373,7 +1373,8 @@ $rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .ref
 .refraction-nav-menu__bar-brand {
 	--refraction-nav-brand-speed-used: var(--refraction-nav-brand-speed, 400ms);
 
-	display: flex;
+	// Content > Logo or Site Title > Visible, per screen size (flex or none).
+	display: var(--refraction-nav-brand-display, flex);
 	flex: none;
 	align-items: center;
 	max-width: 60vw;
@@ -1512,7 +1513,7 @@ $rf-nav-top-sub: ".refraction-nav-menu__list > .refraction-nav-menu__item > .ref
 	}
 
 	.refraction-nav-menu__bar-brand--collapsed {
-		display: flex;
+		display: var(--refraction-nav-brand-display, flex);
 	}
 
 	// The brand and the hamburger on one line, the opened menu under them at full width.

@@ -183,6 +183,11 @@ class Blockquote extends Pro_Widget {
 		return isset( $wp->request ) && '' !== $wp->request ? user_trailingslashit( home_url( $wp->request ) ) : home_url( '/' );
 	}
 
+	/** Rendered for each page, never from the element cache: its share link points to the page being viewed. */
+	protected function is_dynamic_content(): bool {
+		return true;
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 

@@ -383,6 +383,11 @@ class Share_Buttons extends Pro_Widget {
 		return '' !== $request ? user_trailingslashit( home_url( $request ) ) : home_url( '/' );
 	}
 
+	/** Rendered for each page, never from the element cache: its links share the page being viewed (its address and title). */
+	protected function is_dynamic_content(): bool {
+		return true;
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$networks = $settings['networks'] ?? [];

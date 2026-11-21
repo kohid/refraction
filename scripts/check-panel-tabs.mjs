@@ -51,7 +51,7 @@ async function main() {
 		{ id: 'pt00004', elType: 'widget', widgetType: 'refraction-showcase-wheel', settings: {}, elements: [] },
 	] } ] ) ] );
 
-	const browser = await chromium.launch();
+	const browser = await chromium.launch( existsSync( '/opt/pw-browsers/chromium' ) ? { executablePath: '/opt/pw-browsers/chromium', args: [ '--no-sandbox' ] } : {} );
 	const errors = [];
 
 	try {
