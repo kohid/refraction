@@ -11,19 +11,17 @@
 	list-style: none;
 }
 
+// Image Position per screen size (0.134.0): --rf-pl-dir (row, column, row-reverse) and the image's --rf-pl-img.
 .refraction-price-list__item {
 	display: flex;
+	flex-direction: var(--rf-pl-dir, row);
 	align-items: flex-start;
-	column-gap: 16px;
+	gap: 12px 16px;
 	margin: 0;
 }
 
-.refraction-price-list--image-right .refraction-price-list__item {
-	flex-direction: row-reverse;
-}
-
 .refraction-price-list__image {
-	flex: 0 0 25%;
+	flex: var(--rf-pl-img, 0 0 25%);
 	max-width: 100%;
 
 	img {

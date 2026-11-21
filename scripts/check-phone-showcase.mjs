@@ -151,6 +151,8 @@ async function main() {
 		} ) ] ), {} );
 		// 0.128.0: on phones, the phone first, then the text above, with the steps hidden.
 		const reordered = page( 'Phone layout reordered', box( [ w( 'ps12', { steps: [ step( 1 ), step( 2 ) ], cards: [], label: 'Taxi app', heading: 'Book in four taps', description: 'Day or night.', parts_order_mobile: 'phone-text-steps', steps_display_mobile: 'hide' } ) ] ), {} );
+		// 0.134.0: Phone On The, On Small Screens and the Progress Bar position per screen size.
+		const perView = page( 'Phone showcase per view', box( [ w( 'ps20', { steps: [ step( 1 ), step( 2 ) ], cards: [], autoplay: 'yes', interval: { size: 3 }, phone_side: 'left', phone_side_tablet: 'right', stack_order_phone_sm: 'phone', progress_position_phone_md: 'top' } ) ] ), {} );
 		const phoneOnly = page( 'Phone layout', box( [ w( 'ps05', { steps: [ step( 1 ), step( 2 ) ], cards, cards_phone: '', stack_order: 'phone' } ) ] ), {} );
 
 		const state = ( p, id ) => p.evaluate( ( wid ) => {
@@ -354,6 +356,22 @@ async function main() {
 			const top = ( sel ) => Math.round( root.querySelector( sel ).getBoundingClientRect().top );
 			return { device: top( '.rf-showcase__device' ), intro: top( '.rf-showcase__intro' ), steps: getComputedStyle( root.querySelector( '.rf-showcase__steps' ) ).display, sideways: document.documentElement.scrollWidth > window.innerWidth };
 		} );
+		const views = {};
+		for ( const width of [ 1280, 1024, 430, 393 ] ) {
+			const vp = await at( perView.url, width, 900 );
+			await sleep( 900 );
+			views[ width ] = await vp.evaluate( () => {
+				const root = document.querySelector( '[data-id="ps20"]' );
+				const dev = root.querySelector( '.rf-showcase__device' ).getBoundingClientRect();
+				const side = root.querySelector( '.rf-showcase__side' ).getBoundingClientRect();
+				const timer = root.querySelector( '.rf-showcase__timer' );
+				return { phoneLeft: dev.right <= side.left + 1, phoneRight: dev.left >= side.right - 1, phoneFirst: dev.bottom <= side.top + 1, stepsFirst: side.bottom <= dev.top + 1, timerTop: timer ? getComputedStyle( timer ).top : 'none' };
+			} );
+			await vp.context().close();
+		}
+		check( 'per view', 'Phone On The: left on desktop, right from 1024 (its own setting)', views[ 1280 ].phoneLeft && views[ 1024 ].phoneRight, JSON.stringify( views ) );
+		check( 'per view', 'On Small Screens: steps first at 430, the phone first at 393 (its own setting)', views[ 430 ].stepsFirst && views[ 393 ].phoneFirst, JSON.stringify( views ) );
+		check( 'per view', 'Progress Bar at the bottom on desktop, at the top from 430', 'auto' === views[ 1280 ].timerTop && '0px' === views[ 430 ].timerTop && '0px' === views[ 393 ].timerTop, JSON.stringify( views ) );
 		check( 'phone screen', 'Order Of The Parts on phones: the phone, then the text above; Steps hidden on phones', order.device < order.intro && 'none' === order.steps && ! order.sideways, JSON.stringify( order ) );
 		await p.screenshot( { path: join( SHOTS, 'small-reordered.png' ), fullPage: true } );
 		const wide = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
@@ -415,6 +433,28 @@ async function main() {
 			const c = window.refraction.widgetsCache[ 'refraction-phone-showcase' ]?.controls || {}; return { max: c.steps?.max_items, devices: Object.keys( c.device?.options || {} ).length, cards: c.cards?.max_items };
 		} );
 		check( 'editor', 'the preview draws it and a click on a step works there; up to 20 steps, 14 device choices (13 and my own frame), up to 100 cards', ed.phone && 2 === ed.at && 20 === panel.max && 14 === panel.devices && 100 === panel.cards, JSON.stringify( [ ed, panel ] ) );
+
+		// 0.134.0: Phone On The chosen at 1024 shows at once in the 1024 preview only.
+		const side = () => frame.evaluate( () => {
+			const root = document.querySelector( '[data-id="ps01"]' );
+			const dev = root.querySelector( '.rf-showcase__device' ).getBoundingClientRect();
+			const sd = root.querySelector( '.rf-showcase__side' ).getBoundingClientRect();
+			if ( dev.right <= sd.left + 1 ) {
+				return 'left';
+			}
+
+			return dev.left >= sd.right - 1 ? 'right' : 'stacked';
+		} );
+		await e.evaluate( () => refraction.changeDeviceMode( 'tablet' ) );
+		await sleep( 1500 );
+		const tabletBefore = await side();
+		await e.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'ps01' ), settings: { phone_side_tablet: 'left' } } ) );
+		await sleep( 1200 );
+		const tabletAfter = await side();
+		await e.evaluate( () => refraction.changeDeviceMode( 'desktop' ) );
+		await sleep( 1500 );
+		const desktopAfter = await side();
+		check( 'editor', 'Phone On The set to Left at 1024 shows at once in the 1024 preview; desktop keeps the right', 'right' === tabletBefore && 'left' === tabletAfter && 'right' === desktopAfter, JSON.stringify( { tabletBefore, tabletAfter, desktopAfter } ) );
 
 		// Placing cards: from the phone's edges, the old middle-based place kept; dragging one in the editor.
 		const pv = await browser.newPage( { viewport: { width: 1280, height: 900 } } );

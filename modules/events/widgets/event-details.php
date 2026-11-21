@@ -133,7 +133,8 @@ class Event_Details extends Widget_Base {
 			'default' => 'yes',
 		] );
 
-		$this->add_control( 'layout', [
+		// Per screen size (0.134.0; a class before): e.g. in a row on desktop, one under another on phones.
+		$this->add_responsive_control( 'layout', [
 			'label' => esc_html__( 'Layout', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'list',
@@ -141,7 +142,11 @@ class Event_Details extends Widget_Base {
 				'list' => esc_html__( 'One under another', 'refraction' ),
 				'row' => esc_html__( 'In a row', 'refraction' ),
 			],
-			'prefix_class' => 'rf-ed-layout-',
+			'selectors_dictionary' => [
+				'list' => '--rf-ed-dir: column; --rf-ed-wrap: nowrap; --rf-ed-col-k: 1;',
+				'row' => '--rf-ed-dir: row; --rf-ed-wrap: wrap; --rf-ed-col-k: 2;',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			'separator' => 'before',
 		] );
 

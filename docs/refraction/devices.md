@@ -94,3 +94,26 @@ Check: `node scripts/check-device-styles.mjs --site DIR --port N`.
     device icon after its label;
   - a per-view setting with its own value on this view (not inherited) has a dot by its device icon; a popover row
     has the dot when any of its settings is set on this view.
+
+## Layout choices per view on our widgets (0.134.0)
+
+Class-based choices (`prefix_class`) had one value for every screen. These are now responsive controls that set
+custom properties the widget's styles read (or, for Focus Stack, a class the script sets for the current view):
+
+| Widget | Setting | How |
+|---|---|---|
+| Phone Showcase | Phone On The, On Small Screens, Progress Bar > Position | `--rf-ps-side-order`, `--rf-ps-stack-device` (used at 767px and less), `--rf-ps-timer-top/-bottom`. Phone On The has `mobile_default` right, so phones keep the steps first as before. |
+| Focus Stack | Stack | `frontend_available` and responsive: the script reads the current view's choice (`getCurrentDeviceSetting`), sets `rf-fs-o-horizontal/-vertical` on the widget and builds again when the size crosses into another choice. The server writes the desktop class. Both directions' settings stay shown. |
+| Showcase Wheel | Shape behind the current one, Labels | `--rf-sw-sh-box`, `--rf-sw-sh-circle`, `--rf-sw-sh-radius`; `--rf-sw-lbl-all`, `--rf-sw-lbl-cur`. |
+| Price List | Image Position (new: Above) | `--rf-pl-dir`, `--rf-pl-img`. |
+| Event Details | Layout | `--rf-ed-dir`, `--rf-ed-wrap`, `--rf-ed-col-k`. |
+| Testimonial Carousel | Layout | `--rf-tc-dir`, `--rf-tc-text`, `--rf-tc-items`, `--rf-tc-img-mt`, and `--rf-tc-dir-sm` / `--rf-tc-text-sm` used at 767px and less. The phone views' copies get their own dictionary (`device_args`): Beside set for a larger view writes the stacked `-sm` values (as before), Beside set on a phone view keeps itself. |
+| Video Playlist | Playlist Position | `--rf-vp-dir`, `--rf-vp-flex`, `--rf-vp-width` and their `-sm` versions used at 1024px and less, with the same `device_args` rule for the tablet and phone views. |
+
+Not converted, because the choice is built into the HTML or drives a script's animation rather than a layout:
+Gallery layout (grid / masonry / justified, measured by its script), Flip Box effect and direction, Off-Canvas
+position and animation, Sidebar Panel side and placement (it folds into a drawer per view already), Nav Menu layout
+and effects (it has its own collapse breakpoint), Call to Action and Author Box skins, Share Buttons view.
+
+Check: `node scripts/check-widget-views.mjs --site DIR --port N`, and the per-view parts of
+`check-phone-showcase.mjs`.

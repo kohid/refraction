@@ -670,19 +670,24 @@ class Phone_Showcase extends Widget_Base {
 		// ---------------------------------------------------------------- layout
 		$this->start_controls_section( 'section_layout', [ 'label' => esc_html__( 'Layout', 'refraction' ) ] );
 
-		$this->add_control( 'phone_side', [
+		// Per screen size (0.134.0; a class before): which side the phone is on while the parts are beside each other.
+		// Phones keep the steps first unless their own view says otherwise (the old phone rule).
+		$this->add_responsive_control( 'phone_side', [
 			'label' => esc_html__( 'Phone On The', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'default' => 'right',
+			'mobile_default' => 'right',
 			'toggle' => false,
 			'options' => [
 				'left' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'rficon-h-align-left' ],
 				'right' => [ 'title' => esc_html__( 'Right', 'refraction' ), 'icon' => 'rficon-h-align-right' ],
 			],
-			'prefix_class' => 'rf-showcase-phone-',
+			'selectors_dictionary' => [ 'left' => '2', 'right' => '0' ],
+			'selectors' => [ '{{WRAPPER}}' => '--rf-ps-side-order: {{VALUE}};' ],
 		] );
 
-		$this->add_control( 'stack_order', [
+		// Per screen size (0.134.0): on screens of 767px and less, the phone or the steps first.
+		$this->add_responsive_control( 'stack_order', [
 			'label' => esc_html__( 'On Small Screens', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'steps',
@@ -690,7 +695,8 @@ class Phone_Showcase extends Widget_Base {
 				'steps' => esc_html__( 'Steps, then the phone', 'refraction' ),
 				'phone' => esc_html__( 'The phone, then the steps', 'refraction' ),
 			],
-			'prefix_class' => 'rf-showcase-stack-',
+			'selectors_dictionary' => [ 'steps' => '0', 'phone' => '-1' ],
+			'selectors' => [ '{{WRAPPER}}' => '--rf-ps-stack-device: {{VALUE}};' ],
 		] );
 
 		// Each screen size its own (0.128.0): set them on 480px for phones.
@@ -968,7 +974,8 @@ class Phone_Showcase extends Widget_Base {
 		$this->add_control( 'progress_radius', [ 'label' => esc_html__( 'Corners', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'max' => 12 ] ], 'selectors' => [ $timer => 'border-radius: {{SIZE}}{{UNIT}};' ], 'condition' => $shown ] );
 		$this->add_responsive_control( 'progress_inset', [ 'label' => esc_html__( 'Space At The Sides', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px', '%' ], 'range' => [ 'px' => [ 'max' => 60 ], '%' => [ 'max' => 20 ] ], 'selectors' => [ $timer => 'left: {{SIZE}}{{UNIT}}; width: calc(100% - 2 * {{SIZE}}{{UNIT}});' ], 'condition' => $shown ] );
 		$this->add_responsive_control( 'progress_offset', [ 'label' => esc_html__( 'Space From The Edge', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => -10, 'max' => 30 ] ], 'selectors' => [ $timer => '--rf-showcase-timer-gap: {{SIZE}}{{UNIT}};' ], 'condition' => $shown ] );
-		$this->add_control( 'progress_position', [
+		// Per screen size (0.134.0; a class before).
+		$this->add_responsive_control( 'progress_position', [
 			'label' => esc_html__( 'Position', 'refraction' ),
 			'type' => Controls_Manager::CHOOSE,
 			'options' => [
@@ -977,7 +984,11 @@ class Phone_Showcase extends Widget_Base {
 			],
 			'default' => 'bottom',
 			'toggle' => false,
-			'prefix_class' => 'rf-showcase-progress-at-',
+			'selectors_dictionary' => [
+				'top' => '--rf-ps-timer-top: var(--rf-showcase-timer-gap, 0px); --rf-ps-timer-bottom: auto;',
+				'bottom' => '--rf-ps-timer-top: initial; --rf-ps-timer-bottom: initial;',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			'condition' => $shown,
 		] );
 		$this->end_controls_section();

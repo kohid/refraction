@@ -169,8 +169,9 @@ class Focus_Stack extends Widget_Nested_Base {
 	}
 
 	protected function register_controls() {
-		$vertical = [ 'orientation!' => 'horizontal' ];
-		$horizontal = [ 'orientation' => 'horizontal' ];
+		// The orientation is per screen size (0.134.0): the settings of both stay shown.
+		$vertical = [];
+		$horizontal = [];
 
 		// ------------------------------------------------ Content: slides
 		$this->start_controls_section( 'section_slides', [ 'label' => esc_html__( 'Slides', 'refraction' ) ] );
@@ -264,7 +265,9 @@ class Focus_Stack extends Widget_Nested_Base {
 		// ------------------------------------------------ Content: layout
 		$this->start_controls_section( 'section_layout', [ 'label' => esc_html__( 'Layout', 'refraction' ) ] );
 
-		$this->add_control( 'orientation', [
+		// Per screen size (0.134.0): for example side by side on desktop, up and down on phones. The script reads the
+		// current screen size's choice and sets rf-fs-o-<orientation> on the widget (the server writes the desktop one).
+		$this->add_responsive_control( 'orientation', [
 			'frontend_available' => true,
 			'render_type' => 'ui',
 			'label' => esc_html__( 'Stack', 'refraction' ),
@@ -275,7 +278,7 @@ class Focus_Stack extends Widget_Nested_Base {
 			] ),
 			'default' => 'vertical',
 			'toggle' => false,
-			'prefix_class' => 'rf-fs-o-',
+			'description' => esc_html__( 'Per screen size. Both directions below are kept: each applies where its stack is chosen.', 'refraction' ),
 		] );
 
 		$this->add_control( 'direction_v', [
@@ -708,12 +711,23 @@ class Focus_Stack extends Widget_Nested_Base {
 
 	// ---------------------------------------------------------------- output
 
+	/** The desktop orientation's class, written by the server so the stack is laid out before the script runs. */
+	protected function add_render_attributes() {
+		parent::add_render_attributes();
+
+		$orientation = 'horizontal' === $this->get_settings( 'orientation' ) ? 'horizontal' : 'vertical';
+		$this->add_render_attribute( '_wrapper', 'class', 'rf-fs-o-' . $orientation );
+	}
+
 	/** The settings the script reads, on the stack itself (it reads them in Edit Mode from the model). */
 	private static function options( array $settings ): string {
 		$horizontal = 'horizontal' === ( $settings['orientation'] ?? 'vertical' );
 
 		return (string) wp_json_encode( [
 			'reverse' => $horizontal ? 'right' !== ( $settings['direction_h'] ?? 'left' ) : 'up' === ( $settings['direction_v'] ?? 'down' ),
+			// Per orientation, for a screen size whose stack differs from the desktop's (0.134.0).
+			'reverse_h' => 'right' !== ( $settings['direction_h'] ?? 'left' ),
+			'reverse_v' => 'up' === ( $settings['direction_v'] ?? 'down' ),
 			'next' => 'footer' === ( $settings['next_part'] ?? 'header' ) ? 'footer' : 'header',
 			'prev' => 'header' === ( $settings['prev_part'] ?? 'footer' ) ? 'header' : 'footer',
 			'visible' => max( 0, min( 2, (int) ( $settings['visible'] ?? 2 ) ) ),

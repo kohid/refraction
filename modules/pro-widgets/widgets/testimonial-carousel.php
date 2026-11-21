@@ -123,7 +123,22 @@ class Testimonial_Carousel extends Pro_Widget {
 			]
 		);
 
-		$this->add_control(
+		// Per screen size (0.134.0; a class before). "Beside" chosen for a larger screen still stacks on phones (as
+		// before); chosen on a phone's own view, it stays beside there.
+		$layouts = static function ( bool $small ): array {
+			return [
+				'below' => '--rf-tc-dir: column-reverse; --rf-tc-text: center; --rf-tc-items: stretch; --rf-tc-img-mt: 4px; --rf-tc-dir-sm: column-reverse; --rf-tc-text-sm: center;',
+				'above' => '--rf-tc-dir: column; --rf-tc-text: center; --rf-tc-items: stretch; --rf-tc-img-mt: 0px; --rf-tc-dir-sm: column; --rf-tc-text-sm: center;',
+				'aside' => '--rf-tc-dir: row; --rf-tc-text: start; --rf-tc-items: center; --rf-tc-img-mt: 0px; ' . ( $small ? '--rf-tc-dir-sm: row; --rf-tc-text-sm: start;' : '--rf-tc-dir-sm: column; --rf-tc-text-sm: center;' ),
+			];
+		};
+		$small = [];
+
+		foreach ( [ 'mobile', 'phone_lg', 'phone_md', 'phone_sm', 'phone_xs' ] as $device ) {
+			$small[ $device ] = [ 'selectors_dictionary' => $layouts( true ) ];
+		}
+
+		$this->add_responsive_control(
 			'layout',
 			[
 				'label' => esc_html__( 'Layout', 'refraction' ),
@@ -134,7 +149,9 @@ class Testimonial_Carousel extends Pro_Widget {
 					'above' => esc_html__( 'Photo above the quote', 'refraction' ),
 					'aside' => esc_html__( 'Photo beside the quote', 'refraction' ),
 				],
-				'prefix_class' => 'refraction-tc-layout-',
+				'selectors_dictionary' => $layouts( false ),
+				'device_args' => $small,
+				'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
 			]
 		);
 

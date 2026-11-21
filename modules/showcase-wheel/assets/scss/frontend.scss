@@ -467,9 +467,9 @@
 
 // The shape behind the current thumbnail: rounded or square around it and its label; a circle around its picture.
 // Its width, height and position from its centre can be set (empty: it fits around them).
-.rf-sw-shape-rounded .rf-sw__thumb.is-active::before,
-.rf-sw-shape-square .rf-sw__thumb.is-active::before,
-.rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
+// Per screen size (0.134.0): --rf-sw-sh-box (rounded or rectangle), --rf-sw-sh-circle and --rf-sw-sh-radius.
+.rf-sw__thumb.is-active::before,
+.rf-sw__thumb.is-active .rf-sw__thumb-img::before {
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -482,11 +482,13 @@
 	transform: translate(calc(-50% + var(--rf-sw-shape-x, 0px)), calc(-50% + var(--rf-sw-shape-y, 0px)));
 }
 
-.rf-sw-shape-rounded .rf-sw__thumb.is-active::before {
-	border-radius: var(--rf-sw-shape-radius);
+.rf-sw__thumb.is-active::before {
+	display: var(--rf-sw-sh-box, block);
+	border-radius: var(--rf-sw-sh-radius, var(--rf-sw-shape-radius));
 }
 
-.rf-sw-shape-circle .rf-sw__thumb.is-active .rf-sw__thumb-img::before {
+.rf-sw__thumb.is-active .rf-sw__thumb-img::before {
+	display: var(--rf-sw-sh-circle, none);
 	width: var(--rf-sw-shape-w, calc(100% + 12px));
 	height: var(--rf-sw-shape-h, var(--rf-sw-shape-w, calc(100% + 12px)));
 	border-radius: 50%;
@@ -514,11 +516,16 @@
 	font-weight: 600;
 }
 
-.rf-sw-labels-all .rf-sw__thumb .rf-sw__label,
-.rf-sw-labels-all .rf-sw__thumb .rf-sw__badge,
-.rf-sw-labels-current .rf-sw__thumb.is-active .rf-sw__label,
-.rf-sw-labels-current .rf-sw__thumb.is-active .rf-sw__badge {
-	display: block;
+// Labels, per screen size (0.134.0): under every thumbnail (--rf-sw-lbl-all) and under the current one
+// (--rf-sw-lbl-cur).
+.rf-sw__thumb .rf-sw__label,
+.rf-sw__thumb .rf-sw__badge {
+	display: var(--rf-sw-lbl-all, none);
+}
+
+.rf-sw__thumb.is-active .rf-sw__label,
+.rf-sw__thumb.is-active .rf-sw__badge {
+	display: var(--rf-sw-lbl-cur, block);
 }
 
 .rf-sw .rf-sw__arrow {

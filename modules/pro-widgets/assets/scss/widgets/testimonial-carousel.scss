@@ -2,12 +2,14 @@
 // Testimonial Carousel
 //
 
+// Layout per screen size (0.134.0): --rf-tc-dir / --rf-tc-text, and on phones their -sm versions.
 .refraction-tc {
 	display: flex;
-	flex-direction: column;
+	flex-direction: var(--rf-tc-dir, column-reverse);
+	align-items: var(--rf-tc-items, stretch);
 	gap: 16px;
 	padding: 24px 56px;
-	text-align: center;
+	text-align: var(--rf-tc-text, center);
 }
 
 .refraction-tc__body {
@@ -75,18 +77,9 @@
 	opacity: 0.75;
 }
 
-.refraction-tc-layout-below .refraction-tc {
-	flex-direction: column-reverse;
-}
-
-.refraction-tc-layout-below .refraction-tc__image {
-	margin-top: 4px;
-}
-
-.refraction-tc-layout-aside .refraction-tc {
-	flex-direction: row;
-	align-items: center;
-	text-align: start;
+// Below: a little room above the photo (--rf-tc-img-mt from the layout).
+.refraction-tc__image {
+	margin-top: var(--rf-tc-img-mt, 0);
 }
 
 @media (max-width: $screen-mobile-max) {
@@ -95,8 +88,8 @@
 		padding: 20px 44px;
 	}
 
-	.refraction-tc-layout-aside .refraction-tc {
-		flex-direction: column;
-		text-align: center;
+	.refraction-tc {
+		flex-direction: var(--rf-tc-dir-sm, column-reverse);
+		text-align: var(--rf-tc-text-sm, center);
 	}
 }
