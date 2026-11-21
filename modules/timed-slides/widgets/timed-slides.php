@@ -262,7 +262,35 @@ class Timed_Slides extends Widget_Nested_Base {
 			'range' => [ 'px' => [ 'min' => 240, 'max' => 1400 ], 'vh' => [ 'min' => 30, 'max' => 100 ] ],
 			'default' => [ 'unit' => 'vh', 'size' => 100 ],
 			'mobile_default' => [ 'unit' => 'px', 'size' => 640 ],
-			'selectors' => [ '{{WRAPPER}} .rf-tco' => 'height: {{SIZE}}{{UNIT}}; min-height: 0;' ],
+			// Through a custom property (0.133.0), so Layout > Stacked can let the slider grow with the text instead.
+			'selectors' => [ '{{WRAPPER}}' => '--rf-ts-fixed-height: {{SIZE}}{{UNIT}};' ],
+		] );
+
+		// Per view (0.133.0): on a phone the text and the cards can sit one under the other, the slider growing with
+		// the text, instead of over the picture at a fixed height where long text ran under the cards.
+		$this->add_responsive_control( 'layout', [
+			'label' => esc_html__( 'Layout', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'overlay',
+			'options' => [
+				'overlay' => esc_html__( 'Text and cards over the picture', 'refraction' ),
+				'stacked' => esc_html__( 'Stacked: text, then cards (height follows the text)', 'refraction' ),
+			],
+			'description' => esc_html__( 'Per screen size. Stacked ignores the Height above and keeps the whole text in view.', 'refraction' ),
+			'selectors_dictionary' => [
+				'overlay' => '--rf-ts-layer-position: initial; --rf-ts-height: initial; --rf-ts-layer-inset: initial; --rf-ts-box-pad: initial;',
+				'stacked' => '--rf-ts-layer-position: relative; --rf-ts-height: auto; --rf-ts-layer-inset: auto; --rf-ts-box-pad: var(--rf-ts-pad-top, 0) var(--rf-ts-pad-right, 0) var(--rf-ts-pad-bottom, 0) var(--rf-ts-pad-left, 0);',
+			],
+			'selectors' => [ '{{WRAPPER}}' => '{{VALUE}}' ],
+		] );
+
+		// The slider box's own padding (0.133.0): the text and the cards keep inside it, the pictures still fill the box.
+		$this->add_responsive_control( 'slider_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', '%', 'em', 'vw' ],
+			'description' => esc_html__( 'Room inside the slider, per screen size, for both the text and the cards.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}}' => '--rf-ts-pad-top: {{TOP}}{{UNIT}}; --rf-ts-pad-right: {{RIGHT}}{{UNIT}}; --rf-ts-pad-bottom: {{BOTTOM}}{{UNIT}}; --rf-ts-pad-left: {{LEFT}}{{UNIT}};' ],
 		] );
 
 		$this->add_control( 'autoplay', [
@@ -436,6 +464,21 @@ class Timed_Slides extends Widget_Nested_Base {
 
 		$layer = '{{WRAPPER}} .rf-ts__layer--cards';
 		$on = [ 'show_cards' => 'yes' ];
+
+		// Per view (0.133.0): the cards, arrows, line and numbers shown or hidden at each screen size.
+		$this->add_responsive_control( 'cards_visible', [
+			'label' => esc_html__( 'Cards and arrows', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'default' => 'show',
+			'toggle' => false,
+			'options' => [
+				'show' => [ 'title' => esc_html__( 'Show', 'refraction' ), 'icon' => 'rficon-eye' ],
+				'hide' => [ 'title' => esc_html__( 'Hide', 'refraction' ), 'icon' => 'rficon-ban' ],
+			],
+			'description' => esc_html__( 'Per screen size, e.g. hidden on small phones.', 'refraction' ),
+			'selectors_dictionary' => [ 'show' => 'flex', 'hide' => 'none' ],
+			'selectors' => [ $layer => 'display: {{VALUE}};' ],
+		] );
 
 		$this->add_responsive_control( 'cards_horizontal', [
 			'label' => esc_html__( 'Horizontal', 'refraction' ),

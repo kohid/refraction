@@ -83,3 +83,17 @@ Style > Slider > **Box**: Normal / Hover tabs with border (Hover: border color),
 Box (Style > Box: also background, padding and **Cut The Content To The Corners**, which applies only once a corner is
 rounded). Check: `node scripts/check-box-style.mjs --site DIR --port N`.
 
+
+## Per screen size: Layout, Padding, Cards and arrows (0.133.0)
+
+- Slider > **Layout** (responsive): *Text and cards over the picture* (as before, at the set Height) or *Stacked:
+  text, then cards*, where the two layers are in the flow and the slider is as tall as they are (the Height is not
+  used there). Long text on a phone no longer runs under the cards. Set through custom properties on the widget
+  (`--rf-ts-layer-position`, `--rf-ts-height`, `--rf-ts-layer-inset`, `--rf-ts-box-pad`); `initial` takes the
+  overlay values back on a smaller view.
+- Slider > **Padding** (responsive): the room inside the slider for the text and the cards (`--rf-ts-pad-*`). Over
+  the picture it is where the layers stop; stacked it is the padding around them. The pictures always fill the box.
+- Slider > Height now sets `--rf-ts-fixed-height` (the slider's `height` reads it unless Stacked).
+- Cards > **Cards and arrows** (responsive Show / Hide): the cards, arrows, line and numbers at each screen size.
+- Edit Mode shows each at once in the chosen view's preview. Check: the "per view" part of
+  `scripts/check-timed-slides.mjs`.

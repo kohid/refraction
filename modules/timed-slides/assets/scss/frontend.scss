@@ -8,9 +8,19 @@
 	width: 100%;
 }
 
+// Slider > Height, Layout and Padding, per screen size (0.133.0; the widget sets the custom properties). Over the
+// picture: a fixed height, the layers placed inside the padding. Stacked: the layers in the flow (text, then cards),
+// the padding around them and the slider as tall as they are. The pictures always fill the whole box.
+.rf-tco.rf-ts {
+	box-sizing: border-box;
+	height: var(--rf-ts-height, var(--rf-ts-fixed-height, 100vh));
+	min-height: 0;
+	padding: var(--rf-ts-box-pad, 0);
+}
+
 .rf-ts__layer {
-	position: absolute;
-	inset: 0;
+	position: var(--rf-ts-layer-position, absolute);
+	inset: var(--rf-ts-layer-inset, var(--rf-ts-pad-top, 0) var(--rf-ts-pad-right, 0) var(--rf-ts-pad-bottom, 0) var(--rf-ts-pad-left, 0));
 	z-index: 3;
 	display: flex;
 	align-items: center;
