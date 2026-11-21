@@ -24,11 +24,44 @@ export default class extends BaseRegion {
 
 		this.ensurePosition = this.ensurePosition.bind( this );
 
+		// A nested widget's slides are named from its list (0.138.0): when the list changes (a row renamed, added,
+		// moved, duplicated or removed), Structure shows the names again.
+		$e.commands.on( 'run:after', ( component, command, args ) => {
+			const owner = this.nestedOwnerOf( command, args );
+
+			if ( owner ) {
+				_.defer( () => owner.children.forEach( ( child ) => child.model.trigger( 'title_external_change' ) ) );
+			}
+		} );
+
 		this.listenTo( refraction.channels.dataEditMode, 'switch', this.onEditModeSwitched );
 
 		// TODO: Move to hook on 'editor/documents/load'.
 		refraction.on( 'document:loaded', this.onDocumentLoaded.bind( this ) );
 		refraction.on( 'document:unloaded', this.onDocumentUnloaded.bind( this ) );
+	}
+
+	/**
+	 * The nested widget whose list a command changed, or null.
+	 *
+	 * @param {string} command
+	 * @param {Object} args
+	 */
+	nestedOwnerOf( command, args ) {
+		if ( 0 === command.indexOf( 'document/repeater/' ) ) {
+			const widget = args?.container;
+
+			return widget && refraction.widgetsCache?.[ widget.model?.get( 'widgetType' ) ]?.support_nesting ? widget : null;
+		}
+
+		if ( 'document/elements/settings' === command ) {
+			const row = ( args?.containers || [ args?.container ] )[ 0 ];
+			const widget = row && 'repeater' === row.type ? row.parent?.parent || row.parent : null;
+
+			return widget && widget.children && refraction.widgetsCache?.[ widget.model?.get( 'widgetType' ) ]?.support_nesting ? widget : null;
+		}
+
+		return null;
 	}
 
 	getStorageKey() {

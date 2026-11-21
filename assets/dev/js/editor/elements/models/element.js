@@ -150,6 +150,13 @@ ElementModel = BaseElementModel.extend( {
 	},
 
 	getTitle() {
+		// A nested widget's slide or item (Showcase Wheel, carousels, tabs...): the name in the widget's list.
+		const itemTitle = this.getNestedItemTitle();
+
+		if ( itemTitle ) {
+			return itemTitle;
+		}
+
 		const editorSettings = this.get( 'editor_settings' );
 		let title = editorSettings?.title || this.getSetting( '_title' ) || this.getSetting( 'presetTitle' );
 
@@ -164,6 +171,22 @@ ElementModel = BaseElementModel.extend( {
 		}
 
 		return title;
+	},
+
+	/**
+	 * The name of this container's item in its nested widget's list (Slides, Tabs, Items), or ''. The list is what the
+	 * widget shows and orders, so Structure follows it when items are added, moved or renamed (0.138.0).
+	 *
+	 * @return {string} The item's title.
+	 */
+	getNestedItemTitle() {
+		if ( 'container' !== this.get( 'elType' ) ) {
+			return '';
+		}
+
+		const item = refraction.helpers.getNestedItem?.( this.get( 'id' ) );
+
+		return item ? String( item.item.settings.get( item.titleKey ) || '' ).trim() : '';
 	},
 
 	getVisibility() {

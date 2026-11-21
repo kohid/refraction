@@ -561,6 +561,36 @@ module.exports = {
 		);
 	},
 
+	/**
+	 * A nested widget's own slide or item (a container in Showcase Wheel, a carousel, tabs...) and its row in the
+	 * widget's list: { owner, name, index, item, titleKey, container }, or null for any other element (0.138.0).
+	 *
+	 * @param {string} id The container's id.
+	 */
+	getNestedItem( id ) {
+		let container = null;
+
+		try {
+			container = refraction.getContainer( id );
+		} catch ( e ) {
+			return null;
+		}
+
+		const owner = container?.parent;
+		const config = owner && 'widget' === owner.model?.get( 'elType' ) ? refraction.widgetsCache?.[ owner.model.get( 'widgetType' ) ] : null;
+
+		if ( ! config?.support_nesting || ! owner.repeaters ) {
+			return null;
+		}
+
+		const titleKey = config.defaults?.repeater_title_setting;
+		const name = Object.keys( owner.repeaters ).find( ( key ) => 'nested-elements-repeater' === owner.settings.controls?.[ key ]?.type );
+		const index = owner.children.indexOf( container );
+		const item = name && index > -1 ? owner.repeaters[ name ].children[ index ] : null;
+
+		return item && titleKey ? { owner, name, index, item, titleKey, container } : null;
+	},
+
 	scrollToView( $element, timeout, $parent ) {
 		if ( undefined === timeout ) {
 			timeout = 500;
