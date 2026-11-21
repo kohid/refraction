@@ -138,6 +138,7 @@ class Modules_Manager {
 			'focus-stack',
 			'showcase-wheel',
 			'dynamic-container',
+			'timeline',
 			'woocommerce',
 			'form-builder',
 			'records-dashboard',
