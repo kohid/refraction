@@ -228,6 +228,60 @@ async function main() {
 		await sleep( 800 );
 		ea = await arrow( f, 'cn000001' );
 		check( 'editor', 'Side "top" at 20% for the end: redrawn at once, ending above 2, a fifth of the way along', ea && near( ea.end[ 1 ], er2.t - 4 ) && near( ea.end[ 0 ], Math.round( er2.l + ( ( er2.r - er2.l ) * 0.2 ) ) ), JSON.stringify( { ea, er2 } ) );
+		// ---- like a diagram tool (0.141.0)
+		const pickers = await e.evaluate( () => {
+			const c = refraction.widgetsCache[ 'refraction-connector' ].controls;
+			return [ 'to_side', 'head_end' ].map( ( n ) => 'visual_choice' === c[ n ].type ? Object.values( c[ n ].options ).filter( ( o ) => /^data:image\/svg/.test( o.image ) ).length : 0 ).join() + '|' + document.querySelectorAll( '.refraction-control-to_side .refraction-visual-choice-element img' ).length;
+		} );
+		check( 'diagram', 'sides and end shapes are chosen from pictures (5 sides, 7 ends)', '5,7|5' === pickers, pickers );
+		const outlined = await f.evaluate( () => [ document.getElementById( 'c1' ).classList.contains( 'rf-cn-linked-from' ), document.getElementById( 'c2' ).classList.contains( 'rf-cn-linked-to' ) ].join() );
+		check( 'diagram', 'with the Connector selected, its start (1) and end (2) are outlined', 'true,true' === outlined, outlined );
+		await e.click( '.refraction-control-to_pick button' );
+		await sleep( 300 );
+		await f.hover( '#c6 h3' );
+		const hovering = await f.evaluate( () => !! document.querySelector( '.rf-cn-pick-hover' ) && document.body.classList.contains( 'rf-cn-picking' ) );
+		await f.click( '#c6 h3' );
+		await sleep( 900 );
+		const linked = await e.evaluate( () => {
+			const s = refraction.getContainer( 'cn000001' ).settings;
+			return [ s.get( 'to' ), s.get( 'to_element' ), refraction.selection.getElements().map( ( x ) => x.id ).join() ].join( '|' );
+		} );
+		const c6e = await rect( f, 'c6' );
+		ea = await arrow( f, 'cn000001' );
+		check( 'diagram', '"Pick on the page" then a click on Container 6 points the arrow there (and keeps the Connector selected)', hovering && /^element\|box0006\|cn000001$/.test( linked ) && ea && ( near( ea.end[ 1 ], c6e.t - 4 ) || near( ea.end[ 0 ], c6e.l - 4 ) ), JSON.stringify( { hovering, linked, ea, c6e } ) );
+		await e.click( '.refraction-control-swap button' );
+		await sleep( 900 );
+		const swapped = await e.evaluate( () => {
+			const s = refraction.getContainer( 'cn000001' ).settings;
+			return [ s.get( 'from' ), s.get( 'from_element' ), s.get( 'to' ), s.get( 'head_start' ), s.get( 'head_end' ) ].join( '|' );
+		} );
+		ea = await arrow( f, 'cn000001' );
+		const c1e = await rect( f, 'c1' );
+		check( 'diagram', 'Swap reverses it: from Container 6 to the container holding it (1), the arrow head now at 1', 'element|box0006|parent|none|arrow' === swapped && ea && ( near( ea.end[ 1 ], c1e.b + 4 ) || near( ea.end[ 0 ], c1e.r + 4 ) ) && /^M0,0 L10,5/.test( ea.endHead || '' ), JSON.stringify( { swapped, ea, c1e } ) );
+		await e.evaluate( () => $e.run( 'document/history/undo' ) );
+		await sleep( 600 );
+		const undone = await e.evaluate( () => refraction.getContainer( 'cn000001' ).settings.get( 'to' ) );
+		check( 'diagram', 'Undo takes the swap back in one step', 'element' === undone, undone );
+		await e.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'cn000001' ), settings: { opacity: { unit: 'px', size: 50 } } } ) );
+		await sleep( 500 );
+		const op = await f.evaluate( () => getComputedStyle( document.querySelector( '[data-id="cn000001"] .rf-cn__svg' ) ).opacity );
+		check( 'diagram', 'Opacity 50%', '0.5' === op, op );
+		await e.screenshot( { path: join( SHOTS, 'connector-diagram-editor.png' ) } );
+		// Saved: the site draws the picked link.
+		await e.evaluate( async () => {
+			await $e.run( 'document/save/publish' );
+		} );
+		await sleep( 1500 );
+		const site = await ( await browser.newContext( { viewport: { width: 1200, height: 900 } } ) ).newPage();
+		site.on( 'pageerror', ( x ) => errors.push( `${ x.message } @ site` ) );
+		await site.goto( pg.url );
+		await site.waitForTimeout( 1200 );
+		const sa = await arrow( site, 'cn000001' );
+		const s6 = await rect( site, 'c6' );
+		const sOutline = await site.evaluate( () => document.querySelectorAll( '.rf-cn-linked-from, .rf-cn-linked-to, .rf-cn__chip:not([style*="none"])' ).length && [ ...document.querySelectorAll( '.rf-cn__chip' ) ].some( ( c ) => 'none' !== getComputedStyle( c ).display ) );
+		check( 'diagram', 'on the site, the picked link is drawn to Container 6, with no outlines or chips', sa && ( near( sa.end[ 1 ], s6.t - 4 ) || near( sa.end[ 0 ], s6.l - 4 ) ) && ! sOutline, JSON.stringify( { sa, s6, sOutline } ) );
+		await site.context().close();
+
 		await e.evaluate( () => $e.run( 'panel/change-device-mode', { device: 'mobile' } ) );
 		await sleep( 2500 );
 		ea = await arrow( f, 'cn000002' );

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.140.0
+Stable tag: 0.141.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.141.0 =
+* Connector, like a diagram tool: "Pick on the page" links either end to any container or widget with a click (Esc cancels), with no CSS ID to set; sides chosen on a little box with its handle; end shapes shown as pictures; "Swap start and end" reverses the arrow (its head moves to the other element; sides follow); opacity. While a Connector is selected, the two elements it joins are outlined.
 
 = 0.140.0 =
 * New widget: Connector. An arrow from one element to another: put it in a container and it points to the next container (or from the one before, or to and from any element by its CSS ID). It takes no room in the layout and is drawn again when the layout changes, so when containers stack on phones the arrow turns with them. Path straight, elbow (right angles, rounded corners) or curved; the sides it leaves and reaches (or facing each other), the place along each side, the gap, the line's width and the ends' size per screen size; solid, dashed or dotted line; ends: arrow, open arrow, thin arrow, dot, diamond, square or none, at either end; animations: flowing dashes, drawn when it comes into view, or a dot travelling along. Edit Mode shows a small Connector chip to select it.

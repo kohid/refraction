@@ -23,6 +23,7 @@
 }
 
 .rf-cn__svg {
+	opacity: var(--rf-cn-opacity, 1);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -130,4 +131,27 @@
 	white-space: nowrap;
 	pointer-events: auto;
 	cursor: pointer;
+}
+
+// Edit Mode: the two elements a selected Connector joins (connector.js), and the one under the pointer while picking
+// (editor.js).
+.rf-cn-linked-from {
+	outline: 2px dashed rgba(37, 99, 235, 0.55) !important;
+	outline-offset: 3px;
+}
+
+.rf-cn-linked-to {
+	outline: 2px solid rgba(37, 99, 235, 0.75) !important;
+	outline-offset: 3px;
+}
+
+.rf-cn-picking,
+.rf-cn-picking * {
+	cursor: crosshair !important;
+}
+
+.rf-cn-pick-hover {
+	outline: 2px solid #2563eb !important;
+	outline-offset: 2px;
+	background-color: rgba(37, 99, 235, 0.06);
 }

@@ -25,6 +25,13 @@ class Module extends BaseModule {
 		parent::__construct();
 
 		add_action( 'refraction/frontend/after_register_styles', [ $this, 'register_styles' ] );
+		add_action( 'refraction/editor/after_enqueue_scripts', [ $this, 'editor_scripts' ] );
+	}
+
+	/** Edit Mode: pick the elements on the page, reverse the arrow (assets/js/editor.js, built to connector-editor). */
+	public function editor_scripts() {
+		$min = \Refraction\Utils::is_script_debug() ? '' : '.min';
+		wp_enqueue_script( 'refraction-connector-editor', REFRACTION_ASSETS_URL . 'js/connector-editor' . $min . '.js', [ 'wp-i18n' ], REFRACTION_VERSION, true );
 	}
 
 	/** `assets/scss/frontend.scss` is built to `/assets/css/widget-connector.min.css`. */

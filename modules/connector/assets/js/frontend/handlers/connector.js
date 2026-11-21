@@ -83,6 +83,10 @@ export default class Connector extends Base {
 				this.settingsModel = refraction.getContainer( this.getID() ).settings;
 				this.settingsModel.on( 'change', this.schedule );
 			} catch ( e ) {}
+
+			// While the Connector is selected, the two elements it joins are outlined.
+			this.selection = new MutationObserver( () => this.outlineLinked() );
+			this.selection.observe( this.$element.get( 0 ), { attributes: true, attributeFilter: [ 'class' ] } );
 		}
 
 		this.draw();
@@ -102,6 +106,12 @@ export default class Connector extends Base {
 
 		if ( this.settingsModel ) {
 			this.settingsModel.off( 'change', this.schedule );
+		}
+
+		if ( this.selection ) {
+			this.selection.disconnect();
+			this.linked = [];
+			this.outlineLinked();
 		}
 
 		window.cancelAnimationFrame( this.frame );
@@ -149,6 +159,13 @@ export default class Connector extends Base {
 
 			return n;
 		};
+
+		// Picked on the page in Edit Mode: the element's own id.
+		if ( 'element' === kind ) {
+			const id = String( s[ end + '_element' ] || '' ).replace( /[^a-z0-9]/gi, '' );
+
+			return id ? document.querySelector( `.refraction-element[data-id="${ id }"]` ) : null;
+		}
 
 		if ( 'id' === kind ) {
 			const id = String( s[ end + '_id' ] || '' ).replace( /^#/, '' ).trim();
@@ -231,6 +248,8 @@ export default class Connector extends Base {
 		const to = this.target( 'to' );
 
 		this.watch( [ from, to, this.holder() ] );
+		this.linked = [ from, to ];
+		this.outlineLinked();
 
 		const old = box.querySelector( ':scope > .rf-cn__svg' );
 
@@ -353,6 +372,28 @@ export default class Connector extends Base {
 		points = points.filter( ( pt, i ) => 0 === i || Math.hypot( pt[ 0 ] - points[ i - 1 ][ 0 ], pt[ 1 ] - points[ i - 1 ][ 1 ] ) > 0.5 );
 
 		return rounded( points, v.radius );
+	}
+
+	/** Edit Mode: outline the start (dashed) and the end (solid) while this Connector is selected. */
+	outlineLinked() {
+		if ( ! this.isEdit ) {
+			return;
+		}
+
+		const on = this.$element.hasClass( 'refraction-element-editable' );
+		const [ from, to ] = this.linked || [];
+
+		( this.outlined || [] ).forEach( ( node ) => node.classList.remove( 'rf-cn-linked-from', 'rf-cn-linked-to' ) );
+		this.outlined = [];
+
+		if ( on ) {
+			[ [ from, 'rf-cn-linked-from' ], [ to, 'rf-cn-linked-to' ] ].forEach( ( [ node, cls ] ) => {
+				if ( node ) {
+					node.classList.add( cls );
+					this.outlined.push( node );
+				}
+			} );
+		}
 	}
 
 	/**

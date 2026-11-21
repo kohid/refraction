@@ -21,6 +21,19 @@ overflows it. In Edit Mode a small "Connector" chip there selects it (and Struct
 - **Style > Line**: colour, width (per screen size), style (solid, dashed, dotted), ends size (per screen size),
   travelling dot colour.
 
+## Like a diagram tool (0.141.0)
+
+- **Pick on the page** (each end): the preview shows a crosshair and outlines the element under the pointer; a click
+  links that end to it (`{end}` = `element`, `{end}_element` = its element id), instead of selecting it. Esc or a click
+  in the panel cancels. `assets/js/editor.js` (built to `connector-editor`).
+- **Sides** are chosen on a little box with a handle on that side (four light handles: facing the other one); **end
+  shapes** as pictures of a line with that end.
+- **Swap start and end** exchanges every from_ setting with its to_ one (every screen size's side and place, CSS ID,
+  picked element), in one undoable step: the end shapes stay at the start and the end, so the head moves to the other
+  element and the arrow (and its animation) runs the other way.
+- **Opacity** of the whole arrow.
+- With a Connector selected, its start is outlined dashed and its end solid (`connector.js`, Edit Mode only).
+
 ## How it works
 
 `assets/js/frontend/handlers/connector.js` finds the two elements, reads the widget's custom properties (each screen
