@@ -448,7 +448,18 @@ class Module extends BaseModule {
 		$element->add_control( 'rf_blob_line', [ 'label' => esc_html__( 'Outline Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'default' => '#1E1E1E', 'selectors' => [ $layer => '--rf-blob-line: {{VALUE}};' ], 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'solid' ] ) ] );
 		$element->add_control( 'rf_blob_line_width', [ 'label' => esc_html__( 'Outline Width', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.5, 'max' => 10, 'step' => 0.5 ] ], 'default' => [ 'unit' => 'px', 'size' => 2 ], 'selectors' => [ $layer => '--rf-blob-lw: {{SIZE}}px;' ], 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'solid' ] ) ] );
 		$element->add_control( 'rf_blob_line_shape', [ 'label' => esc_html__( 'Outline Shape', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'blob-2', 'options' => $this->shape_options(), 'description' => esc_html__( 'A different shape reads hand-drawn.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template', 'condition' => array_merge( $on, [ 'rf_blob_style' => 'both' ] ) ] );
-		$element->add_control( 'rf_blob_grain', [ 'label' => esc_html__( 'Grain On The Blob', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'frontend_available' => true, 'render_type' => 'template', 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'outline' ] ) ] );
+		// Containers choose the blob's grain in Grain (next to the fill's); a picture has no Grain section.
+		if ( ! $container ) {
+			$element->add_control( 'rf_blob_grain', [ 'label' => esc_html__( 'Grain On The Blob', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'frontend_available' => true, 'render_type' => 'template', 'condition' => array_merge( $on, [ 'rf_blob_style!' => 'outline' ] ) ] );
+		}
+
+		// Morph On Hover (0.136.0): the blob turns into another shape while the pointer is over the element.
+		$element->add_control( 'rf_blob_morph', [ 'label' => esc_html__( 'Morph On Hover', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'The blob turns into another shape while the pointer is over it, and back after.', 'refraction' ), 'frontend_available' => true, 'render_type' => 'template', 'separator' => 'before', 'condition' => $on ] );
+		$morph = [ 'condition' => array_merge( $on, [ 'rf_blob_morph' => 'yes' ] ) ];
+		$this->shape_picker( $element, 'rf_blob_morph_source', 'rf_blob_morph_shape', 'rf_blob_morph_mine', '', false, $morph );
+		$element->update_control( 'rf_blob_morph_source', [ 'label' => esc_html__( 'Into', 'refraction' ) ] );
+		$element->update_control( 'rf_blob_morph_shape', [ 'default' => 'blob-4' ] );
+		$element->add_control( 'rf_blob_morph_ms', [ 'label' => esc_html__( 'Morph Duration (ms)', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 100, 'max' => 5000, 'step' => 50, 'default' => 700, 'frontend_available' => true, 'render_type' => 'template' ] + $morph );
 
 		if ( $container ) {
 			self::edge_control( $element, 'rf_blob_edge', 'rf-blob-edge-', $show, esc_html__( 'Puts the blob against this side and cuts it straight there, flush with the container edge.', 'refraction' ) );
@@ -513,41 +524,45 @@ class Module extends BaseModule {
 	}
 
 	private function grain_section( $element ): void {
-		$layer = '{{WRAPPER}} > .rf-ofx-grain, {{WRAPPER}} > .e-con-inner > .rf-ofx-grain, {{WRAPPER}} > .rf-ofx-fill > .rf-ofx-grain';
-		$on = [ 'rf_grain' => 'yes' ];
+		// The fill's grain and the Deco Blob's grain (0.136.0: the amount and blend reach both).
+		$layer = '{{WRAPPER}} > .rf-ofx-grain, {{WRAPPER}} > .e-con-inner > .rf-ofx-grain, {{WRAPPER}} > .rf-ofx-fill > .rf-ofx-grain, {{WRAPPER}} > .rf-ofx-blob > .rf-ofx-grain, {{WRAPPER}} > .rf-ofx-bclip > .rf-ofx-blob > .rf-ofx-grain';
+		$fill = [ 'rf_grain' => 'yes' ];
+		// Shown when the grain is on the fill, on the blob's shape, or both.
+		$on = [ 'conditions' => [ 'relation' => 'or', 'terms' => [ [ 'name' => 'rf_grain', 'operator' => '===', 'value' => 'yes' ], [ 'name' => 'rf_blob_grain', 'operator' => '===', 'value' => 'yes' ] ] ] ];
 		$live = [ 'frontend_available' => true, 'render_type' => 'template' ];
 
 		$element->start_controls_section( 'section_rf_grain', [ 'label' => esc_html__( 'Grain', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
-		$element->add_control( 'rf_grain', [ 'label' => esc_html__( 'Grain On Container Fill', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'A texture over the container background, under its content. The texture, colour and size also dress a Deco Blob with grain.', 'refraction' ) ] + $live );
+		$element->add_control( 'rf_grain', [ 'label' => esc_html__( 'On The Container Fill', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'A texture over the container background, under its content.', 'refraction' ) ] + $live );
+		$element->add_control( 'rf_blob_grain', [ 'label' => esc_html__( 'Only On The Deco Blob Shape', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__( 'The texture inside the Deco Blob only (turn on Deco Blob, Solid or with an offset outline). Turn both on for both.', 'refraction' ) ] + $live );
 		$element->add_control( 'rf_grain_texture', [
 			'label' => esc_html__( 'Texture', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'film',
 			'options' => $this->texture_options(),
 			'description' => esc_html__( 'Pictures you upload are turned into ink (their dark parts) and show here as Uploaded.', 'refraction' ),
-		] + $live );
+		] + $live + $on );
 		$element->add_control( 'rf_grain_texture_upload', [
 			'type' => Controls_Manager::BUTTON,
 			'label' => esc_html__( 'Your textures', 'refraction' ),
 			'text' => esc_html__( 'Upload or manage', 'refraction' ),
 			'event' => 'refraction:organicTextures',
-		] );
+		] + $on );
 		$element->add_control( 'rf_grain_fade', [
 			'label' => esc_html__( 'Fade From', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => '',
 			'options' => [ '' => esc_html__( 'None', 'refraction' ), 'left' => esc_html__( 'Left', 'refraction' ), 'right' => esc_html__( 'Right', 'refraction' ), 'top' => esc_html__( 'Top', 'refraction' ), 'bottom' => esc_html__( 'Bottom', 'refraction' ), 'center' => esc_html__( 'Centre', 'refraction' ) ],
 			'description' => esc_html__( 'The grain is densest on this side and fades out across the element. Dispersion fades from the left unless you choose another side.', 'refraction' ),
-		] + $live );
-		$element->add_control( 'rf_grain_reach', [ 'label' => esc_html__( 'Fade Reach (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ], 'default' => [ 'size' => 70 ] ] + $live );
-		$element->add_control( 'rf_grain_color', [ 'label' => esc_html__( 'Grain Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'description' => esc_html__( 'Empty: dark ink (the classic film grain stays grey).', 'refraction' ) ] + $live );
-		$element->add_control( 'rf_grain_amount', [ 'label' => esc_html__( 'Grain Amount', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.02, 'max' => 1, 'step' => 0.01 ] ], 'default' => [ 'size' => 0.25 ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ], 'condition' => $on ] );
-		$element->add_control( 'rf_grain_scale', [ 'label' => esc_html__( 'Grain Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 1, 'max' => 100 ] ], 'default' => [ 'size' => 50 ], 'description' => esc_html__( 'Higher = coarser patches, lower = finer.', 'refraction' ) ] + $live );
+		] + $live + $on );
+		$element->add_control( 'rf_grain_reach', [ 'label' => esc_html__( 'Fade Reach (%)', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ], 'default' => [ 'size' => 70 ] ] + $live + $on );
+		$element->add_control( 'rf_grain_color', [ 'label' => esc_html__( 'Grain Colour', 'refraction' ), 'type' => Controls_Manager::COLOR, 'description' => esc_html__( 'Empty: dark ink (the classic film grain stays grey).', 'refraction' ) ] + $live + $on );
+		$element->add_control( 'rf_grain_amount', [ 'label' => esc_html__( 'Grain Amount', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 0.02, 'max' => 1, 'step' => 0.01 ] ], 'default' => [ 'size' => 0.25 ], 'selectors' => [ $layer => 'opacity: {{SIZE}};' ] ] + $on );
+		$element->add_control( 'rf_grain_scale', [ 'label' => esc_html__( 'Grain Size', 'refraction' ), 'type' => Controls_Manager::SLIDER, 'range' => [ 'px' => [ 'min' => 1, 'max' => 100 ] ], 'default' => [ 'size' => 50 ], 'description' => esc_html__( 'Higher = coarser patches, lower = finer.', 'refraction' ) ] + $live + $on );
 		// The 0.68 size select, kept hidden so a saved Medium or Coarse still reaches the script.
 		$element->add_control( 'rf_grain_size', [ 'type' => Controls_Manager::HIDDEN, 'default' => '' ] + $live );
-		$element->add_control( 'rf_grain_pattern', [ 'label' => esc_html__( 'Pattern', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 999, 'default' => 0, 'description' => esc_html__( '0 gives every element its own random speckle. Any other number fixes the pattern.', 'refraction' ) ] + $live );
-		$element->add_control( 'rf_grain_blend', [ 'label' => esc_html__( 'Blend', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'multiply', 'options' => [ 'multiply' => esc_html__( 'Darken (multiply)', 'refraction' ), 'overlay' => esc_html__( 'Overlay', 'refraction' ), 'soft-light' => esc_html__( 'Soft light', 'refraction' ), 'screen' => esc_html__( 'Lighten (screen)', 'refraction' ), 'normal' => esc_html__( 'Normal', 'refraction' ) ], 'selectors' => [ $layer => 'mix-blend-mode: {{VALUE}};' ], 'condition' => $on ] );
-		$element->add_control( 'rf_grain_over', [ 'label' => esc_html__( 'Also Over The Content', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'prefix_class' => 'rf-grain-over-', 'condition' => $on ] );
+		$element->add_control( 'rf_grain_pattern', [ 'label' => esc_html__( 'Pattern', 'refraction' ), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 999, 'default' => 0, 'description' => esc_html__( '0 gives every element its own random speckle. Any other number fixes the pattern.', 'refraction' ) ] + $live + $on );
+		$element->add_control( 'rf_grain_blend', [ 'label' => esc_html__( 'Blend', 'refraction' ), 'type' => Controls_Manager::SELECT, 'default' => 'multiply', 'options' => [ 'multiply' => esc_html__( 'Darken (multiply)', 'refraction' ), 'overlay' => esc_html__( 'Overlay', 'refraction' ), 'soft-light' => esc_html__( 'Soft light', 'refraction' ), 'screen' => esc_html__( 'Lighten (screen)', 'refraction' ), 'normal' => esc_html__( 'Normal', 'refraction' ) ], 'selectors' => [ $layer => 'mix-blend-mode: {{VALUE}};' ] ] + $on );
+		$element->add_control( 'rf_grain_over', [ 'label' => esc_html__( 'Also Over The Content', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'prefix_class' => 'rf-grain-over-', 'condition' => $fill ] );
 		$element->end_controls_section();
 	}
 

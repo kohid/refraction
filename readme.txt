@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.135.0
+Stable tag: 0.136.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.136.0 =
+* Phone Showcase: a Deco Blob (Style > Deco Blob), behind or in front of the phone (per screen size), with its size, height, place, turn, opacity and motion. And Grain (Style > Grain): on the widget's fill, only on the Deco Blob's shape, or both.
+* Every Deco Blob has the same settings: a built-in or uploaded shape; Solid, Outline, or Solid with an offset outline; and the new Morph On Hover, which turns the shape into another one (built-in or uploaded) while the pointer is over it, and back after (Morph Duration). On containers and pictures, Phone Showcase and every Showcase Wheel slide.
+* Grain on containers: "On The Container Fill" and "Only On The Deco Blob Shape" are side by side in Grain. Texture, colour, amount, size, pattern and blend now reach the blob's grain too; before, Amount and Blend were hidden and unused unless the fill had grain.
+* Showcase Wheel: a slide's Deco Blob can be behind or in front of the picture, and has the outline styles and Morph On Hover (hover the slide). New Style > Grain: on each slide's fill (over the slide's background, under its text), only on the slides' shapes, or both. The editor preview draws them the same.
 
 = 0.135.0 =
 * Timed Slides: Style > Slider (the slider's box settings) now holds Padding (inside the slider, for the text and the cards) and Text padding (around the slides' text), each per screen size. The text no longer gets a hidden 48 20 0 20 px padding at 768px and below: it uses the desktop's until you set your own, and an emptied value goes back to the larger screen's.

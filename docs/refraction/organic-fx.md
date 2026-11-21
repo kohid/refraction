@@ -91,6 +91,28 @@ Also Over The Content. Built-in textures are seamless SVG tiles drawn by `textur
 colour through the PNG as a repeating mask. Fade is a gradient mask; inside a Deco Blob the blob's shape is one more
 mask layer, all intersected. The blob's grain uses the same texture, colour and size.
 
+## Morph On Hover, grain on the fill or the shape, the same blob in widgets (0.136.0)
+
+- **Morph On Hover** (Deco Blob): the blob turns into another shape (Into: built-in or uploaded, with its own upload
+  button) while the pointer is over the element, and back when it leaves; Morph Duration (ms). The fill is then drawn
+  as an SVG path (`.rf-ofx-blob__shape`); `attachMorph()` in `organic-fx.js` samples both shapes to 120 matched points
+  (rotated and turned to line up), eases between them, and draws the exact start and end shapes. The blob's grain
+  clip (`--rf-shape`) follows. Reduced motion: it jumps.
+- **Grain** now holds both switches: *On The Container Fill* (`rf_grain`) and *Only On The Deco Blob Shape*
+  (`rf_blob_grain`, which used to sit in Deco Blob). Turn on either or both; Texture, Fade, Colour, Amount, Size,
+  Pattern and Blend show for either, and Amount and Blend now reach the blob's grain (before, they were hidden and not
+  applied unless the fill had grain). Also Over The Content stays a fill setting. A picture (Image widget) has no Grain
+  section and keeps Grain On The Blob in its Deco Blob.
+- **Widgets** use the same blob through `Classes\Widget_Blob`: shape tabs (built-in / uploaded with the library
+  button), Style (Solid, Outline, Solid with an offset outline and its other shape), Morph On Hover, and Grain with
+  *On* = None / the widget's fill / only on the Deco Blob shape / both (texture with its own upload button, colour,
+  amount, size, pattern, blend). The markup is printed by PHP (`.rf-wblob`, `.rf-wgrain`); `widgetFx()` paints the
+  textures, clips the shape's grain and runs the morph (on the site and on every `element_ready` in the editor).
+  Phone Showcase and Showcase Wheel use it; their placement, size and motion stay their own.
+- The editor library (`organic-fx-editor.js`) knows the new pickers: `rf_blob_morph_mine`, `ps_blob_mine`,
+  `ps_blob_morph_mine`, `sw_blob_morph_mine`, the outline-shape selects and the widget texture lists (their buttons
+  send `refraction:organicTextures:<setting>`, and the picked texture goes to that setting).
+
 ## Checks
 
 - `php scripts/test-organic-fx.php`: generated files match, shapes stay in their box, upload cleaning (scripts,
@@ -98,6 +120,10 @@ mask layer, all intersected. The blob's grain uses the same texture, colour and 
 - `node scripts/check-organic-fx.mjs --site DIR --port N`: My Shapes upload/paste/refuse/rename/delete, masks (built-in
   and uploaded), blob, grain, floating shapes and words on desktop, phone counts with reduced motion, and the editor
   preview redrawing with an uploaded floating shape.
+- `node scripts/check-blob-morph-grain.mjs --site DIR --port N` (0.136.0): Phone Showcase blob behind / in front of the
+  phone per screen size, looks, morph and back, grain on the fill and the shape; a container's grain only on the blob
+  with Amount and Blend, its morph; Showcase Wheel blobs in front / behind the picture, slide grain under the text,
+  morph; Edit Mode drawing the same and following panel changes.
 
 ## Global colours (0.104.0)
 

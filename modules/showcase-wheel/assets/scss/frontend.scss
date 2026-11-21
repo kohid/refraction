@@ -193,6 +193,12 @@
 	}
 }
 
+// Style > Grain on each slide's fill (0.136.0): over the slide container's background, under its text (z-index 2) and
+// the blob (also 1, later). The blob's own look, grain and morph come from Widget_Blob (Organic FX's stylesheet).
+.rf-sw__slot > .rf-wgrain {
+	z-index: 1;
+}
+
 // An arc in a corner of the slide: a ring centred on that corner, so a quarter of it shows (the box clips the rest).
 // Distance moves the centre out of the corner (or into the slide).
 .rf-sw__corner {

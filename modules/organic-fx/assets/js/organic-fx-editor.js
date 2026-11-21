@@ -9,10 +9,12 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 
 const cfg = window.refractionOrganicEditor || { shapes: {}, textures: {} };
-// The uploaded-shape pickers (Showcase Wheel: one per slide, inside its Slides list).
-const SHAPE_CONTROLS = [ 'rf_mask_mine', 'rf_blob_mine', 'sw_blob_mine' ];
-const SHAPE_SELECTS = [ 'rf_blob_line_shape', 'rf_fs_shapes' ];
-const TEXTURE_CONTROLS = [ 'rf_grain_texture' ];
+// The uploaded-shape pickers (Showcase Wheel: one per slide, inside its Slides list), with the Morph On Hover ones and
+// the widgets' Deco Blobs (Widget_Blob, 0.136.0).
+const SHAPE_CONTROLS = [ 'rf_mask_mine', 'rf_blob_mine', 'sw_blob_mine', 'rf_blob_morph_mine', 'sw_blob_morph_mine', 'ps_blob_mine', 'ps_blob_morph_mine' ];
+const SHAPE_SELECTS = [ 'rf_blob_line_shape', 'rf_fs_shapes', 'sw_blob_line_shape', 'ps_blob_line_shape' ];
+// Every grain texture list: a container's, then the widgets' (their buttons say which: refraction:organicTextures:<name>).
+const TEXTURE_CONTROLS = [ 'rf_grain_texture', 'ps_grain_texture', 'sw_grain_texture' ];
 const BUILT_IN_TEXTURES = [ 'film', 'speckle', 'chalk', 'brush', 'fibre', 'halftone', 'dispersion', 'strokes', 'splatter', 'scratches' ];
 
 const toast = ( message ) => {
@@ -419,8 +421,8 @@ function open( kind, container, target ) {
 
 				if ( shapes && SHAPE_CONTROLS.includes( target ) ) {
 					apply( container, { [ target.replace( /_mine$/, '' ) + '_source' ]: 'mine', [ target ]: added[ 0 ] } );
-				} else if ( ! shapes && 'rf_grain_texture' === target ) {
-					apply( container, { rf_grain_texture: added[ 0 ] } );
+				} else if ( ! shapes && TEXTURE_CONTROLS.includes( target ) ) {
+					apply( container, { [ target ]: added[ 0 ] } );
 				}
 
 				/* Translators: %d: Number added. */
@@ -503,7 +505,7 @@ function open( kind, container, target ) {
 				if ( shapes && SHAPE_CONTROLS.includes( target ) ) {
 					apply( container, { [ target.replace( /_mine$/, '' ) + '_source' ]: 'mine', [ target ]: id } );
 				} else if ( ! shapes ) {
-					apply( container, { rf_grain_texture: id } );
+					apply( container, { [ TEXTURE_CONTROLS.includes( target ) ? target : 'rf_grain_texture' ]: id } );
 				}
 
 				close();
@@ -579,5 +581,6 @@ window.addEventListener( 'refraction/init', () => {
 
 	SHAPE_CONTROLS.forEach( ( name ) => ch.on( 'refraction:organicLibrary:' + name, ( view ) => open( 'shapes', containerOf( view ), name ) ) );
 	ch.on( 'refraction:organicTextures', ( view ) => open( 'textures', containerOf( view ), 'rf_grain_texture' ) );
+	TEXTURE_CONTROLS.forEach( ( name ) => ch.on( 'refraction:organicTextures:' + name, ( view ) => open( 'textures', containerOf( view ), name ) ) );
 	window.refractionOrganicLibrary = { open: ( kind ) => open( kind, containerOf( null ), 'shapes' === kind ? 'rf_mask_mine' : 'rf_grain_texture' ) };
 } );

@@ -9,6 +9,7 @@ use Refraction\Icons_Manager;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\OrganicFx\Classes\Pure_Organic;
 use Refraction\Modules\OrganicFx\Classes\Shapes_Repository;
+use Refraction\Modules\OrganicFx\Classes\Widget_Blob;
 use Refraction\Modules\OrganicFx\Module as OrganicFx;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
 use Refraction\Modules\ProWidgets\Classes\Motion_Easings;
@@ -171,6 +172,11 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		}
 
 		return [ 'd' => Pure_Organic::path( $id ), 'vb' => '0 0 100 100', 'rule' => 'nonzero' ];
+	}
+
+	/** A slide's blob settings, by Widget_Blob's names (the built-in picker keeps its 0.117.0 name). */
+	private static function blob_keys(): array {
+		return Widget_Blob::keys( 'sw_blob', [ 'shape' => 'sw_blob_pick' ] );
 	}
 
 	/** How many floating images a slide can have. */
@@ -579,6 +585,24 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'default' => '',
 		] );
 
+		// 0.136.0: in front of the picture or behind it, as every Deco Blob's settings: its look and a hover morph.
+		$repeater->add_control( 'sw_blob_layer', [
+			'label' => esc_html__( 'Show', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => self::choose( [
+				'back' => [ esc_html__( 'Behind the picture', 'refraction' ), 'rficon-arrow-down' ],
+				'front' => [ esc_html__( 'In front of the picture', 'refraction' ), 'rficon-arrow-up' ],
+			] ),
+			'default' => 'back',
+			'toggle' => false,
+			'selectors_dictionary' => [ 'back' => '1', 'front' => '4' ],
+			'selectors' => [ $item . ' .rf-sw__deco--blob' => 'z-index: {{VALUE}};' ],
+			'description' => esc_html__( 'In front, clicks pass through it.', 'refraction' ),
+			'condition' => $on_blob,
+		] );
+		Widget_Blob::morph_controls( $repeater, self::blob_keys(), $on_blob );
+		$repeater->update_control( 'sw_blob_morph_shape', [ 'default' => 'blob-4' ] );
+
 		$repeater->add_control( 'deco_motion', [
 			'label' => esc_html__( 'Animation', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
@@ -612,6 +636,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			'selectors' => [ $item => '--rf-sw-deco-color: {{VALUE}};' ],
 			'condition' => $on_deco,
 		] );
+
+		Widget_Blob::look_controls( $repeater, self::blob_keys(), $item . ' .rf-sw__deco--blob', [ 'deco' => 'blob' ] );
 
 		$repeater->add_control( 'deco_opacity', [
 			'label' => esc_html__( 'Opacity', 'refraction' ),
@@ -966,6 +992,18 @@ class Showcase_Wheel extends Widget_Nested_Base {
 
 		$this->end_controls_section();
 
+		// ------------------------------------------------ Style: grain (0.136.0)
+		$this->start_controls_section( 'section_style_grain', [
+			'label' => esc_html__( 'Grain', 'refraction' ),
+			'tab' => Controls_Manager::TAB_STYLE,
+		] );
+		Widget_Blob::grain_controls( $this, 'sw_grain', '{{WRAPPER}} .rf-sw', [
+			'fill' => esc_html__( 'On each slide\'s fill', 'refraction' ),
+			'shape' => esc_html__( 'Only on the slides\' shapes (Deco Blob)', 'refraction' ),
+			'both' => esc_html__( 'On both', 'refraction' ),
+		] );
+		$this->end_controls_section();
+
 		// ------------------------------------------------ Style: the picture and what is behind it
 		$this->start_controls_section( 'section_style_picture', [
 			'label' => esc_html__( 'Picture', 'refraction' ),
@@ -1257,7 +1295,7 @@ class Showcase_Wheel extends Widget_Nested_Base {
 
 	/** What sits behind a slide's picture: an arc, a shape, or nothing (the arc in a corner is drawn on the slide). Its
 	 * color, size, place and turn come from the slide's Style tab (CSS on the slide, by its list item). */
-	private static function deco( array $slide ): string {
+	private static function deco( array $slide, ?array $grain = null ): string {
 		$deco = (string) ( $slide['deco'] ?? '' );
 
 		if ( 'arc' === $deco ) {
@@ -1267,7 +1305,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		if ( 'blob' === $deco ) {
 			$shape = self::blob_data( $slide );
 
-			return '<span class="rf-sw__deco rf-sw__deco--blob" aria-hidden="true"><svg viewBox="' . esc_attr( $shape['vb'] ) . '" preserveAspectRatio="none"><path fill-rule="' . esc_attr( $shape['rule'] ) . '" d="' . esc_attr( $shape['d'] ) . '"/></svg></span>';
+			// The shape, its look, the grain inside it and the hover morph: the same as every Deco Blob (0.136.0).
+			return Widget_Blob::html( $slide, self::blob_keys(), $grain, 'rf-sw__deco rf-sw__deco--blob', [ $shape['d'], $shape['vb'], $shape['rule'] ] );
 		}
 
 		return '';
@@ -1317,6 +1356,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		$children = $this->get_children();
 		$label = '' !== trim( (string) ( $settings['wheel_label'] ?? '' ) ) ? $settings['wheel_label'] : __( 'Showcase', 'refraction' );
 		$total = count( $children );
+		$fill_grain = Widget_Blob::fill_grain_html( Widget_Blob::grain( $settings, 'sw_grain', 'fill' ) );
+		$shape_grain = Widget_Blob::grain( $settings, 'sw_grain', 'shape' );
 
 		$this->add_render_attribute( 'root', [
 			'class' => array_filter( [ 'rf-sw', $this->has_nav( $settings, count( $this->get_children() ) ) ? 'has-nav' : '' ] ),
@@ -1333,11 +1374,12 @@ class Showcase_Wheel extends Widget_Nested_Base {
 					$pic = self::picture( $slide );
 					$side = 'right' === ( $slide['side'] ?? 'left' ) ? 'right' : 'left';
 					?>
-					<div class="<?php echo esc_attr( self::slot_classes( $slide, $side, $index ) ); ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( '%d / %d%s', $index + 1, $total, '' !== trim( (string) ( $slide['slide_title'] ?? '' ) ) ? ' - ' . wp_strip_all_tags( $slide['slide_title'] ) : '' ) ); ?>"<?php echo 0 === $index ? '' : ' aria-hidden="true"'; ?>>
+					<div class="<?php echo esc_attr( self::slot_classes( $slide, $side, $index ) ); ?>" role="group" aria-roledescription="slide" aria-label="<?php echo esc_attr( sprintf( '%d / %d%s', $index + 1, $total, '' !== trim( (string) ( $slide['slide_title'] ?? '' ) ) ? ' - ' . wp_strip_all_tags( $slide['slide_title'] ) : '' ) ); ?>"<?php echo 0 === $index ? '' : ' aria-hidden="true"'; ?> data-rf-wblob-hover>
+						<?php echo $fill_grain; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in Widget_Blob. ?>
 						<?php $child->print_element(); ?>
 						<?php echo self::corner( $slide, $side ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 						<div class="rf-sw__visual" aria-hidden="<?php echo '' === $pic['alt'] ? 'true' : 'false'; ?>">
-							<?php echo self::deco( $slide ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
+							<?php echo self::deco( $slide, $shape_grain ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts. ?>
 							<?php
 							$back = self::floats( $slide, 'back' );
 							$front = self::floats( $slide, 'front' );
@@ -1489,16 +1531,58 @@ class Showcase_Wheel extends Widget_Nested_Base {
 			const thumb = slide.thumb && slide.thumb.url ? slide.thumb.url : image;
 			return { image, thumb };
 		};
+		// Grain (Style > Grain) and the blob's markup: the same as Widget_Blob::html() prints on the site.
+		const grainAt = ( where ) => {
+			const at = settings.sw_grain_where || '';
+			if ( ! at || ( 'both' !== at && where !== at ) ) {
+				return null;
+			}
+			const t = /^[a-z0-9-]+$/.test( settings.sw_grain_texture || '' ) ? settings.sw_grain_texture : 'film';
+			const scale = settings.sw_grain_scale && settings.sw_grain_scale.size ? Number( settings.sw_grain_scale.size ) : 50;
+			return { t, c: settings.sw_grain_color || '', s: Math.max( 1, Math.min( 100, scale ) ), p: Math.max( 0, Math.min( 999, parseInt( settings.sw_grain_pattern, 10 ) || 0 ) ) };
+		};
+		const fillGrain = grainAt( 'fill' );
+		const shapeGrain = grainAt( 'shape' );
+		const byId = ( id, fallback ) => {
+			if ( builtin[ id ] ) {
+				return { d: builtin[ id ], vb: '0 0 100 100', rule: 'nonzero' };
+			}
+			if ( id && mine[ id ] ) {
+				return mine[ id ];
+			}
+			return fallback ? { d: builtin[ fallback ], vb: '0 0 100 100', rule: 'nonzero' } : null;
+		};
+		const svg = ( sh, cls ) => '<svg class="' + cls + '" viewBox="' + _.escape( sh.vb ) + '" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill-rule="' + _.escape( sh.rule || 'nonzero' ) + '" d="' + _.escape( sh.d ) + '"/></svg>';
+		const blob = ( slide ) => {
+			const sh = shape( slide );
+			const look = [ 'outline', 'both' ].includes( slide.sw_blob_style ) ? slide.sw_blob_style : 'solid';
+			const data = {};
+			if ( 'yes' === slide.sw_blob_morph ) {
+				const into = byId( 'mine' === slide.sw_blob_morph_source ? slide.sw_blob_morph_mine : slide.sw_blob_morph_shape, '' );
+				if ( into ) {
+					data.morph = { d: into.d, vb: into.vb, rule: into.rule || 'nonzero' };
+					data.ms = Math.max( 100, Math.min( 5000, parseInt( slide.sw_blob_morph_ms, 10 ) || 700 ) );
+				}
+			}
+			if ( shapeGrain && 'outline' !== look ) {
+				data.grain = shapeGrain;
+			}
+			let out = '<span class="rf-wblob rf-wblob--' + look + ' rf-sw__deco rf-sw__deco--blob" aria-hidden="true"' + ( _.isEmpty( data ) ? '' : ' data-rf-wblob="' + _.escape( JSON.stringify( data ) ) + '"' ) + '>';
+			if ( 'outline' !== look ) {
+				out += svg( sh, 'rf-wblob__fill' ) + ( data.grain ? '<span class="rf-wblob__grain"></span>' : '' );
+			}
+			if ( 'outline' === look ) {
+				out += svg( sh, 'rf-wblob__line' );
+			} else if ( 'both' === look ) {
+				out += svg( byId( slide.sw_blob_line_shape || 'blob-2', 'blob-2' ), 'rf-wblob__line rf-wblob__line--offset' );
+			}
+			return out + '</span>';
+		};
 		const deco = ( slide ) => {
-			const style = '';
 			if ( 'arc' === slide.deco ) {
-				return '<span class="rf-sw__deco rf-sw__deco--arc"' + style + ' aria-hidden="true"></span>';
+				return '<span class="rf-sw__deco rf-sw__deco--arc" aria-hidden="true"></span>';
 			}
-			if ( 'blob' === slide.deco ) {
-				const sh = shape( slide );
-				return '<span class="rf-sw__deco rf-sw__deco--blob"' + style + ' aria-hidden="true"><svg viewBox="' + _.escape( sh.vb ) + '" preserveAspectRatio="none"><path fill-rule="' + _.escape( sh.rule || 'nonzero' ) + '" d="' + _.escape( sh.d ) + '"/></svg></span>';
-			}
-			return '';
+			return 'blob' === slide.deco ? blob( slide ) : '';
 		};
 		const floats = ( slide, layer ) => {
 			let out = '';
@@ -1534,7 +1618,8 @@ class Showcase_Wheel extends Widget_Nested_Base {
 		<div class="rf-sw {{ thumbs || ( 'none' !== arrows && total > 1 ) ? 'has-nav' : '' }}" role="region" aria-roledescription="carousel" aria-label="{{ settings.wheel_label }}" tabindex="0">
 			<div class="rf-sw__slots">
 				<# _.each( slides, ( slide, index ) => { const p = pic( slide ); #>
-					<div class="{{ slotClass( slide, index ) }}" role="group" aria-roledescription="slide" aria-label="{{ index + 1 }} / {{ total }}">
+					<div class="{{ slotClass( slide, index ) }}" role="group" aria-roledescription="slide" aria-label="{{ index + 1 }} / {{ total }}" data-rf-wblob-hover>
+						<# if ( fillGrain ) { #><span class="rf-wgrain" aria-hidden="true" data-rf-wgrain="{{ JSON.stringify( fillGrain ) }}"></span><# } #>
 						{{{ corner( slide ) }}}
 						<div class="rf-sw__visual" aria-hidden="true">
 							{{{ deco( slide ) }}}
