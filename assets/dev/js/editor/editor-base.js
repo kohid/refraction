@@ -1060,6 +1060,52 @@ export default class EditorBase extends Marionette.Application {
 		this.$preview[ 0 ].src = this.config.initial_document.urls.preview;
 	}
 
+	/**
+	 * Ctrl+V of a copied element while the caret is in a widget's inline editing (a click on a heading puts it there):
+	 * Copy also puts the element on the system clipboard, so the paste brings the element, not its code as text.
+	 * Plain text pastes into the text as before.
+	 *
+	 * @param {Document} doc The preview's document.
+	 */
+	bindElementPaste( doc ) {
+		if ( ! doc || doc.refractionElementPaste ) {
+			return;
+		}
+
+		doc.refractionElementPaste = true;
+		doc.addEventListener( 'paste', ( event ) => {
+			const target = event.target && event.target.closest ? event.target : event.target?.parentElement;
+
+			if ( ! target || ! target.closest( '.refraction-element [contenteditable="true"]' ) ) {
+				return;
+			}
+
+			const text = event.clipboardData ? event.clipboardData.getData( 'text/plain' ) : '';
+
+			if ( ! text || '{' !== text.trim()[ 0 ] ) {
+				return;
+			}
+
+			let data = null;
+
+			try {
+				data = JSON.parse( text );
+			} catch ( e ) {
+				return;
+			}
+
+			if ( ! data || 'refraction' !== data.type || ! Array.isArray( data.elements ) || ! data.elements.length ) {
+				return;
+			}
+
+			event.preventDefault();
+
+			if ( $e.components.get( 'document/elements' ).utils.allowAddingWidgets() ) {
+				$e.run( 'document/ui/paste', { storageType: 'rawdata', data: text } );
+			}
+		}, true );
+	}
+
 	changeDeviceMode( newDeviceMode, hideBarOnDesktop = true ) {
 		const oldDeviceMode = this.channels.deviceMode.request( 'currentMode' );
 
@@ -1284,6 +1330,7 @@ export default class EditorBase extends Marionette.Application {
 		} );
 
 		$e.shortcuts.bindListener( refractionFrontend.elements.$window );
+		this.bindElementPaste( refractionFrontend.elements.window.document );
 
 		this.trigger( 'preview:loaded', ! this.loaded /* IsFirst */ );
 

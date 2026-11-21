@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.136.0
+Stable tag: 0.137.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,12 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.137.0 =
+* Copy and paste work for every widget, on the same page and from one page to another. Widgets holding slides or items (Focus Stack, Showcase Wheel, Timed Slides, Mega Menu, tabs, accordions, carousels, Dynamic Container...) copied every default setting of every screen size of every slide: millions of characters, more than the browser keeps, so Copy did nothing. A copy now holds what a save holds (a Showcase Wheel: 148,000 characters instead of 1.5 million); a copy still too big says so.
+* Ctrl+C works on a widget right after clicking its text (a heading, a button...): with no text selected it copies the widget; with text selected it still copies the text. Ctrl+V of a copied widget there pastes the widget instead of its code.
+* A slide or item of a nested widget (Showcase Wheel, carousels, tabs...) offers "Copy <widget>" in its right-click menu, and Ctrl+C on it copies the widget.
+* Video, Google Maps, Facebook and other embeds: a click selects the widget and a right-click opens the editor's menu (Copy, Paste...); the embed itself works once the widget is selected.
 
 = 0.136.0 =
 * Phone Showcase: a Deco Blob (Style > Deco Blob), behind or in front of the phone (per screen size), with its size, height, place, turn, opacity and motion. And Grain (Style > Grain): on the widget's fill, only on the Deco Blob's shape, or both.
