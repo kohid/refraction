@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.138.0
+Stable tag: 0.139.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.139.0 =
+* New widget: Timeline. Entries along a line, each an empty container to design with any widgets (a card, a step, an event), with a marker on the line: a dot, an icon, a number (1 or 01) or a text such as a year or a time. The line on the left, on the right, in the middle with the entries on alternate sides, or Zigzag (alternate sides, each entry starting part-way down the one before so both sides interlock), per screen size (phones start with the line on the left). A pointer joins each entry to the line; a text such as a date can sit across the line from an entry; the line can fill as the page scrolls, colouring the markers it reaches. Room for the line, spacing, marker sizes and the pointer are set per screen size.
 
 = 0.138.0 =
 * Slides stay together with their settings: after a slide was moved or added in Timed Slides, Focus Stack, Showcase Wheel, Dynamic Container, Nested Carousel, Mega Menu or Tabs, moving, duplicating or removing another took the wrong slide's content, so slides swapped content against their title, picture and background. Showcase Wheel also put a moved slide's content in its neighbour's slot.

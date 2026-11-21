@@ -1,0 +1,183 @@
+// Timeline (widgets/timeline.php). Each entry (.rf-tl__item) is a grid row: the marker in the line's column, the
+// container (the entry) on its side, a pointer at the container's edge towards the line, and in the middle layout a
+// text across the line. The layout (per screen size) writes the columns: --rf-tl-l-* for an entry left of the line,
+// --rf-tl-r-* for one right of it. The line runs behind the markers; timeline.js trims it to the first and last
+// markers (--rf-tl-line-top / -bottom) and fills it as the page scrolls (--rf-tl-progress).
+
+.rf-tl {
+	--rf-tl-mark-size: var(--rf-tl-mark, 44px);
+
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.rf-tl--marker-dot {
+	--rf-tl-mark-size: var(--rf-tl-dot, 14px);
+}
+
+.rf-tl__items {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	row-gap: var(--rf-tl-row-gap, 40px);
+}
+
+// ---------------------------------------------------------------- the line
+.rf-tl__line {
+	position: absolute;
+	top: var(--rf-tl-line-top, 0px);
+	bottom: var(--rf-tl-line-bottom, 0px);
+	left: var(--rf-tl-line-x, 50%);
+	z-index: 0;
+	width: 0;
+	border-left: var(--rf-tl-line-w, 2px) var(--rf-tl-line-style, solid) var(--rf-tl-line-color, #d5d8dc);
+	transform: translateX(-50%);
+	pointer-events: none;
+}
+
+.rf-tl__fill {
+	position: absolute;
+	top: 0;
+	left: calc(-1 * var(--rf-tl-line-w, 2px));
+	width: var(--rf-tl-line-w, 2px);
+	height: var(--rf-tl-progress, 0%);
+	background: var(--rf-tl-fill, #2563eb);
+}
+
+// ---------------------------------------------------------------- an entry
+.rf-tl__item {
+	// Left of the line (odd entries in the middle layout).
+	--rf-tl-col: var(--rf-tl-l-col, 1);
+	--rf-tl-justify: var(--rf-tl-l-justify, end);
+	--rf-tl-shift: var(--rf-tl-l-shift, 100%);
+	--rf-tl-clip: var(--rf-tl-l-clip, polygon(0 0, 100% 50%, 0 100%));
+	--rf-tl-aside-col: var(--rf-tl-l-aside, 3);
+	--rf-tl-aside-align: var(--rf-tl-l-aside-align, start);
+
+	position: relative;
+	display: grid;
+	// Only its parts take the pointer: in the Zigzag an entry's row reaches beside the one before it.
+	pointer-events: none;
+	grid-template-columns: var(--rf-tl-cols, minmax(0, 1fr) var(--rf-tl-rail, 48px) minmax(0, 1fr));
+	column-gap: var(--rf-tl-gap, 24px);
+	align-items: start;
+	min-width: 0;
+}
+
+// Right of the line: the even entries, and those set to the right.
+.rf-tl__item:nth-child(even),
+.rf-tl__item.rf-tl__item--side-right {
+	--rf-tl-col: var(--rf-tl-r-col, 3);
+	--rf-tl-justify: var(--rf-tl-r-justify, start);
+	--rf-tl-shift: var(--rf-tl-r-shift, -100%);
+	--rf-tl-clip: var(--rf-tl-r-clip, polygon(100% 0, 0 50%, 100% 100%));
+	--rf-tl-aside-col: var(--rf-tl-r-aside, 1);
+	--rf-tl-aside-align: var(--rf-tl-r-aside-align, end);
+}
+
+.rf-tl__item.rf-tl__item--side-left {
+	--rf-tl-col: var(--rf-tl-l-col, 1);
+	--rf-tl-justify: var(--rf-tl-l-justify, end);
+	--rf-tl-shift: var(--rf-tl-l-shift, 100%);
+	--rf-tl-clip: var(--rf-tl-l-clip, polygon(0 0, 100% 50%, 0 100%));
+	--rf-tl-aside-col: var(--rf-tl-l-aside, 3);
+	--rf-tl-aside-align: var(--rf-tl-l-aside-align, start);
+}
+
+.rf-tl__item > * {
+	pointer-events: auto;
+}
+
+// The entry: the container, on its side. It keeps its own width settings inside its column.
+.rf-tl__item > .e-con,
+.rf-tl__item > .refraction-element {
+	grid-row: 1;
+	grid-column: var(--rf-tl-col);
+	min-width: 0;
+	max-width: 100%;
+}
+
+// ---------------------------------------------------------------- the marker
+.rf-tl__marker {
+	position: relative;
+	z-index: 2;
+	box-sizing: border-box;
+	display: inline-flex;
+	grid-row: 1;
+	grid-column: var(--rf-tl-mark-col, 2);
+	align-items: center;
+	justify-content: center;
+	justify-self: center;
+	align-self: var(--rf-tl-align, start);
+	min-width: var(--rf-tl-mark-size);
+	height: var(--rf-tl-mark-size);
+	margin-top: var(--rf-tl-top, 20px);
+	padding: 0 0.35em;
+	border: 3px solid #fff;
+	border-radius: 50%;
+	background-color: #2563eb;
+	color: #fff;
+	line-height: 1;
+	white-space: nowrap;
+	transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+	i,
+	svg {
+		width: var(--rf-tl-icon, 18px);
+		height: var(--rf-tl-icon, 18px);
+		font-size: var(--rf-tl-icon, 18px);
+		fill: currentcolor;
+	}
+}
+
+.rf-tl--marker-dot .rf-tl__marker {
+	padding: 0;
+}
+
+// A text wider than the rail sits over it (never wider than the rail's column plus the gaps).
+.rf-tl__marker-text {
+	font-size: 0.8em;
+	font-weight: 600;
+}
+
+// ---------------------------------------------------------------- the pointer
+.rf-tl__pointer {
+	position: relative;
+	z-index: 1;
+	display: var(--rf-tl-ptr-display, block);
+	grid-row: 1;
+	grid-column: var(--rf-tl-col);
+	justify-self: var(--rf-tl-justify);
+	align-self: var(--rf-tl-align, start);
+	width: var(--rf-tl-ptr, 10px);
+	height: calc(var(--rf-tl-ptr, 10px) * 2);
+	// Level with the marker's middle (Marker Beside The Entry writes it: from the top, or 0 in the middle).
+	margin-top: var(--rf-tl-ptr-top, calc(20px + var(--rf-tl-mark-size) / 2 - var(--rf-tl-ptr, 10px)));
+	background: var(--rf-tl-ptr-color, #fff);
+	clip-path: var(--rf-tl-clip);
+	translate: var(--rf-tl-shift) 0;
+	pointer-events: none;
+}
+
+// ---------------------------------------------------------------- the text across the line
+.rf-tl__aside {
+	display: var(--rf-tl-aside-display, block);
+	grid-row: 1;
+	grid-column: var(--rf-tl-aside-col);
+	align-self: var(--rf-tl-align, start);
+	min-width: 0;
+	margin-top: var(--rf-tl-top, 20px);
+	// Its first line level with the marker.
+	padding-top: max(0px, calc((var(--rf-tl-mark-size) - 1.5em) / 2));
+	text-align: var(--rf-tl-aside-align);
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.rf-tl__marker {
+		transition: none;
+	}
+}
