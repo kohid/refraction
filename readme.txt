@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.132.0
+Stable tag: 0.133.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.133.0 =
+* Timed Slides, per screen size: Slider > Layout can stack the text and then the cards, with the slider growing to fit the text (no more long text running under the cards on phones); Slider > Padding sets the room inside the slider for the text and the cards; Cards > Cards and arrows can be shown or hidden. All show at once in Edit Mode at the chosen view.
 
 = 0.132.0 =
 * Nav Menu: the page being viewed is marked as the current item (its active style and aria-current) on every page. In a header made with the Theme Builder the menu was kept in the element cache from the first page visited, so that page (often Home) stayed marked everywhere. Share Buttons and Blockquote's share link had the same problem in headers and footers: they now share the page being viewed.

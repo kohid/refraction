@@ -421,6 +421,45 @@ async function main() {
 		await pv.p.locator( '[data-id="wp_percent"]' ).screenshot( { path: join( SHOTS, 'progress.png' ) } );
 		await pv.ctx.close();
 
+		// ------------------------------------------------------------ per view: Layout, Padding, Cards and arrows (0.133.0)
+		const longText = 'Loch Ness is one of the most famous natural landmarks in Scotland and attracts visitors from all over the world. Our tour offers a comfortable and enjoyable way to explore the area with a knowledgeable local guide who knows the history, legends and best viewpoints. Highlights include the castle, the loch and the glens.';
+		const views = slider( 'v', {
+			layout_phone_md: 'stacked',
+			slider_padding_phone_md: { unit: 'px', top: '20', right: '16', bottom: '24', left: '16', isLinked: false },
+			content_padding_phone_md: { unit: 'px', top: '0', right: '0', bottom: '16', left: '0', isLinked: false },
+			cards_visible_phone_xs: 'hide',
+		}, slides );
+		views.elements = views.elements.map( ( c, i ) => ( { ...c, elements: [ ...c.elements, { id: `vtx${ i }`, elType: 'widget', widgetType: 'text-editor', settings: { editor: `<p>${ longText }</p><p>${ longText }</p>` }, elements: [] } ] } ) );
+		const perView = page( 'Timed slides per view', row( 'v', views ) );
+		const layers = ( p ) => p.evaluate( () => {
+			const el = document.querySelector( '[data-id="wv"]' );
+			const root = el.querySelector( '.rf-tco' ).getBoundingClientRect();
+			const content = el.querySelector( '.rf-ts__layer--content' );
+			const cards = el.querySelector( '.rf-ts__layer--cards' );
+			const c = content.getBoundingClientRect();
+			const k = cards.getBoundingClientRect();
+			const text = el.querySelector( '.rf-tco__text.is-active' ) || el.querySelector( '.rf-tco__text' );
+			const tb = text.getBoundingClientRect();
+			return {
+				position: getComputedStyle( content ).position, height: Math.round( root.height ), contentTop: Math.round( c.top - root.top ), contentLeft: Math.round( c.left - root.left ),
+				contentBottom: Math.round( c.bottom - root.top ), textBottom: Math.round( tb.bottom - root.top ), cardsTop: Math.round( k.top - root.top ), cardsBottom: Math.round( k.bottom - root.top ), cards: getComputedStyle( cards ).display,
+			};
+		} );
+		const views1 = await visit( perView.url, 1280, 800 );
+		const desk = await layers( views1.p );
+		check( 'per view', 'desktop keeps the text and cards over the picture at the set height', 'absolute' === desk.position && 800 === desk.height && 0 === desk.contentLeft, JSON.stringify( desk ) );
+		await views1.ctx.close();
+		const views2 = await visit( perView.url, 430, 900 );
+		const at430 = await layers( views2.p );
+		check( 'per view', 'Layout Stacked at 430: the text, then the cards, nothing under the cards, the slider as tall as both', 'relative' === at430.position && at430.textBottom <= at430.cardsTop && at430.cardsBottom <= at430.height && at430.height > 640, JSON.stringify( at430 ) );
+		check( 'per view', 'Padding at 430: the text starts 20px down and 16px in, the cards end 24px above the bottom', 20 === at430.contentTop && 16 === at430.contentLeft && 24 === at430.height - at430.cardsBottom, JSON.stringify( at430 ) );
+		await views2.p.screenshot( { path: join( SHOTS, 'per-view-430.png' ), fullPage: true } );
+		await views2.ctx.close();
+		const views3 = await visit( perView.url, 375, 900 );
+		const at375 = await layers( views3.p );
+		check( 'per view', 'Cards and arrows hidden at 375 (stacked from 430 still applies)', 'none' === at375.cards && 'relative' === at375.position, JSON.stringify( at375 ) );
+		await views3.ctx.close();
+
 		// ------------------------------------------------------------ editor
 		const blank = page( 'Timed slides editor', [ { id: 'ed01', elType: 'container', isInner: false, settings: { min_height: { unit: 'px', size: 200 } }, elements: [ { id: 'edh1', elType: 'widget', widgetType: 'heading', settings: { title: 'Above the slider' }, elements: [] } ] } ] );
 		const actx = await browser.newContext( { viewport: { width: 1400, height: 1000 } } );
@@ -531,6 +570,26 @@ async function main() {
 			check( 'editor', 'saved: the site shows four slides, and the added widget in slide 2', 4 === site.texts && site.image && 4 === site.cards, JSON.stringify( site ) );
 			await f.ctx.close();
 		}
+		// Edit Mode: Layout chosen at 393 shows at once in the 393 preview only.
+		await admin.goto( `${ BASE }/wp-admin/post.php?post=${ perView.id }&action=refraction` );
+		await admin.waitForFunction( () => window.refraction?.documents?.getCurrent?.()?.container?.children?.length > 0, null, { timeout: 90000 } );
+		await sleep( 2500 );
+		const previewPosition = () => frame().evaluate( () => getComputedStyle( document.querySelector( '[data-id="wv"] .rf-ts__layer--content' ) ).position );
+		await admin.evaluate( () => {
+			const c = refraction.getContainer( 'wv' );
+			$e.run( 'panel/editor/open', { model: c.model, view: c.view } );
+			refraction.changeDeviceMode( 'phone_lg' );
+		} );
+		await sleep( 1500 );
+		const before = await previewPosition();
+		await admin.evaluate( () => $e.run( 'document/elements/settings', { container: refraction.getContainer( 'wv' ), settings: { layout_phone_lg: 'stacked' } } ) );
+		await sleep( 1200 );
+		const after480 = await previewPosition();
+		await admin.evaluate( () => refraction.changeDeviceMode( 'desktop' ) );
+		await sleep( 1500 );
+		const afterDesktop = await previewPosition();
+		check( 'editor', 'Layout Stacked chosen at 480 shows at once in the 480 preview; desktop keeps the overlay', 'absolute' === before && 'relative' === after480 && 'absolute' === afterDesktop, JSON.stringify( { before, after480, afterDesktop } ) );
+
 		await actx.close();
 
 		check( 'console', 'no JavaScript errors in the browser', 0 === errors.length, errors.slice( 0, 5 ).join( ' | ' ) );
