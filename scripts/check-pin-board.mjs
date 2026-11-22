@@ -121,6 +121,43 @@ const measure = ( p, wid ) => p.evaluate( ( w ) => {
 	} );
 	return { notes, paths, inner: Math.round( rb.width - parseFloat( cs.paddingLeft ) - parseFloat( cs.paddingRight ) ), padL: Math.round( parseFloat( cs.paddingLeft ) ), bg: getComputedStyle( root, '::before' ).backgroundImage.slice( 0, 26 ), overflow: document.documentElement.scrollWidth - window.innerWidth };
 }, wid );
+
+// Every line meets its two notes: just behind its start is the note it leaves, just after it is not; the same at its end
+// with the next note (the space from the notes allowed for). Scrolled to each line, as the browser hit-tests the screen.
+const meets = ( p, wid, inset = 0 ) => p.evaluate( async ( [ w, gap ] ) => {
+	const root = document.querySelector( `[data-id="${ w }"] .rf-pb` );
+	const svg = root.querySelector( ':scope > .rf-pb__links' );
+	const notes = [ ...root.querySelectorAll( ':scope > .rf-pb__notes > .rf-pb__note' ) ];
+	const out = [];
+	for ( const [ i, path ] of [ ...svg.querySelectorAll( 'path.rf-pb__link' ) ].entries() ) {
+		notes[ i ].scrollIntoView( { block: 'center', behavior: 'instant' } );
+		await new Promise( ( r ) => requestAnimationFrame( () => requestAnimationFrame( r ) ) );
+		const o = svg.getBoundingClientRect();
+		const len = path.getTotalLength();
+		const pt = ( l ) => {
+			const q = path.getPointAtLength( l );
+			return [ o.left + q.x, o.top + q.y ];
+		};
+		const unit = ( a, b ) => {
+			const d = Math.hypot( b[ 0 ] - a[ 0 ], b[ 1 ] - a[ 1 ] ) || 1;
+			return [ ( b[ 0 ] - a[ 0 ] ) / d, ( b[ 1 ] - a[ 1 ] ) / d ];
+		};
+		const noteAt = ( x, y ) => document.elementFromPoint( x, y )?.closest( '.rf-pb__note' );
+		const s0 = pt( 0 );
+		const sd = unit( s0, pt( 4 ) );
+		const e0 = pt( len );
+		const ed = unit( e0, pt( len - 4 ) );
+		const back = gap + 3;
+		out.push( {
+			startIn: noteAt( s0[ 0 ] - ( sd[ 0 ] * back ), s0[ 1 ] - ( sd[ 1 ] * back ) ) === notes[ i ],
+			startOut: noteAt( s0[ 0 ] + ( sd[ 0 ] * 2 ), s0[ 1 ] + ( sd[ 1 ] * 2 ) ) !== notes[ i ],
+			endIn: noteAt( e0[ 0 ] - ( ed[ 0 ] * back ), e0[ 1 ] - ( ed[ 1 ] * back ) ) === notes[ i + 1 ],
+			endOut: noteAt( e0[ 0 ] + ( ed[ 0 ] * 2 ), e0[ 1 ] + ( ed[ 1 ] * 2 ) ) !== notes[ i + 1 ],
+		} );
+	}
+	return out;
+}, [ wid, inset ] );
+const allMeet = ( list ) => list.length > 0 && list.every( ( x ) => x.startIn && x.startOut && x.endIn && x.endOut );
 const deg = ( v ) => parseFloat( v ) || 0;
 const near = ( a, b, tol = 3 ) => Math.abs( a - b ) <= tol;
 
@@ -146,6 +183,7 @@ async function main() {
 			section( [ board( 'pba0001' ) ] ),
 			section( [ board( 'pbb0001', { layout: 'grid', pin: 'tape', paper: 'dots' }, 6 ) ] ),
 			{ id: id(), elType: 'container', settings: { min_height: { unit: 'px', size: 1400 } }, elements: [] },
+			section( [ board( 'pbd0001', { link_width: { unit: 'px', size: 3 }, link_dash_len: { unit: 'px', size: 12 }, link_dash_gap: { unit: 'px', size: 6 }, link_opacity: { unit: 'px', size: 50 }, link_layer: '3', link_inset: { unit: 'px', size: 10 }, link_cap: 'butt', link_color: '#E20A17' }, 3 ) ] ),
 			section( [ board( 'pbc0001', { reveal: 'drop', reveal_duration: 400, reveal_stagger: 60, link_shape: 'straight', link_style: 'long', link_marker: 'arrow', board_background_background: 'gradient', board_background_color: '#FDE68A', board_background_color_b: '#BFDBFE' }, 4 ) ] ),
 		] );
 
@@ -167,6 +205,17 @@ async function main() {
 			return near( p.a[ 0 ], right ? a.r : a.l, 14 ) && near( p.b[ 0 ], right ? b.l : b.r, 14 ) && p.dash;
 		} ), JSON.stringify( { paths: m.paths, n: n.map( ( x ) => [ x.l, x.r ] ) } ) );
 		check( 'desktop', 'the board is lined paper', m.bg.startsWith( 'repeating-linear-gradient' ), m.bg );
+		const met = await meets( d, 'pba0001' );
+		check( 'lines', 'every line starts on the edge of the tilted note it leaves and ends on the edge of the next one (not in the air)', allMeet( met ), JSON.stringify( met ) );
+		const styled = await d.evaluate( () => {
+			const root = document.querySelector( '[data-id="pbd0001"] .rf-pb' );
+			const svg = root.querySelector( ':scope > .rf-pb__links' );
+			const path = svg.querySelector( 'path.rf-pb__link' );
+			return { w: path.getAttribute( 'stroke-width' ), dash: path.getAttribute( 'stroke-dasharray' ), op: getComputedStyle( svg ).opacity, z: getComputedStyle( svg ).zIndex, cap: getComputedStyle( path ).strokeLinecap, color: getComputedStyle( path ).stroke };
+		} );
+		check( 'lines', 'Style > Lines: thickness 3, dashes 12 long with 6 between, 50% opacity, over the notes, square ends, red', '3' === styled.w && '12 6' === styled.dash && '0.5' === styled.op && '3' === styled.z && 'butt' === styled.cap && 'rgb(226, 10, 23)' === styled.color, JSON.stringify( styled ) );
+		const metGap = await meets( d, 'pbd0001', 10 );
+		check( 'lines', 'Space From The Notes 10px: the lines stop 10px from both notes', allMeet( metGap ), JSON.stringify( metGap ) );
 		await d.locator( '[data-id="pba0001"]' ).screenshot( { path: join( SHOTS, 'pin-board-1200.png' ) } );
 		m = await measure( d, 'pbb0001' );
 		check( 'desktop', 'grid: three notes a row, sharing it; no curves; dotted paper', near( m.notes[ 0 ].t, m.notes[ 2 ].t, 30 ) && m.notes[ 3 ].t > m.notes[ 0 ].b - 30 && 0 === m.paths.length && m.bg.startsWith( 'radial-gradient' ), JSON.stringify( { notes: m.notes.map( ( x ) => [ x.l, x.t, x.w ] ), paths: m.paths.length, bg: m.bg } ) );
@@ -195,6 +244,8 @@ async function main() {
 			};
 		} );
 		check( 'reveal', 'in view, the notes have come in (dropped and pinned) and the lines between them have drawn themselves', revealed.visible >= 2 && revealed.visible >= revealed.inView && revealed.lines.slice( 0, revealed.visible - 1 ).every( ( o ) => '0' === o ), JSON.stringify( revealed ) );
+		const metReveal = await meets( d, 'pbc0001' );
+		check( 'lines', 'after the reveal (notes dropped into place) the lines still meet the notes', allMeet( metReveal.slice( 0, Math.max( 1, revealed.visible - 1 ) ) ), JSON.stringify( metReveal ) );
 		check( 'lines', 'straight lines, long dashes, an arrow at the next note', / L/.test( revealed.d || '' ) && ! / C/.test( revealed.d || '' ) && revealed.dash && revealed.dash.split( ' ' )[ 0 ] === '15' && revealed.arrow, JSON.stringify( revealed ) );
 		check( 'board', 'the board takes a gradient background, the lined paper still over it', revealed.bg.startsWith( 'linear-gradient' ) && revealed.paper.startsWith( 'repeating-linear' ), JSON.stringify( revealed ) );
 		await d.locator( '[data-id="pbc0001"]' ).screenshot( { path: join( SHOTS, 'pin-board-reveal-1200.png' ) } );
@@ -210,6 +261,10 @@ async function main() {
 			const ok = pm.notes.every( ( x ) => near( x.w, pm.inner * 0.82, 2 ) && x.l >= 0 ) && near( deg( pm.notes[ 0 ].rotate ), -3 ) && 4 === pm.paths.length && pm.overflow <= 0;
 			check( `${ w }px`, 'zigzag with notes 82% wide, a gentler tilt (60%: -3 degrees), the curves drawn, no sideways scrolling', ok, JSON.stringify( { notes: pm.notes.map( ( x ) => [ x.l, x.w, x.rotate ] ), inner: pm.inner, paths: pm.paths.length, overflow: pm.overflow } ) );
 			const gm = await measure( p, 'pbb0001' );
+			if ( 375 === w ) {
+				const pmet = await meets( p, 'pba0001' );
+				check( `${ w }px`, 'the lines meet the notes on phones too', allMeet( pmet ), JSON.stringify( pmet ) );
+			}
 			check( `${ w }px`, 'the grid is one column on phones', gm.notes.every( ( x, i ) => 0 === i || x.t > gm.notes[ i - 1 ].t + 40 ), JSON.stringify( gm.notes.map( ( x ) => x.t ) ) );
 			if ( 375 === w ) {
 				await p.locator( '[data-id="pba0001"]' ).screenshot( { path: join( SHOTS, 'pin-board-375.png' ) } );

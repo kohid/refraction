@@ -47,4 +47,16 @@ pin. It draws again when the board or a note changes size, and in Edit Mode on a
 - **Lines**: `link_shape` (curve, s-curve, loose, straight, elbow), `link_curve`, `link_style` (+ long, dash-dot),
   `link_marker` (arrow, dots, dot-arrow; SVG markers), `link_flow` (dashes moving).
 
+## 0.145.0: lines that meet the notes
+
+The lines were drawn from each note's bounding box on screen: a tilted card's box is wider than the card, and during
+the reveal (or a hover lift) the box moves, so a line could start or end in the air. `pin-board.js` now takes each
+note as laid out (`offsetLeft/Top/Width/Height`, the reveal's and hover's movement ignored), works out the point on the
+straight card (side, how far down, space from the note) and turns it with the note's tilt (`rotate`) around its middle.
+
+Style > Lines (moved Color and Thickness, ids unchanged): Opacity, Dash Length, Space Between Dashes (empty: from the
+thickness), Line Ends (rounded, square), Arrow And Dot Size, Space From The Notes, Leaves The Note At (%), Reaches The
+Next At (%), Layer (behind / over the notes). The values the script needs are custom properties per screen size
+(`--rf-pb-dash-len`, `--rf-pb-dash-gap`, `--rf-pb-marker`, `--rf-pb-link-inset`, `--rf-pb-link-from`, `--rf-pb-link-to`).
+
 Check: `node scripts/check-pin-board.mjs --site DIR --port N`.

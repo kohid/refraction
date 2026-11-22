@@ -143,27 +143,47 @@ export default class PinBoard extends Base {
 			notes.forEach( ( note ) => this.resize.observe( note ) );
 		}
 
-		const origin = board.getBoundingClientRect();
-		const width = parseFloat( style.getPropertyValue( '--rf-pb-link-w' ) ) || 1.5;
-		const dash = ( DASHES[ s.link_style ] || ( 'solid' === s.link_style ? null : DASHES.dashed ) );
-		const pattern = dash ? dash( width ) : null;
+		const num = ( name, fallback ) => {
+			const v = parseFloat( style.getPropertyValue( name ) );
+
+			return Number.isFinite( v ) ? v : fallback;
+		};
+		const width = num( '--rf-pb-link-w', 1.5 );
+		let kind = 'solid' === s.link_style ? 'solid' : 'dashed';
+
+		if ( DASHES[ s.link_style ] ) {
+			kind = s.link_style;
+		}
+
+		// Style > Lines: Dash Length and Space Between Dashes, when set; else from the width.
+		const dashLen = num( '--rf-pb-dash-len', NaN );
+		const dashGap = num( '--rf-pb-dash-gap', NaN );
+		let pattern = 'solid' === kind ? null : DASHES[ kind ]( width );
+
+		if ( pattern && Number.isFinite( dashGap ) ) {
+			pattern = pattern.map( ( v, i ) => ( 1 === i % 2 ? dashGap : v ) );
+		}
+
+		if ( pattern && Number.isFinite( dashLen ) && 'dotted' !== kind ) {
+			pattern[ 0 ] = dashLen;
+		}
+
+		this.ends = {
+			inset: num( '--rf-pb-link-inset', 0 ),
+			from: num( '--rf-pb-link-from', 62 ) / 100,
+			to: num( '--rf-pb-link-to', 30 ) / 100,
+		};
 		const strength = Math.max( 0, Number( s.link_curve?.size ?? 100 ) ) / 100;
 		const defs = svgEl( 'defs' );
 		const uid = 'rf-pb-' + this.getID();
-		const markers = this.markers( defs, uid, width, s.link_marker || '' );
+		const markers = this.markers( defs, uid, num( '--rf-pb-marker', Math.max( 6, width * 5 ) ), s.link_marker || '' );
 		const revealing = this.revealOn() && 'yes' === s.reveal_lines;
 
 		svg.appendChild( defs );
 		board.style.setProperty( '--rf-pb-dash', pattern ? pattern.reduce( ( a, b ) => a + b, 0 ) + 'px' : '12px' );
 
-		const box = ( el ) => {
-			const r = el.getBoundingClientRect();
-
-			return { l: r.left - origin.left, r: r.right - origin.left, t: r.top - origin.top, b: r.bottom - origin.top, cx: r.left - origin.left + ( r.width / 2 ), cy: r.top - origin.top + ( r.height / 2 ) };
-		};
-
 		notes.slice( 0, -1 ).forEach( ( note, i ) => {
-			const d = this.linkPath( box( note ), box( notes[ i + 1 ] ), notes[ i + 1 ], s, strength, box );
+			const d = this.linkPath( note, notes[ i + 1 ], s, strength );
 			const path = svgEl( 'path', { class: 'rf-pb__link', d, 'stroke-width': width } );
 
 			if ( pattern ) {
@@ -203,13 +223,12 @@ export default class PinBoard extends Base {
 	/**
 	 * The ends' markers in the defs: { start, end } ids.
 	 *
-	 * @param {Element} defs  The defs to add them to.
-	 * @param {string}  uid   This board's id prefix.
-	 * @param {number}  width The line's width.
-	 * @param {string}  kind  '', 'arrow', 'dots', 'dot-arrow'.
+	 * @param {Element} defs The defs to add them to.
+	 * @param {string}  uid  This board's id prefix.
+	 * @param {number}  size The ends' size (px).
+	 * @param {string}  kind '', 'arrow', 'dots', 'dot-arrow'.
 	 */
-	markers( defs, uid, width, kind ) {
-		const size = Math.max( 6, width * 5 );
+	markers( defs, uid, size, kind ) {
 		const make = ( id, d, refX ) => {
 			const m = svgEl( 'marker', { id, viewBox: '0 0 10 10', refX, refY: 5, markerWidth: size, markerHeight: size, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' } );
 			m.appendChild( svgEl( 'path', { d, class: 'rf-pb__end' } ) );
@@ -236,30 +255,67 @@ export default class PinBoard extends Base {
 	}
 
 	/**
+	 * A note as laid out (its place in the board and size, without the reveal's or a hover's movement) and its tilt:
+	 * the points on it are worked out on the straight card, then turned with it, so a line meets the card's edge.
+	 *
+	 * @param {Element} note
+	 */
+	noteFrame( note ) {
+		const list = note.parentElement;
+		const tilt = parseFloat( getComputedStyle( note ).rotate ) || 0;
+
+		return {
+			x: list.offsetLeft + note.offsetLeft,
+			y: list.offsetTop + note.offsetTop,
+			w: note.offsetWidth,
+			h: note.offsetHeight,
+			cos: Math.cos( tilt * Math.PI / 180 ),
+			sin: Math.sin( tilt * Math.PI / 180 ),
+		};
+	}
+
+	/**
+	 * A point of a note (from its straight top left corner), on the page as the note is tilted.
+	 *
+	 * @param {Object} f  noteFrame().
+	 * @param {number} lx Across the note (px).
+	 * @param {number} ly Down the note (px).
+	 */
+	static at( f, lx, ly ) {
+		const dx = lx - ( f.w / 2 );
+		const dy = ly - ( f.h / 2 );
+
+		return [ f.x + ( f.w / 2 ) + ( dx * f.cos ) - ( dy * f.sin ), f.y + ( f.h / 2 ) + ( dx * f.sin ) + ( dy * f.cos ) ];
+	}
+
+	/**
 	 * The path from a note to the next.
 	 *
-	 * @param {Object}   a        The note's box.
-	 * @param {Object}   b        The next note's box.
-	 * @param {Element}  next     The next note.
-	 * @param {Object}   s        The settings.
-	 * @param {number}   strength Curve strength (1: as designed).
-	 * @param {Function} box      Box of an element.
+	 * @param {Element} note     The note.
+	 * @param {Element} next     The next note.
+	 * @param {Object}  s        The settings.
+	 * @param {number}  strength Curve strength (1: as designed).
 	 */
-	linkPath( a, b, next, s, strength, box ) {
+	linkPath( note, next, s, strength ) {
 		const shape = s.link_shape || 'curve';
 		const pin = 'pin' === s.link_end ? next.querySelector( ':scope > .rf-pb__pin' ) : null;
-		const sideways = Math.abs( b.cx - a.cx ) > ( ( a.r - a.l ) / 3 );
-		const right = b.cx > a.cx;
+		const a = this.noteFrame( note );
+		const b = this.noteFrame( next );
+		const { inset, from, to } = this.ends;
+		const sideways = Math.abs( ( b.x + ( b.w / 2 ) ) - ( a.x + ( a.w / 2 ) ) ) > ( a.w / 3 );
+		const right = ( b.x + ( b.w / 2 ) ) > ( a.x + ( a.w / 2 ) );
 		const dir = right ? 1 : -1;
+		// The pin's head (the pin is centred on its left: translate -50%).
+		const pinPoint = () => PinBoard.at( b, pin.offsetLeft, pin.offsetTop + ( pin.offsetHeight * 0.3 ) );
 		let start;
 		let end;
 
 		if ( sideways ) {
-			start = [ right ? a.r : a.l, a.t + ( ( a.b - a.t ) * 0.62 ) ];
-			end = pin ? [ box( pin ).cx, box( pin ).cy ] : [ right ? b.l : b.r, b.t + ( ( b.b - b.t ) * 0.3 ) ];
+			start = PinBoard.at( a, right ? a.w + inset : -inset, a.h * from );
+			end = pin ? pinPoint() : PinBoard.at( b, right ? -inset : b.w + inset, b.h * to );
 		} else {
-			start = [ a.cx, a.b ];
-			end = pin ? [ box( pin ).cx, box( pin ).cy ] : [ b.cx, b.t ];
+			start = PinBoard.at( a, a.w / 2, a.h + inset );
+			end = pin ? pinPoint() : PinBoard.at( b, b.w / 2, -inset );
 		}
 
 		const [ x1, y1 ] = start;

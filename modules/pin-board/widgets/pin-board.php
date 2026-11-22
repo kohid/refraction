@@ -640,22 +640,101 @@ class Pin_Board extends Widget_Nested_Base {
 			'separator' => 'before',
 			'condition' => [ 'pin!' => 'none' ],
 		] );
+		$this->end_controls_section();
+
+		// ------------------------------------------------ Style: lines (0.145.0)
+		$this->start_controls_section( 'section_style_lines', [ 'label' => esc_html__( 'Lines', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'links!' => 'none' ] ] );
+
 		$this->add_control( 'link_color', [
-			'label' => esc_html__( 'Line Color', 'refraction' ),
+			'label' => esc_html__( 'Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'default' => '#9CA3AF',
 			'selectors' => [ $root => '--rf-pb-link: {{VALUE}};' ],
-			'separator' => 'before',
 			'condition' => [ 'links!' => 'none' ],
 		] );
 		$this->add_responsive_control( 'link_width', [
-			'label' => esc_html__( 'Line Width', 'refraction' ) . ' (px)',
+			'label' => esc_html__( 'Thickness', 'refraction' ) . ' (px)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => 0.5, 'max' => 8, 'step' => 0.5 ] ],
 			'default' => [ 'size' => 1.5 ],
 			'selectors' => [ $root => '--rf-pb-link-w: {{SIZE}};' ],
 			'frontend_available' => true,
 			'condition' => [ 'links!' => 'none' ],
+		] );
+
+		$this->add_control( 'link_opacity', [
+			'label' => esc_html__( 'Opacity', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 5, 'max' => 100 ] ],
+			'selectors' => [ '{{WRAPPER}} .rf-pb__links' => 'opacity: calc({{SIZE}} / 100);' ],
+		] );
+		$this->add_responsive_control( 'link_dash_len', [
+			'label' => esc_html__( 'Dash Length', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 60 ] ],
+			'description' => esc_html__( 'Empty: from the thickness. Dashed, long dashes, dash and dot.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-dash-len: {{SIZE}};' ],
+			'frontend_available' => true,
+			'condition' => [ 'link_style' => [ 'dashed', 'long', 'dash-dot' ] ],
+		] );
+		$this->add_responsive_control( 'link_dash_gap', [
+			'label' => esc_html__( 'Space Between Dashes', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 1, 'max' => 60 ] ],
+			'description' => esc_html__( 'Empty: from the thickness. For dots too.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-dash-gap: {{SIZE}};' ],
+			'frontend_available' => true,
+			'condition' => [ 'link_style!' => 'solid' ],
+		] );
+		$this->add_control( 'link_cap', [
+			'label' => esc_html__( 'Line Ends', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'round',
+			'options' => [ 'round' => esc_html__( 'Rounded', 'refraction' ), 'butt' => esc_html__( 'Square', 'refraction' ) ],
+			'description' => esc_html__( 'Dotted lines need Rounded.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} .rf-pb__links path.rf-pb__link' => 'stroke-linecap: {{VALUE}};' ],
+		] );
+		$this->add_responsive_control( 'link_marker_size', [
+			'label' => esc_html__( 'Arrow And Dot Size', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 4, 'max' => 40 ] ],
+			'description' => esc_html__( 'Empty: from the thickness.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-marker: {{SIZE}};' ],
+			'frontend_available' => true,
+			'condition' => [ 'link_marker!' => '' ],
+		] );
+		$this->add_responsive_control( 'link_inset', [
+			'label' => esc_html__( 'Space From The Notes', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => -20, 'max' => 60 ] ],
+			'description' => esc_html__( '0: the line touches the notes\' edges.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-link-inset: {{SIZE}};' ],
+			'frontend_available' => true,
+			'separator' => 'before',
+		] );
+		$this->add_responsive_control( 'link_from', [
+			'label' => esc_html__( 'Leaves The Note At', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'description' => esc_html__( 'How far down its side (0: the top, 100: the bottom). Default 62.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-link-from: {{SIZE}};' ],
+			'frontend_available' => true,
+		] );
+		$this->add_responsive_control( 'link_to', [
+			'label' => esc_html__( 'Reaches The Next At', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+			'description' => esc_html__( 'How far down its side. Default 30.', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-link-to: {{SIZE}};' ],
+			'frontend_available' => true,
+			'condition' => [ 'link_end' => 'side' ],
+		] );
+		$this->add_control( 'link_layer', [
+			'label' => esc_html__( 'Layer', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '0',
+			'options' => [ '0' => esc_html__( 'Behind the notes', 'refraction' ), '3' => esc_html__( 'Over the notes', 'refraction' ) ],
+			'selectors' => [ '{{WRAPPER}} .rf-pb__links' => 'z-index: {{VALUE}};' ],
 		] );
 
 		$this->end_controls_section();
