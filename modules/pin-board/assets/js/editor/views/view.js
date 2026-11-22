@@ -1,5 +1,5 @@
 /**
- * Every note's container goes into its own slot (.rf-pb__note of the same place, from the widget's template): the
+ * Every row's container goes into its own slot (.rf-pb__slot of the same place: the heading, a note, the footer, from the widget's template): the
  * white card with its pin. Later changes (a note added, moved, removed) are placed by the nested view base.
  */
 export default class View extends $e.components.get( 'nested-elements' ).exports.NestedView {
@@ -13,7 +13,7 @@ export default class View extends $e.components.get( 'nested-elements' ).exports
 	ownSlots() {
 		const box = this.$el.find( '.rf-pb__notes' ).get( 0 );
 
-		return box ? Array.from( box.children ).filter( ( el ) => el.classList.contains( 'rf-pb__note' ) ) : [];
+		return box ? Array.from( box.children ).filter( ( el ) => el.classList.contains( 'rf-pb__slot' ) ) : [];
 	}
 
 	/**

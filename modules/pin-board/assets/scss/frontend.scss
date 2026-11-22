@@ -1,7 +1,9 @@
 // Pin Board (widgets/pin-board.php): notes pinned to a board. The layout writes, per screen size: --rf-pb-display (flex
-// for the zigzag, grid), --rf-pb-cols-css, --rf-pb-note-w, --rf-pb-odd / --rf-pb-even (where the notes stand in the
-// zigzag) and --rf-pb-mt (how far a note rises beside the one before). Each note has its own --rf-pb-r (tilt) and
-// --rf-pb-pin-color. The dashed lines between the notes are drawn by pin-board.js in svg.rf-pb__links.
+// for the zigzag, grid for the grid and the Free layout), --rf-pb-cols-css, --rf-pb-note-w, --rf-pb-odd / --rf-pb-even
+// (where the notes stand), --rf-pb-mt (how far a note rises beside the one before), --rf-pb-free (1: each note at its
+// own --rf-pb-x / --rf-pb-y / --rf-pb-nw). Each note has its own --rf-pb-r (tilt), --rf-pb-pin-color, --rf-pb-i (its
+// place among the notes) and --rf-pb-alt (0 / 1, left or right in turn). The dashed lines between the notes, the
+// reveal and the Edit Mode dragging are pin-board.js's.
 
 .rf-pb {
 	--rf-pb-paper: #e4e4e7;
@@ -13,21 +15,31 @@
 	padding: 48px 32px;
 	border-radius: 24px;
 	background-color: #f5f5f6;
+	isolation: isolate;
+
+	// The paper, a layer of its own over the board's background (which can be an image or a gradient).
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: inherit;
+		pointer-events: none;
+	}
 }
 
-// ---------------------------------------------------------------- the paper
-.rf-pb-paper-lined .rf-pb {
+.rf-pb-paper-lined .rf-pb::before {
 	background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rf-pb-paper-gap) - 1px), var(--rf-pb-paper) calc(var(--rf-pb-paper-gap) - 1px), var(--rf-pb-paper) var(--rf-pb-paper-gap));
 }
 
-.rf-pb-paper-grid .rf-pb {
+.rf-pb-paper-grid .rf-pb::before {
 	background-image:
 		linear-gradient(to bottom, var(--rf-pb-paper) 1px, transparent 1px),
 		linear-gradient(to right, var(--rf-pb-paper) 1px, transparent 1px);
 	background-size: var(--rf-pb-paper-gap) var(--rf-pb-paper-gap);
 }
 
-.rf-pb-paper-dots .rf-pb {
+.rf-pb-paper-dots .rf-pb::before {
 	background-image: radial-gradient(circle, var(--rf-pb-paper) 1.6px, transparent 2px);
 	background-size: var(--rf-pb-paper-gap) var(--rf-pb-paper-gap);
 }
@@ -43,32 +55,85 @@
 	overflow: visible;
 	pointer-events: none;
 
-	path {
+	path.rf-pb__link {
 		fill: none;
 		stroke: var(--rf-pb-link, #9ca3af);
 		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.rf-pb__end {
+		fill: var(--rf-pb-link, #9ca3af);
 	}
 }
 
-// ---------------------------------------------------------------- the notes
+@keyframes rf-pb-flow {
+	to {
+		stroke-dashoffset: calc(-1 * var(--rf-pb-dash, 12px));
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-pb-flow-yes .rf-pb__links path.rf-pb__link {
+		animation: rf-pb-flow 1.2s linear infinite;
+	}
+}
+
+// ---------------------------------------------------------------- the rows
 .rf-pb__notes {
 	position: relative;
 	z-index: 1;
 	display: var(--rf-pb-display, flex);
 	flex-direction: column;
 	grid-template-columns: var(--rf-pb-cols-css, none);
-	gap: var(--rf-pb-gap, 36px);
+	gap: var(--rf-pb-row-gap, var(--rf-pb-gap, 36px)) var(--rf-pb-gap, 36px);
 }
 
+// The heading and footer: across the board, above and below the notes.
+.rf-pb__part {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	grid-column: 1 / -1;
+	align-self: stretch;
+	width: 100%;
+	min-width: 0;
+
+	> .e-con {
+		width: 100%;
+	}
+}
+
+// Free layout: the heading in the first row, the notes in the second (one cell they share), the footer in the third;
+// the rows have no gap there, so the heading and footer keep it as a margin.
+.rf-pb__part--heading {
+	margin-bottom: calc(var(--rf-pb-free, 0) * var(--rf-pb-gap, 36px));
+}
+
+.rf-pb__part--footer {
+	grid-row: var(--rf-pb-foot-row, auto);
+	margin-top: calc(var(--rf-pb-free, 0) * var(--rf-pb-gap, 36px));
+}
+
+// ---------------------------------------------------------------- the notes
 .rf-pb__note {
+	// Free: its own place and width, or (not yet dragged) left and right in turn, a step down each.
+	--rf-pb-free-x: var(--rf-pb-x, calc(var(--rf-pb-alt, 0) * (100% - var(--rf-pb-nw, var(--rf-pb-w, 44%)))));
+	--rf-pb-free-y: var(--rf-pb-y, calc(var(--rf-pb-i, 0) * var(--rf-pb-step, 220px)));
+
 	position: relative;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-self: var(--rf-pb-odd, flex-start);
-	width: var(--rf-pb-note-w, 44%);
+	justify-self: var(--rf-pb-jself, auto);
+	width: calc(var(--rf-pb-free, 0) * var(--rf-pb-nw, var(--rf-pb-w, 44%)) + (1 - var(--rf-pb-free, 0)) * var(--rf-pb-note-w, 44%));
 	min-width: 0;
 	max-width: 100%;
+	margin-top: calc(var(--rf-pb-free, 0) * var(--rf-pb-free-y));
+	margin-left: calc(var(--rf-pb-free, 0) * var(--rf-pb-free-x));
 	padding: 34px 14px 16px;
 	border-radius: var(--rf-pb-card-r, 24px);
 	background: var(--rf-pb-card, #fff);
@@ -83,13 +148,19 @@
 	}
 }
 
-// Zigzag: left, right, left... each rising beside the one before (not the first).
-.rf-pb__note:nth-child(even) {
+// In the Free layout every note is in the same cell (the second row).
+.rf-pb__notes > .rf-pb__note {
+	grid-row: var(--rf-pb-note-row, auto);
+	grid-column: var(--rf-pb-note-col, auto);
+}
+
+// Zigzag: left, right, left... (by its place among the notes), each rising beside the one before.
+.rf-pb__note.rf-pb__note--alt {
 	align-self: var(--rf-pb-even, flex-end);
 }
 
 .rf-pb__note + .rf-pb__note {
-	margin-top: var(--rf-pb-mt, 0px);
+	margin-top: calc(var(--rf-pb-free, 0) * var(--rf-pb-free-y) + var(--rf-pb-mt, 0px));
 }
 
 .rf-pb__note.rf-pb__note--left {
@@ -104,16 +175,16 @@
 	align-self: flex-end;
 }
 
-// In the grid every note fills its cell.
+// In the grid and the Free layout the sides do not apply.
 .rf-pb__note.rf-pb__note--left,
 .rf-pb__note.rf-pb__note--center,
 .rf-pb__note.rf-pb__note--right {
-	justify-self: stretch;
+	justify-self: var(--rf-pb-jself, auto);
 }
 
 // The note under the pointer comes to the front.
 .rf-pb__note:hover {
-	z-index: 2;
+	z-index: 3;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -173,4 +244,76 @@
 	box-shadow: 0 1px 3px rgba(17, 24, 39, 0.12);
 	rotate: -3deg;
 	opacity: 0.9;
+}
+
+// ---------------------------------------------------------------- reveal (pin-board.js)
+.rf-pb__slot.is-pending {
+	opacity: 0;
+}
+
+.rf-pb--reveal .rf-pb__slot {
+	transition: opacity var(--rf-pb-rd, 700ms) ease, transform var(--rf-pb-rd, 700ms) cubic-bezier(0.2, 1.2, 0.35, 1), rotate 0.35s ease, translate 0.35s ease, box-shadow 0.35s ease;
+	transition-delay: var(--rf-pb-delay, 0ms);
+}
+
+.rf-pb--reveal-drop .rf-pb__note.is-pending {
+	transform: translateY(-48px) rotate(9deg) scale(1.05);
+}
+
+.rf-pb--reveal-fade-up .rf-pb__slot.is-pending {
+	transform: translateY(32px);
+}
+
+.rf-pb--reveal-zoom .rf-pb__note.is-pending {
+	transform: scale(0.82);
+}
+
+.rf-pb--reveal-swing .rf-pb__note {
+	transform-origin: var(--rf-pb-pin-x, 50%) 0;
+}
+
+.rf-pb--reveal-swing .rf-pb__note.is-pending {
+	transform: rotate(24deg);
+}
+
+.rf-pb--reveal .rf-pb__part.is-pending {
+	transform: translateY(16px);
+}
+
+// ---------------------------------------------------------------- Edit Mode: drag a note, resize it
+.rf-pb--editing .rf-pb__note {
+	cursor: grab;
+}
+
+.rf-pb--editing .rf-pb__note > .e-con {
+	cursor: auto;
+}
+
+.rf-pb__note.is-dragging {
+	z-index: 10;
+	cursor: grabbing;
+	transition: none;
+	box-shadow: 0 30px 60px -12px rgba(17, 24, 39, 0.35);
+}
+
+.rf-pb__resize {
+	position: absolute;
+	top: 50%;
+	right: -7px;
+	z-index: 6;
+	width: 14px;
+	height: 44px;
+	border: 2px solid #fff;
+	border-radius: 7px;
+	background: #2563eb;
+	box-shadow: 0 2px 6px rgba(17, 24, 39, 0.3);
+	translate: 0 -50%;
+	cursor: ew-resize;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.rf-pb__note:hover > .rf-pb__resize,
+.rf-pb__note.is-dragging > .rf-pb__resize {
+	opacity: 1;
 }

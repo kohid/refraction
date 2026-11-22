@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.143.0
+Stable tag: 0.144.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,13 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.144.0 =
+* Pin Board: the board has a container's settings (background colour, gradient or image, border, shadow, min height, corners, padding; the paper stays over the background), and a Heading and a Footer can be turned on (Content > Heading And Footer): containers on the board above and below the notes, with all a container's settings.
+* Pin Board, Free layout: in Edit Mode drag a note by its white frame or its pin to move it, and by the handle on its right edge to change its width; the place is saved for the screen size shown and used on the site. Dragging a note in the zigzag or the grid turns that screen size to Free, every note staying where it was.
+* Pin Board, Reveal: notes appear as they come into view (dropped and pinned, fade in, zoom in, swing on the pin), one after another, then the line to each draws itself; the heading and footer fade in. Once or every time.
+* Pin Board, more lines: curve, S-curve, loose string, straight or elbow; dashed, dotted, solid, long dashes or dash and dot; plain, an arrow, a dot at each end, or a dot then an arrow; curve strength; flowing dashes.
+* Nested widgets: an item added in the middle of the list (or first) gets its container there too.
 
 = 0.143.0 =
 * New widget: Pin Board. Notes pinned to a board (five to start, Add Note for more), each a white card with a pin holding a container to design (its number, a title, a few words), tilted a little, with dashed curves from each note to the next. A zigzag (one note per row, left and right in turn, rising beside the one before) or a grid, per screen size; phones start with wider notes, less overlap and a gentler tilt. Pins: pushpin, flat pin, tape or none, each note its own colour or orange, blue and purple in turn; the board as lined paper, grid paper, dots or plain; notes lift or straighten on hover.

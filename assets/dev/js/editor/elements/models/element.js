@@ -193,8 +193,15 @@ ElementModel = BaseElementModel.extend( {
 		const title = String( item.item.settings.get( item.titleKey ) || '' ).trim();
 		const names = refraction.helpers.nestedDefaultTitle( item.owner );
 
-		// Still a default name ("Slide #4"): the number of its place, also on a page saved before 0.138.0.
-		return names && names.test( title ) ? names.at( item.index + 1 ) : title;
+		if ( ! names || ! names.test( title ) ) {
+			return title;
+		}
+
+		// Still a default name ("Slide #4"): its number among the rows still named by default, also on a page saved
+		// before 0.138.0.
+		const rows = item.owner.repeaters[ item.name ].children.slice( 0, item.index + 1 );
+
+		return names.at( rows.filter( ( row ) => names.test( row.settings.get( item.titleKey ) ) ).length );
 	},
 
 	getVisibility() {

@@ -627,9 +627,15 @@ module.exports = {
 		}
 
 		let changed = false;
+		let place = 0;
 
+		// Numbered among the rows still named by default (a heading or footer row, or one named by hand, has no number).
 		owner.repeaters[ first.name ].children.forEach( ( row, index ) => {
-			const name = names.at( index + 1 );
+			if ( ! names.test( row.settings.get( first.titleKey ) ) ) {
+				return;
+			}
+
+			const name = names.at( ++place );
 			const child = owner.children[ index ];
 
 			if ( names.test( row.settings.get( first.titleKey ) ) && name !== row.settings.get( first.titleKey ) ) {
