@@ -180,8 +180,13 @@ async function main() {
 		check( 'editor', 'the preview shows both steps with their titles and the group and repeater boxes with their fields', 2 === seen.slots && 'About you|Your booking' === seen.titles && seen.group.includes( 'Street' ) && seen.rep.includes( 'Guest name' ), JSON.stringify( seen ) );
 		await page.screenshot( { path: join( SHOTS, 'editor.png' ) } );
 
-		// Advanced tab: conditional visibility section
-		await preview.locator( '.refraction-widget-rfb-field-email' ).click();
+		// Advanced tab: conditional visibility section. The Email field is on step 2, out of sight while the preview
+		// shows step 1: its settings are opened from the editor.
+		await page.evaluate( () => {
+			const find = ( c ) => c.children.flatMap( ( x ) => [ x, ...find( x ) ] );
+			const email = find( refraction.getPreviewContainer() ).find( ( c ) => 'rfb-field-email' === c.model.get( 'widgetType' ) );
+			$e.run( 'panel/editor/open', { model: email.model, view: email.view } );
+		} );
 		await page.waitForTimeout( 600 );
 		await page.click( '.refraction-panel-navigation-tab:has-text("Advanced")' );
 		await page.waitForTimeout( 400 );
