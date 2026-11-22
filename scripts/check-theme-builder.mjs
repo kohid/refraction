@@ -137,12 +137,13 @@ async function main() {
 	const logStart = logSize();
 	const browser = await chromium.launch( { executablePath: findChromium(), args: [ '--no-sandbox' ] } );
 	const consoleErrors = [];
+	// WordPress 7.1 admin page transitions (core view-transitions CSS): Chromium reports a skipped or aborted transition when a page is left mid-transition.
 	const watch = ( page, label = 'page' ) => {
 		page.on( 'console', ( m ) => {
 			// A 404 test URL is expected to log its own 404; favicon is not part of the plugin.
-			if ( m.type() === 'error' && ! /favicon\.ico|nothing-lives-here/.test( m.location().url ) && ! /Transition was skipped/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
+			if ( m.type() === 'error' && ! /favicon\.ico|nothing-lives-here/.test( m.location().url ) && ! /Transition was (skipped|aborted because of invalid state)/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
-		page.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
+		page.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
 		page.on( 'response', ( r ) => { if ( r.status() >= 400 && ! /favicon\.ico|nothing-lives-here/.test( r.url() ) ) { console.log( `      http ${ r.status() } ${ r.url().slice( 0, 90 ) } ${ String( r.request().postData() || '' ).slice( 0, 120 ) } [${ label }]` ); } } );
 	};
 
