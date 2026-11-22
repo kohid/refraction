@@ -23,6 +23,12 @@ class Layout_Sanitizer {
 	/** Control types that hold no value. */
 	const NO_VALUE = [ 'section', 'tab', 'tabs', 'heading', 'divider', 'raw_html', 'button', 'deprecated_notice', 'alert', 'notice', 'hidden', 'wp_widget', 'code' ];
 
+	/**
+	 * Hidden controls that hold data a layout needs (0.147.0): a nested widget's row `role` (a Pin Board's heading or
+	 * footer row: without it the row becomes one more note). Kept as a plain key.
+	 */
+	const KEEP_HIDDEN = [ 'role' ];
+
 	/** @var callable (string $el_type, string $widget_type) => ?array spec: [ 'controls' => [ name => control ], 'nested' => bool ] */
 	private $spec;
 
@@ -177,6 +183,16 @@ class Layout_Sanitizer {
 			}
 
 			$control = $controls[ $name ] ?? self::device_copy_of( $name, $controls );
+
+			if ( is_array( $control ) && 'hidden' === ( $control['type'] ?? '' ) && in_array( $name, self::KEEP_HIDDEN, true ) && is_string( $value ) ) {
+				$key = sanitize_key( $value );
+
+				if ( '' !== $key ) {
+					$out[ $name ] = $key;
+				}
+
+				continue;
+			}
 
 			if ( ! is_array( $control ) || in_array( $control['type'] ?? '', self::NO_VALUE, true ) ) {
 				$this->ignore( $name );
