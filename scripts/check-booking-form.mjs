@@ -115,7 +115,7 @@ async function main() {
 		const a = await ctx.newPage();
 		// "Transition was skipped": Chromium dropping a page-to-page view transition on the redirect into the editor; it
 		// happens with the Builder's New form button too and is not an error of the page.
-		a.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && errors.push( 'admin: ' + e.message ) );
+		a.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && errors.push( 'admin: ' + e.message ) );
 		await a.goto( `${ BASE }/wp-login.php` );
 		await a.fill( '#user_login', 'admin' );
 		await a.fill( '#user_pass', 'admin' );

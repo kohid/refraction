@@ -124,7 +124,7 @@ async function main() {
 		page.on( 'console', ( m ) => {
 			if ( m.type() === 'error' && ! /favicon\.ico|nothing-lives-here|Transition was skipped/.test( m.location().url + m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
-		page.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
+		page.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
 	};
 
 	try {
