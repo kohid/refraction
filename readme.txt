@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.144.0
+Stable tag: 0.145.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.145.0 =
+* Pin Board: the lines now meet the notes exactly, at the edge of the tilted card, and stay there while notes are revealed, hovered or dragged (they were measured from the moving, tilted outline and could end in the air).
+* Pin Board, Style > Lines: colour, thickness, opacity, dash length and space between dashes, rounded or square ends, arrow and dot size, space from the notes, where a line leaves a note and reaches the next (how far down the side), and in front of or behind the notes; per screen size where it matters.
 
 = 0.144.0 =
 * Pin Board: the board has a container's settings (background colour, gradient or image, border, shadow, min height, corners, padding; the paper stays over the background), and a Heading and a Footer can be turned on (Content > Heading And Footer): containers on the board above and below the notes, with all a container's settings.
