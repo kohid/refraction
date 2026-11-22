@@ -77,6 +77,14 @@ abstract class Widget_Nested_Base extends Widget_Base {
 	}
 
 	/**
+	 * The content a row with a role starts with (0.144.0): [ role => container element ], e.g. Pin Board's heading and
+	 * footer. A row with a role is added with that role in its model (document/repeater/insert).
+	 */
+	protected function get_default_role_elements(): array {
+		return [];
+	}
+
+	/**
 	 * @inheritDoc
 	 *
 	 * To support nesting.
@@ -98,6 +106,7 @@ abstract class Widget_Nested_Base extends Widget_Base {
 				'elements_placeholder_selector' => $this->get_default_children_placeholder_selector(),
 				'child_container_placeholder_selector' => $this->get_default_children_container_placeholder_selector(),
 				'repeater_title_setting' => $this->get_default_repeater_title_setting_key(),
+				'role_elements' => (object) $this->get_default_role_elements(),
 			],
 			'support_nesting' => true,
 			'new_items_like_defaults' => $this->new_items_like_defaults(),

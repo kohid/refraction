@@ -24,4 +24,27 @@ The layout writes custom properties for each screen size (`--rf-pb-display`, `--
 (behind the notes): out of the side facing the next note (or the bottom when it is below), into its facing side or its
 pin. It draws again when the board or a note changes size, and in Edit Mode on any setting change.
 
+## 0.144.0
+
+- **Board**: Style > Board has a container's background group (colour, gradient, image), border group, shadow, min
+  height, corners; the paper is a layer of its own (`.rf-pb::before`) over the background. The widget's Advanced tab
+  (margin, padding, position, motion, responsive, CSS) is the usual one.
+- **Heading and Footer** (Content > Heading And Footer, before Notes): each switch adds or removes a row with a role
+  (`role` = heading / footer) first or last in the Notes list (`pin-board.js` `toggleRole()`, Edit Mode); its
+  container starts with `get_default_role_elements()` content (the nested-repeater insert hook takes a role's content
+  and puts the container where the row went, `options.at`). Heading and footer rows are `.rf-pb__part`, across the
+  board; notes keep their number, tilt and colour among the notes only.
+- **Free layout**: the notes share one grid cell (row 2; the heading row 1, the footer row 3), each moved by margins
+  from its own From The Left (%), From The Top (px) and Width (%), per screen size (repeater responsive controls
+  `pos_x`, `pos_y`, `note_w` on `{{CURRENT_ITEM}}`); a note not yet placed stands left and right in turn, Starting Step
+  Down apart. In Edit Mode `pin-board.js` drags a note (its frame or pin; its container's widgets stay editable) or
+  its right-edge handle, then saves the place for the screen size shown (`{name}_{device}`) in one history step;
+  from the zigzag or the grid it first turns that screen size to Free with every note where it is.
+- **Reveal**: `reveal` (drop, fade-up, zoom, swing), `reveal_lines`, `reveal_parts`, duration, stagger, repeat. Each
+  row starts `.is-pending`; an IntersectionObserver reveals those coming into view one after another, and the line
+  into a note draws through a mask (`stroke-dashoffset` of a solid path the line's length), so dashed lines keep their
+  dashes. Not for reduced motion; Edit Mode plays it again when a Reveal setting changes.
+- **Lines**: `link_shape` (curve, s-curve, loose, straight, elbow), `link_curve`, `link_style` (+ long, dash-dot),
+  `link_marker` (arrow, dots, dot-arrow; SVG markers), `link_flow` (dashes moving).
+
 Check: `node scripts/check-pin-board.mjs --site DIR --port N`.

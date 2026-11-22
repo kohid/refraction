@@ -7,6 +7,9 @@
  * - phones (430, 393, 375): wider notes (82%), a gentler tilt (60%), curves still drawn, no sideways scrolling;
  * - Edit Mode: a new Pin Board starts with five numbered notes; Add Note adds a note and a curve; Grid takes the curves
  *   away at once.
+ * - 0.144.0: the reveal (notes out of view wait, in view they come in and the lines draw), straight long-dash lines
+ *   with arrows, a gradient board under the paper; Heading and Footer containers; dragging a note (the screen size turns
+ *   Free, the others staying), resizing it by its handle, Undo, and the places on the site.
  *
  * Usage: node scripts/check-pin-board.mjs [--site /tmp/rf-pb-site] [--port 9382] [--shots /tmp/pin-board-shots]
  */
@@ -142,6 +145,8 @@ async function main() {
 		const pg = page( 'Pin board', [
 			section( [ board( 'pba0001' ) ] ),
 			section( [ board( 'pbb0001', { layout: 'grid', pin: 'tape', paper: 'dots' }, 6 ) ] ),
+			{ id: id(), elType: 'container', settings: { min_height: { unit: 'px', size: 1400 } }, elements: [] },
+			section( [ board( 'pbc0001', { reveal: 'drop', reveal_duration: 400, reveal_stagger: 60, link_shape: 'straight', link_style: 'long', link_marker: 'arrow', board_background_background: 'gradient', board_background_color: '#FDE68A', board_background_color_b: '#BFDBFE' }, 4 ) ] ),
 		] );
 
 		// ------------------------------------------------------------ desktop
@@ -167,6 +172,32 @@ async function main() {
 		check( 'desktop', 'grid: three notes a row, sharing it; no curves; dotted paper', near( m.notes[ 0 ].t, m.notes[ 2 ].t, 30 ) && m.notes[ 3 ].t > m.notes[ 0 ].b - 30 && 0 === m.paths.length && m.bg.startsWith( 'radial-gradient' ), JSON.stringify( { notes: m.notes.map( ( x ) => [ x.l, x.t, x.w ] ), paths: m.paths.length, bg: m.bg } ) );
 		await d.locator( '[data-id="pbb0001"]' ).screenshot( { path: join( SHOTS, 'pin-board-grid-1200.png' ) } );
 		check( 'desktop', 'no sideways scrolling', m.overflow <= 0, m.overflow );
+
+		// ---- 0.144.0: reveal, lines, board background
+		const pending = await d.evaluate( () => [ ...document.querySelectorAll( '[data-id="pbc0001"] .rf-pb__note' ) ].map( ( n ) => n.classList.contains( 'is-pending' ) ).join() );
+		check( 'reveal', 'notes not yet in view wait for it (hidden)', 'true,true,true,true' === pending, pending );
+		await d.evaluate( () => document.querySelector( '[data-id="pbc0001"]' ).scrollIntoView( { block: 'start', behavior: 'instant' } ) );
+		await d.waitForTimeout( 2200 );
+		const revealed = await d.evaluate( () => {
+			const root = document.querySelector( '[data-id="pbc0001"] .rf-pb' );
+			const notes = [ ...root.querySelectorAll( '.rf-pb__note' ) ];
+			const lines = [ ...root.querySelectorAll( '.rf-pb__reveal-line' ) ].map( ( l ) => l.getAttribute( 'stroke-dashoffset' ) );
+			const link = root.querySelector( 'path.rf-pb__link' );
+			return {
+				visible: notes.filter( ( n ) => ! n.classList.contains( 'is-pending' ) && '1' === getComputedStyle( n ).opacity ).length,
+				inView: notes.filter( ( n ) => n.getBoundingClientRect().top < window.innerHeight * 0.85 ).length,
+				lines,
+				d: link && link.getAttribute( 'd' ),
+				dash: link && link.getAttribute( 'stroke-dasharray' ),
+				arrow: !! ( link && link.getAttribute( 'marker-end' ) ),
+				bg: getComputedStyle( root ).backgroundImage.slice( 0, 15 ),
+				paper: getComputedStyle( root, '::before' ).backgroundImage.slice( 0, 26 ),
+			};
+		} );
+		check( 'reveal', 'in view, the notes have come in (dropped and pinned) and the lines between them have drawn themselves', revealed.visible >= 2 && revealed.visible >= revealed.inView && revealed.lines.slice( 0, revealed.visible - 1 ).every( ( o ) => '0' === o ), JSON.stringify( revealed ) );
+		check( 'lines', 'straight lines, long dashes, an arrow at the next note', / L/.test( revealed.d || '' ) && ! / C/.test( revealed.d || '' ) && revealed.dash && revealed.dash.split( ' ' )[ 0 ] === '15' && revealed.arrow, JSON.stringify( revealed ) );
+		check( 'board', 'the board takes a gradient background, the lined paper still over it', revealed.bg.startsWith( 'linear-gradient' ) && revealed.paper.startsWith( 'repeating-linear' ), JSON.stringify( revealed ) );
+		await d.locator( '[data-id="pbc0001"]' ).screenshot( { path: join( SHOTS, 'pin-board-reveal-1200.png' ) } );
 		await d.context().close();
 
 		// ------------------------------------------------------------ phones
@@ -214,6 +245,74 @@ async function main() {
 		em = await measure( f, made );
 		check( 'editor', 'Layout: Grid shows at once, without the curves', 0 === em.paths.length && near( em.notes[ 0 ].t, em.notes[ 1 ].t, 30 ), JSON.stringify( { paths: em.paths.length, t: em.notes.map( ( x ) => x.t ) } ) );
 		await e.screenshot( { path: join( SHOTS, 'pin-board-editor.png' ) } );
+
+		// ---- 0.144.0: Heading and Footer, drag and resize.
+		await e.evaluate( ( wid ) => $e.run( 'document/elements/settings', { container: refraction.getContainer( wid ), settings: { layout: 'zigzag', show_heading: 'yes', show_footer: 'yes' } } ), made );
+		await sleep( 1800 );
+		const parts = await e.evaluate( ( wid ) => {
+			const c = refraction.getContainer( wid );
+			const rows = c.repeaters.items.children.map( ( r ) => r.settings.get( 'role' ) || 'note' );
+			return { rows: rows.join(), first: c.children[ 0 ].children.map( ( w ) => w.settings.get( 'title' ) ).filter( Boolean ).join( '|' ), names: c.children.map( ( x ) => x.model.getTitle() ).join( '|' ) };
+		}, made );
+		const partBoxes = await f.evaluate( ( wid ) => {
+			const root = document.querySelector( `[data-id="${ wid }"] .rf-pb__notes` );
+			const r = root.getBoundingClientRect();
+			const h = root.querySelector( ':scope > .rf-pb__part--heading' ).getBoundingClientRect();
+			const ft = root.querySelector( ':scope > .rf-pb__part--footer' ).getBoundingClientRect();
+			const notes = [ ...root.querySelectorAll( ':scope > .rf-pb__note' ) ].map( ( n ) => n.getBoundingClientRect() );
+			return { full: Math.round( h.width ) === Math.round( r.width ) && Math.round( ft.width ) === Math.round( r.width ), above: h.bottom <= Math.min( ...notes.map( ( n ) => n.top ) ) + 2, below: ft.top >= Math.max( ...notes.map( ( n ) => n.bottom ) ) - 2 };
+		}, made );
+		check( 'parts', 'Heading and Footer: containers first and last in the list, across the board above and below the notes, the heading starting with its title; notes still Note #1...', 'heading,note,note,note,note,note,note,footer' === parts.rows && /Our route/.test( parts.first ) && /^Heading\|Note #1\|Note #2/.test( parts.names ) && /Footer$/.test( parts.names ) && partBoxes.full && partBoxes.above && partBoxes.below, JSON.stringify( { parts, partBoxes } ) );
+		// Drag the second note by its frame (zigzag: this screen size turns Free, every note staying put).
+		const noteBox = async ( k ) => f.evaluate( ( [ wid, i ] ) => {
+			const n = document.querySelectorAll( `[data-id="${ wid }"] .rf-pb__notes > .rf-pb__note` )[ i ];
+			return { x: n.offsetLeft, y: n.offsetTop, w: n.offsetWidth };
+		}, [ made, k ] );
+		const before = [ await noteBox( 0 ), await noteBox( 1 ), await noteBox( 2 ) ];
+		const grab = await f.locator( `[data-id="${ made }"] .rf-pb__notes > .rf-pb__note >> nth=1` ).boundingBox();
+		await e.mouse.move( grab.x + 30, grab.y + 14 );
+		await e.mouse.down();
+		await e.mouse.move( grab.x + 60, grab.y + 40, { steps: 6 } );
+		await e.mouse.move( grab.x - 30, grab.y + 74, { steps: 6 } );
+		await e.mouse.up();
+		await sleep( 1500 );
+		const after = [ await noteBox( 0 ), await noteBox( 1 ), await noteBox( 2 ) ];
+		const saved = await e.evaluate( ( wid ) => {
+			const c = refraction.getContainer( wid );
+			const row = c.repeaters.items.children[ 2 ];
+			return [ c.settings.get( 'layout' ), row.settings.get( 'pos_x' )?.size, row.settings.get( 'pos_y' )?.size, row.settings.get( 'note_w' )?.size ].join( '|' );
+		}, made );
+		check( 'drag', 'dragging the second note by its frame moves it by the drag (-60, +60), the others staying put; this screen size is now Free with the places saved', /^free\|/.test( saved ) && Math.abs( after[ 1 ].x - ( before[ 1 ].x - 60 ) ) <= 3 && Math.abs( after[ 1 ].y - ( before[ 1 ].y + 60 ) ) <= 3 && Math.abs( after[ 0 ].x - before[ 0 ].x ) <= 2 && Math.abs( after[ 0 ].y - before[ 0 ].y ) <= 2 && Math.abs( after[ 2 ].y - before[ 2 ].y ) <= 2, JSON.stringify( { before, after, saved } ) );
+		// Resize the first note by its right-edge handle.
+		await f.hover( `[data-id="${ made }"] .rf-pb__notes > .rf-pb__note >> nth=0` );
+		const handle = await f.locator( `[data-id="${ made }"] .rf-pb__notes > .rf-pb__note >> nth=0 >> .rf-pb__resize` ).boundingBox();
+		await e.mouse.move( handle.x + 7, handle.y + 22 );
+		await e.mouse.down();
+		await e.mouse.move( handle.x - 40, handle.y + 22, { steps: 5 } );
+		await e.mouse.move( handle.x - 73, handle.y + 22, { steps: 5 } );
+		await e.mouse.up();
+		await sleep( 1200 );
+		const resized = await noteBox( 0 );
+		check( 'drag', 'the handle on the right edge makes the note 80px narrower, kept where it was', Math.abs( resized.w - ( after[ 0 ].w - 80 ) ) <= 4 && Math.abs( resized.x - after[ 0 ].x ) <= 2, JSON.stringify( { was: after[ 0 ], now: resized } ) );
+		await e.evaluate( () => $e.run( 'document/history/undo' ) );
+		await sleep( 800 );
+		check( 'drag', 'Undo takes the width back in one step', Math.abs( ( await noteBox( 0 ) ).w - after[ 0 ].w ) <= 3 );
+		await e.evaluate( () => $e.run( 'document/history/redo' ) );
+		await sleep( 800 );
+		await e.screenshot( { path: join( SHOTS, 'pin-board-editor-free.png' ) } );
+		// Saved: the site shows the notes where they were put.
+		const inEditor = [ await noteBox( 0 ), await noteBox( 1 ) ];
+		await e.evaluate( async () => {
+			await $e.run( 'document/save/publish' );
+		} );
+		await sleep( 1500 );
+		const site = await ( await browser.newContext( { viewport: { width: 1500, height: 950 } } ) ).newPage();
+		site.on( 'pageerror', ( x ) => errors.push( `${ x.message } @ site` ) );
+		await site.goto( pg.url );
+		await site.waitForTimeout( 1200 );
+		const onSite = await site.evaluate( ( wid ) => [ ...document.querySelectorAll( `[data-id="${ wid }"] .rf-pb__notes > .rf-pb__note` ) ].slice( 0, 2 ).map( ( n ) => ( { x: n.offsetLeft, y: n.offsetTop, w: n.offsetWidth } ) ), made );
+		check( 'drag', 'on the site the notes are where they were put in Edit Mode (place and width)', onSite.every( ( p, i ) => Math.abs( p.x - inEditor[ i ].x ) <= 3 && Math.abs( p.y - inEditor[ i ].y ) <= 3 && Math.abs( p.w - inEditor[ i ].w ) <= 3 ), JSON.stringify( { inEditor, onSite } ) );
+		await site.context().close();
 
 		check( 'site', 'no JavaScript errors', ! errors.length, errors.slice( 0, 4 ).join( ' | ' ) );
 		const php = logTail( logStart );

@@ -2,6 +2,8 @@
 namespace Refraction\Modules\PinBoard\Widgets;
 
 use Refraction\Controls_Manager;
+use Refraction\Group_Control_Background;
+use Refraction\Group_Control_Border;
 use Refraction\Group_Control_Box_Shadow;
 use Refraction\Modules\NestedElements\Base\Widget_Nested_Base;
 use Refraction\Modules\NestedElements\Controls\Control_Nested_Repeater;
@@ -21,9 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Phones start with wider notes, less overlap and a gentler tilt. The board can look like lined paper, grid paper or
  * dots. Pins: a 3D pushpin, a flat pin, a strip of tape or none, each note with its own colour (or the next of a set).
  *
+ * 0.144.0: the board has a container's background, border, shadow and size (Style > Board); a Heading and a Footer,
+ * each a container to design, can be turned on above and below the notes (rows with a role in the Notes list); a Free
+ * layout in which each note is dragged into place and resized in Edit Mode (its place and width saved per screen size);
+ * a Reveal (the notes appearing as they come into view, then the lines drawing themselves); more lines (shapes,
+ * patterns, ends, flowing).
+ *
  * Markup: .rf-pb > svg.rf-pb__links (drawn by assets/js/frontend/handlers/pin-board.js) + .rf-pb__notes >
- * .rf-pb__note (one per note: its pin and its container). The layout and sizes are custom properties written per
- * screen size (assets/scss/frontend.scss); the tilt and pin colour are on each note.
+ * .rf-pb__slot (one per row: the heading, each note with its pin, the footer). The layout and sizes are custom
+ * properties written per screen size (assets/scss/frontend.scss); the tilt, pin colour and place are on each note.
  */
 class Pin_Board extends Widget_Nested_Base {
 
@@ -108,9 +116,37 @@ class Pin_Board extends Widget_Nested_Base {
 		return esc_html__( 'Note #%d', 'refraction' );
 	}
 
-	/** One slot per note: the white card with its pin. */
+	/** One slot per row: the heading, each note (the white card with its pin), the footer. */
 	protected function get_default_children_container_placeholder_selector() {
-		return '.rf-pb__note';
+		return '.rf-pb__slot';
+	}
+
+	/** What the Heading and Footer start with (turned on in Content > Heading And Footer). */
+	protected function get_default_role_elements(): array {
+		$part = static function ( string $title, array $elements ): array {
+			return [
+				'elType' => 'container',
+				'settings' => [
+					'_title' => $title,
+					'content_width' => 'full',
+					'flex_direction' => 'column',
+					'flex_align_items' => 'center',
+					'flex_gap' => [ 'unit' => 'px', 'size' => 8, 'column' => '8', 'row' => '8', 'isLinked' => true ],
+					'padding' => [ 'unit' => 'px', 'top' => '8', 'right' => '8', 'bottom' => '8', 'left' => '8', 'isLinked' => true ],
+				],
+				'elements' => $elements,
+			];
+		};
+
+		return [
+			'heading' => $part( esc_html__( 'Heading', 'refraction' ), [
+				self::widget( 'heading', [ 'title' => esc_html__( 'Our route', 'refraction' ), 'header_size' => 'h2', 'align' => 'center' ] ),
+				self::widget( 'text-editor', [ 'editor' => '<p style="text-align:center">' . esc_html__( 'A few words about what follows.', 'refraction' ) . '</p>' ] ),
+			] ),
+			'footer' => $part( esc_html__( 'Footer', 'refraction' ), [
+				self::widget( 'text-editor', [ 'editor' => '<p style="text-align:center">' . esc_html__( 'A closing line, or a button.', 'refraction' ) . '</p>' ] ),
+			] ),
+		];
 	}
 
 	/** A new note starts like the first ones (its panel, number, title and words). */
@@ -121,6 +157,20 @@ class Pin_Board extends Widget_Nested_Base {
 	// ---------------------------------------------------------------- controls
 
 	protected function register_controls() {
+		$this->start_controls_section( 'section_parts', [ 'label' => esc_html__( 'Heading And Footer', 'refraction' ) ] );
+
+		foreach ( [ 'heading' => esc_html__( 'Heading', 'refraction' ), 'footer' => esc_html__( 'Footer', 'refraction' ) ] as $role => $label ) {
+			$this->add_control( 'show_' . $role, [
+				'label' => $label,
+				'type' => Controls_Manager::SWITCHER,
+				'description' => 'heading' === $role
+					? esc_html__( 'A container on the board above the notes, with all a container\'s settings (select it on the page or in Structure).', 'refraction' )
+					: esc_html__( 'A container on the board below the notes, with all a container\'s settings.', 'refraction' ),
+			] );
+		}
+
+		$this->end_controls_section();
+
 		$this->start_controls_section( 'section_items', [ 'label' => esc_html__( 'Notes', 'refraction' ) ] );
 
 		$repeater = new Repeater();
@@ -135,12 +185,14 @@ class Pin_Board extends Widget_Nested_Base {
 			'label' => esc_html__( 'Pin Color', 'refraction' ),
 			'type' => Controls_Manager::COLOR,
 			'description' => esc_html__( 'Empty: orange, blue and purple in turn.', 'refraction' ),
+			'condition' => [ 'role' => '' ],
 		] );
 		$repeater->add_control( 'tilt', [
 			'label' => esc_html__( 'Tilt', 'refraction' ) . ' (deg)',
 			'type' => Controls_Manager::SLIDER,
 			'range' => [ 'px' => [ 'min' => -20, 'max' => 20, 'step' => 0.5 ] ],
 			'description' => esc_html__( 'Empty: a little left or right in turn.', 'refraction' ),
+			'condition' => [ 'role' => '' ],
 		] );
 		$repeater->add_control( 'side', [
 			'label' => esc_html__( 'Side', 'refraction' ),
@@ -148,6 +200,42 @@ class Pin_Board extends Widget_Nested_Base {
 			'default' => '',
 			'options' => [ '' => esc_html__( 'In turn (left, right...)', 'refraction' ), 'left' => esc_html__( 'Left', 'refraction' ), 'center' => esc_html__( 'Middle', 'refraction' ), 'right' => esc_html__( 'Right', 'refraction' ) ],
 			'description' => esc_html__( 'In the zigzag.', 'refraction' ),
+			'condition' => [ 'role' => '' ],
+		] );
+
+		// The row's role: '' a note, or the heading / footer (added and removed by their switches).
+		$repeater->add_control( 'role', [
+			'type' => Controls_Manager::HIDDEN,
+			'default' => '',
+		] );
+		$repeater->add_control( 'place_heading', [
+			'label' => esc_html__( 'Place (Free layout, per screen size)', 'refraction' ),
+			'type' => Controls_Manager::HEADING,
+			'separator' => 'before',
+			'condition' => [ 'role' => '' ],
+		] );
+		$repeater->add_responsive_control( 'pos_x', [
+			'label' => esc_html__( 'From The Left', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 95, 'step' => 0.1 ] ],
+			'description' => esc_html__( 'Or drag the note in Edit Mode (by its white frame or its pin).', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => '--rf-pb-x: {{SIZE}}%;' ],
+			'condition' => [ 'role' => '' ],
+		] );
+		$repeater->add_responsive_control( 'pos_y', [
+			'label' => esc_html__( 'From The Top', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 4000 ] ],
+			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => '--rf-pb-y: {{SIZE}}px;' ],
+			'condition' => [ 'role' => '' ],
+		] );
+		$repeater->add_responsive_control( 'note_w', [
+			'label' => esc_html__( 'Width', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 10, 'max' => 100, 'step' => 0.1 ] ],
+			'description' => esc_html__( 'Or drag the handle on the note\'s right edge in Edit Mode.', 'refraction' ),
+			'selectors' => [ '{{WRAPPER}} {{CURRENT_ITEM}}' => '--rf-pb-nw: {{SIZE}}%;' ],
+			'condition' => [ 'role' => '' ],
 		] );
 
 		$this->add_control( 'items', [
@@ -157,6 +245,7 @@ class Pin_Board extends Widget_Nested_Base {
 			'default' => array_map( static fn( $n ) => [ 'item_title' => sprintf( /* translators: %d: Note index. */ esc_html__( 'Note #%d', 'refraction' ), $n ) ], [ 1, 2, 3, 4, 5 ] ),
 			'title_field' => '{{{ item_title }}}',
 			'button_text' => esc_html__( 'Add Note', 'refraction' ),
+			'description' => esc_html__( 'The Heading and Footer are in this list too (first and last) once turned on above.', 'refraction' ),
 		] );
 
 		$this->end_controls_section();
@@ -172,13 +261,17 @@ class Pin_Board extends Widget_Nested_Base {
 			'options' => [
 				'zigzag' => [ 'title' => esc_html__( 'Zigzag: one note per row, left and right in turn', 'refraction' ), 'icon' => 'rficon-time-line' ],
 				'grid' => [ 'title' => esc_html__( 'Grid', 'refraction' ), 'icon' => 'rficon-container-grid' ],
+				'free' => [ 'title' => esc_html__( 'Free: drag each note into place in Edit Mode', 'refraction' ), 'icon' => 'rficon-cursor-move' ],
 			],
 			'default' => 'zigzag',
 			'toggle' => false,
-			'description' => esc_html__( 'Per screen size (the device icon).', 'refraction' ),
+			'description' => esc_html__( 'Per screen size (the device icon). Free: drag a note by its white frame or its pin, and its width by the handle on its right edge; the place is kept for this screen size. Dragging a note in the zigzag or the grid turns this screen size to Free, the notes staying where they are.', 'refraction' ),
 			'selectors_dictionary' => [
-				'zigzag' => '--rf-pb-display: flex; --rf-pb-cols-css: none; --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: flex-start; --rf-pb-even: flex-end; --rf-pb-mt: calc(-1 * var(--rf-pb-overlap, 48px)); --rf-pb-zigzag: 1;',
-				'grid' => '--rf-pb-display: grid; --rf-pb-cols-css: repeat(var(--rf-pb-cols, 3), minmax(0, 1fr)); --rf-pb-note-w: auto; --rf-pb-odd: stretch; --rf-pb-even: stretch; --rf-pb-mt: 0px; --rf-pb-zigzag: 0;',
+				'zigzag' => '--rf-pb-display: flex; --rf-pb-cols-css: none; --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: flex-start; --rf-pb-even: flex-end; --rf-pb-mt: calc(-1 * var(--rf-pb-overlap, 48px)); --rf-pb-zigzag: 1; --rf-pb-free: 0; --rf-pb-jself: auto; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-foot-row: auto;',
+				'grid' => '--rf-pb-display: grid; --rf-pb-cols-css: repeat(var(--rf-pb-cols, 3), minmax(0, 1fr)); --rf-pb-note-w: 100%; --rf-pb-odd: stretch; --rf-pb-even: stretch; --rf-pb-mt: 0px; --rf-pb-zigzag: 0; --rf-pb-free: 0; --rf-pb-jself: stretch; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-foot-row: auto;',
+				// The notes share one grid cell, each moved by its own margins (--rf-pb-x, --rf-pb-y): the board grows to the
+				// lowest note.
+				'free' => '--rf-pb-display: grid; --rf-pb-cols-css: minmax(0, 1fr); --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: start; --rf-pb-even: start; --rf-pb-mt: 0px; --rf-pb-zigzag: 1; --rf-pb-free: 1; --rf-pb-jself: start; --rf-pb-row-gap: 0px; --rf-pb-note-row: 2; --rf-pb-foot-row: 3;',
 			],
 			'selectors' => [ $root => '{{VALUE}}' ],
 		] );
@@ -202,6 +295,15 @@ class Pin_Board extends Widget_Nested_Base {
 			'mobile_default' => [ 'size' => 8 ],
 			'description' => esc_html__( 'In the zigzag: how far each note rises beside the one before. Negative: space between them.', 'refraction' ),
 			'selectors' => [ $root => '--rf-pb-overlap: {{SIZE}}px;' ],
+		] );
+
+		$this->add_responsive_control( 'free_step', [
+			'label' => esc_html__( 'Free: Starting Step Down', 'refraction' ) . ' (px)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 40, 'max' => 600 ] ],
+			'default' => [ 'size' => 220 ],
+			'description' => esc_html__( 'In the Free layout, a note not yet dragged stands this far below the one before (left and right in turn).', 'refraction' ),
+			'selectors' => [ $root => '--rf-pb-step: {{SIZE}}px;' ],
 		] );
 
 		$this->add_responsive_control( 'columns', [
@@ -300,11 +402,39 @@ class Pin_Board extends Widget_Nested_Base {
 			'frontend_available' => true,
 			'separator' => 'before',
 		] );
+		$this->add_control( 'link_shape', [
+			'label' => esc_html__( 'Line Shape', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'curve',
+			'options' => [
+				'curve' => esc_html__( 'Curve', 'refraction' ),
+				's-curve' => esc_html__( 'S-curve', 'refraction' ),
+				'loose' => esc_html__( 'Loose string (hanging)', 'refraction' ),
+				'straight' => esc_html__( 'Straight', 'refraction' ),
+				'elbow' => esc_html__( 'Elbow (right angles)', 'refraction' ),
+			],
+			'frontend_available' => true,
+			'condition' => [ 'links!' => 'none' ],
+		] );
+		$this->add_control( 'link_curve', [
+			'label' => esc_html__( 'Curve Strength', 'refraction' ) . ' (%)',
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 200 ] ],
+			'default' => [ 'size' => 100 ],
+			'frontend_available' => true,
+			'condition' => [ 'links!' => 'none', 'link_shape' => [ 'curve', 's-curve', 'loose' ] ],
+		] );
 		$this->add_control( 'link_style', [
 			'label' => esc_html__( 'Line', 'refraction' ),
 			'type' => Controls_Manager::SELECT,
 			'default' => 'dashed',
-			'options' => [ 'dashed' => esc_html__( 'Dashed', 'refraction' ), 'dotted' => esc_html__( 'Dotted', 'refraction' ), 'solid' => esc_html__( 'Solid', 'refraction' ) ],
+			'options' => [
+				'dashed' => esc_html__( 'Dashed', 'refraction' ),
+				'dotted' => esc_html__( 'Dotted', 'refraction' ),
+				'solid' => esc_html__( 'Solid', 'refraction' ),
+				'long' => esc_html__( 'Long dashes', 'refraction' ),
+				'dash-dot' => esc_html__( 'Dash and dot', 'refraction' ),
+			],
 			'frontend_available' => true,
 			'condition' => [ 'links!' => 'none' ],
 		] );
@@ -315,6 +445,86 @@ class Pin_Board extends Widget_Nested_Base {
 			'options' => [ 'side' => esc_html__( 'The next note\'s side', 'refraction' ), 'pin' => esc_html__( 'The next note\'s pin', 'refraction' ) ],
 			'frontend_available' => true,
 			'condition' => [ 'links!' => 'none' ],
+		] );
+		$this->add_control( 'link_marker', [
+			'label' => esc_html__( 'Line Ends', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'Plain', 'refraction' ),
+				'arrow' => esc_html__( 'An arrow at the next note', 'refraction' ),
+				'dots' => esc_html__( 'A dot at each end', 'refraction' ),
+				'dot-arrow' => esc_html__( 'A dot, then an arrow', 'refraction' ),
+			],
+			'frontend_available' => true,
+			'condition' => [ 'links!' => 'none' ],
+		] );
+		$this->add_control( 'link_flow', [
+			'label' => esc_html__( 'Flowing Line', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'The dashes move towards the next note (not for visitors who ask for less motion).', 'refraction' ),
+			'prefix_class' => 'rf-pb-flow-',
+			'condition' => [ 'links!' => 'none', 'link_style!' => 'solid' ],
+		] );
+
+		$this->end_controls_section();
+
+		// ------------------------------------------------ Reveal
+		$this->start_controls_section( 'section_reveal', [ 'label' => esc_html__( 'Reveal', 'refraction' ) ] );
+
+		$js = [ 'frontend_available' => true ];
+
+		$this->add_control( 'reveal', $js + [
+			'label' => esc_html__( 'Notes Appear', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => '',
+			'options' => [
+				'' => esc_html__( 'At once (no reveal)', 'refraction' ),
+				'drop' => esc_html__( 'Dropped and pinned', 'refraction' ),
+				'fade-up' => esc_html__( 'Fade in, moving up', 'refraction' ),
+				'zoom' => esc_html__( 'Zoom in', 'refraction' ),
+				'swing' => esc_html__( 'Swing on the pin', 'refraction' ),
+			],
+			'description' => esc_html__( 'Each note as it comes into view, one after another; the line to a note draws itself once the note is in. Not for visitors who ask for less motion.', 'refraction' ),
+		] );
+		$on = [ 'reveal!' => '' ];
+		$this->add_control( 'reveal_lines', $js + [
+			'label' => esc_html__( 'Lines Draw Themselves', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'condition' => $on,
+		] );
+		$this->add_control( 'reveal_parts', $js + [
+			'label' => esc_html__( 'Heading And Footer Too', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'They fade in as they come into view.', 'refraction' ),
+			'condition' => $on,
+		] );
+		$this->add_control( 'reveal_duration', $js + [
+			'label' => esc_html__( 'Duration', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::NUMBER,
+			'min' => 100,
+			'max' => 3000,
+			'step' => 50,
+			'default' => 700,
+			'condition' => $on,
+		] );
+		$this->add_control( 'reveal_stagger', $js + [
+			'label' => esc_html__( 'Between Notes', 'refraction' ) . ' (ms)',
+			'type' => Controls_Manager::NUMBER,
+			'min' => 0,
+			'max' => 2000,
+			'step' => 10,
+			'default' => 180,
+			'description' => esc_html__( 'When several come into view together.', 'refraction' ),
+			'condition' => $on,
+		] );
+		$this->add_control( 'reveal_repeat', $js + [
+			'label' => esc_html__( 'Every Time It Comes Into View', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'description' => esc_html__( 'Off: only the first time. In Edit Mode it plays again when a Reveal setting changes.', 'refraction' ),
+			'condition' => $on,
 		] );
 
 		$this->end_controls_section();
@@ -329,10 +539,18 @@ class Pin_Board extends Widget_Nested_Base {
 			'options' => [ 'lined' => esc_html__( 'Lined', 'refraction' ), 'grid' => esc_html__( 'Grid', 'refraction' ), 'dots' => esc_html__( 'Dots', 'refraction' ), 'plain' => esc_html__( 'Plain', 'refraction' ) ],
 			'prefix_class' => 'rf-pb-paper-',
 		] );
+		$this->add_group_control( Group_Control_Background::get_type(), [
+			'name' => 'board_background',
+			'types' => [ 'classic', 'gradient' ],
+			'selector' => $root,
+			'fields_options' => [
+				'background' => [ 'default' => 'classic' ],
+				'color' => [ 'default' => '#F5F5F6' ],
+			],
+		] );
+		// 0.143.0's colour, kept for the boards that set it (after the group, so it still wins there).
 		$this->add_control( 'board_bg', [
-			'label' => esc_html__( 'Background', 'refraction' ),
-			'type' => Controls_Manager::COLOR,
-			'default' => '#F5F5F6',
+			'type' => Controls_Manager::HIDDEN,
 			'selectors' => [ $root => 'background-color: {{VALUE}};' ],
 		] );
 		$this->add_control( 'paper_color', [
@@ -349,6 +567,22 @@ class Pin_Board extends Widget_Nested_Base {
 			'default' => [ 'size' => 34 ],
 			'selectors' => [ $root => '--rf-pb-paper-gap: {{SIZE}}px;' ],
 			'condition' => [ 'paper!' => 'plain' ],
+		] );
+		$this->add_group_control( Group_Control_Border::get_type(), [
+			'name' => 'board_border',
+			'selector' => $root,
+			'separator' => 'before',
+		] );
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [
+			'name' => 'board_shadow',
+			'selector' => $root,
+		] );
+		$this->add_responsive_control( 'board_min_height', [
+			'label' => esc_html__( 'Min Height', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', 'vh', 'em' ],
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 2000 ] ],
+			'selectors' => [ $root => 'min-height: {{SIZE}}{{UNIT}};' ],
 		] );
 		$this->add_responsive_control( 'board_radius', [
 			'label' => esc_html__( 'Corners', 'refraction' ) . ' (px)',
@@ -456,31 +690,58 @@ class Pin_Board extends Widget_Nested_Base {
 		return '';
 	}
 
-	/** A note's own look: its tilt and pin colour (its own, else the next of the set). */
-	public static function note_style( array $item, int $index ): string {
-		$tilt = isset( $item['tilt']['size'] ) && '' !== $item['tilt']['size'] ? (float) $item['tilt']['size'] : self::TILTS[ $index % count( self::TILTS ) ];
-		$color = preg_match( '/^(#[0-9a-fA-F]{3,8}|rgba?\([0-9., ]+\))$/', (string) ( $item['pin_color'] ?? '' ) ) ? $item['pin_color'] : self::PINS[ $index % 3 ];
+	/** A row's role: 'heading', 'footer' or '' (a note). */
+	public static function role_of( array $item ): string {
+		return in_array( $item['role'] ?? '', [ 'heading', 'footer' ], true ) ? $item['role'] : '';
+	}
 
-		return '--rf-pb-r: ' . $tilt . 'deg; --rf-pb-pin-color: ' . $color . ';';
+	/**
+	 * A note's own look: its tilt and pin colour (its own, else the next of the set), and its place among the notes
+	 * (the Free layout's starting place for a note not yet dragged).
+	 *
+	 * @param array $item The row.
+	 * @param int   $n    The note's place among the notes (from 0; the heading and footer do not count).
+	 */
+	public static function note_style( array $item, int $n ): string {
+		$tilt = isset( $item['tilt']['size'] ) && '' !== $item['tilt']['size'] ? (float) $item['tilt']['size'] : self::TILTS[ $n % count( self::TILTS ) ];
+		$color = preg_match( '/^(#[0-9a-fA-F]{3,8}|rgba?\([0-9., ]+\))$/', (string) ( $item['pin_color'] ?? '' ) ) ? $item['pin_color'] : self::PINS[ $n % 3 ];
+
+		return '--rf-pb-r: ' . $tilt . 'deg; --rf-pb-pin-color: ' . $color . '; --rf-pb-i: ' . $n . '; --rf-pb-alt: ' . ( $n % 2 ) . ';';
 	}
 
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$items = array_values( (array) ( $settings['items'] ?? [] ) );
 		$pin = self::pin_html( (string) ( $settings['pin'] ?? 'pushpin' ) );
+		$n = 0;
 		?>
 		<div class="rf-pb">
 			<svg class="rf-pb__links" aria-hidden="true" focusable="false"></svg>
 			<div class="rf-pb__notes">
 				<?php foreach ( $this->get_children() as $index => $child ) :
 					$item = $items[ $index ] ?? [];
+					$role = self::role_of( $item );
+					$id = 'refraction-repeater-item-' . ( $item['_id'] ?? $index );
+
+					if ( '' !== $role ) :
+						?>
+						<div class="rf-pb__slot rf-pb__part rf-pb__part--<?php echo esc_attr( $role . ' ' . $id ); ?>">
+							<?php $child->print_element(); ?>
+						</div>
+						<?php
+						continue;
+					endif;
+
 					$side = in_array( $item['side'] ?? '', [ 'left', 'center', 'right' ], true ) ? ' rf-pb__note--' . $item['side'] : '';
 					?>
-					<div class="rf-pb__note<?php echo esc_attr( $side ); ?> refraction-repeater-item-<?php echo esc_attr( $item['_id'] ?? $index ); ?>" style="<?php echo esc_attr( self::note_style( $item, $index ) ); ?>">
+					<div class="rf-pb__slot rf-pb__note<?php echo esc_attr( ( 1 === $n % 2 ? ' rf-pb__note--alt' : '' ) . $side . ' ' . $id ); ?>" style="<?php echo esc_attr( self::note_style( $item, $n ) ); ?>">
 						<?php echo $pin; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static markup. ?>
 						<?php $child->print_element(); ?>
 					</div>
-				<?php endforeach; ?>
+					<?php
+					++$n;
+				endforeach;
+				?>
 			</div>
 		</div>
 		<?php
@@ -499,20 +760,26 @@ class Pin_Board extends Widget_Nested_Base {
 		const pinColors = <?php echo wp_json_encode( self::PINS ); ?>;
 		const tilts = <?php echo wp_json_encode( self::TILTS ); ?>;
 		const pin = pins[ settings.pin ] || ( 'none' === settings.pin ? '' : pins.pushpin );
-		const styleOf = ( item, index ) => {
-			const tilt = item.tilt && '' !== item.tilt.size && undefined !== item.tilt.size ? Number( item.tilt.size ) : tilts[ index % tilts.length ];
-			const color = /^(#[0-9a-fA-F]{3,8}|rgba?\([0-9., ]+\))$/.test( item.pin_color || '' ) ? item.pin_color : pinColors[ index % 3 ];
-			return '--rf-pb-r: ' + tilt + 'deg; --rf-pb-pin-color: ' + color + ';';
+		const styleOf = ( item, n ) => {
+			const tilt = item.tilt && '' !== item.tilt.size && undefined !== item.tilt.size ? Number( item.tilt.size ) : tilts[ n % tilts.length ];
+			const color = /^(#[0-9a-fA-F]{3,8}|rgba?\([0-9., ]+\))$/.test( item.pin_color || '' ) ? item.pin_color : pinColors[ n % 3 ];
+			return '--rf-pb-r: ' + tilt + 'deg; --rf-pb-pin-color: ' + color + '; --rf-pb-i: ' + n + '; --rf-pb-alt: ' + ( n % 2 ) + ';';
 		};
+		let n = 0;
 		#>
 		<div class="rf-pb">
 			<svg class="rf-pb__links" aria-hidden="true" focusable="false"></svg>
 			<div class="rf-pb__notes">
 				<# _.each( items, ( item, index ) => {
+					const role = [ 'heading', 'footer' ].includes( item.role ) ? item.role : '';
+					if ( role ) { #>
+						<div class="rf-pb__slot rf-pb__part rf-pb__part--{{ role }} refraction-repeater-item-{{ item._id }}"></div>
+					<# return; }
 					const side = [ 'left', 'center', 'right' ].includes( item.side ) ? ' rf-pb__note--' + item.side : '';
+					const alt = 1 === n % 2 ? ' rf-pb__note--alt' : '';
 				#>
-					<div class="rf-pb__note{{ side }} refraction-repeater-item-{{ item._id }}" style="{{ styleOf( item, index ) }}">{{{ pin }}}</div>
-				<# } ); #>
+					<div class="rf-pb__slot rf-pb__note{{ alt }}{{ side }} refraction-repeater-item-{{ item._id }}" style="{{ styleOf( item, n ) }}">{{{ pin }}}</div>
+				<# n++; } ); #>
 			</div>
 		</div>
 		<?php
