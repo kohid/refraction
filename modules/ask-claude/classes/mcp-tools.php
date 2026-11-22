@@ -32,11 +32,11 @@ class Mcp_Tools {
 			'list_pages' => [ 'Pages: id, title, status, address, whether Refraction edits them, and drafts made through this server.', [ 'search' => $string ], 'pages' ],
 			'get_page' => [ 'A page\'s Refraction elements (the full tree as saved), title, status and template.', [ 'id' => $int ], 'page', [ 'id' ] ],
 			'save_draft' => [ 'Creates (no id) or replaces (id of a draft made here) a draft page with these elements, checked like every Ask Claude result. Returns the preview link (opens without logging in) and what was left out. Never publishes.', [ 'id' => $int, 'title' => $string, 'elements' => $elements, 'template' => [ 'type' => 'string', 'enum' => [ 'canvas', 'full-width', 'default' ] ], 'page_settings' => [ 'type' => 'object', 'description' => 'Optional page settings (pages side by side rf_hp*, loading screen rf_loader*, page background background_*); the page settings get_format lists.' ] ], 'save_draft', [ 'title', 'elements' ] ],
-			'propose_to_page' => [ 'Offers these elements to an existing page: they appear as a ready request in that page\'s Ask Claude panel (Claude Code), for whoever edits the page to insert. mode page replaces the page, section adds them.', [ 'page_id' => $int, 'elements' => $elements, 'summary' => $string, 'mode' => [ 'type' => 'string', 'enum' => [ 'page', 'section' ] ], 'page_settings' => [ 'type' => 'object', 'description' => 'Optional page settings, with mode page only (see save_draft).' ] ], 'propose', [ 'page_id', 'elements', 'summary' ] ],
+			'propose_to_page' => [ 'Offers these elements to an existing page: they appear as a ready request in that page\'s Ask Claude panel (Claude Code), for whoever edits the page to insert. mode page replaces the page, section adds them. It replaces this account\'s earlier proposals for the page that were not inserted.', [ 'page_id' => $int, 'elements' => $elements, 'summary' => $string, 'mode' => [ 'type' => 'string', 'enum' => [ 'page', 'section' ] ], 'page_settings' => [ 'type' => 'object', 'description' => 'Optional page settings, with mode page only (see save_draft).' ] ], 'propose', [ 'page_id', 'elements', 'summary' ] ],
 			'list_requests' => [ 'Ask Claude requests waiting for Claude Code (queued, or building for over 30 minutes).', [], 'requests' ],
 			'get_request' => [ 'One request\'s full brief (the person\'s description, the page or element, and everything about the widgets). Marks it "Claude is building".', [ 'id' => $int ], 'request', [ 'id' ] ],
 			'answer_request' => [ 'Sends the result of a request: {"elements": [...], "summary": "..."}, checked before it is stored. Refused (with the reason) when nothing usable is left; fix and send again.', [ 'id' => $int, 'elements' => $elements, 'summary' => $string ], 'answer', [ 'id', 'elements' ] ],
-			'decline_request' => [ 'Declines a request with a note the person sees.', [ 'id' => $int, 'note' => $string ], 'decline', [ 'id', 'note' ] ],
+			'decline_request' => [ 'Declines a request with a note the person sees; a proposal of yours that was not inserted yet is withdrawn from the page\'s panel.', [ 'id' => $int, 'note' => $string ], 'decline', [ 'id', 'note' ] ],
 		];
 	}
 
@@ -280,7 +280,25 @@ class Mcp_Tools {
 		$page_settings = 'page' === $mode ? Prompt_Builder::clean_page( self::specs( $page->ID ), $args['page_settings'] ?? [] )[0] : [];
 		Job_Queue::move( Job_Queue::get( $id ), 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( (string) $args['summary'] ), 'dropped' => $dropped, 'page_settings' => $page_settings ] );
 
-		return [ 'request' => $id, 'state' => 'ready', 'dropped' => $dropped ];
+		// A newer proposal for the page replaces the ones this account offered before that nobody inserted yet (0.147.0),
+		// so the panel never offers an outdated version.
+		$replaced = [];
+
+		foreach ( self::waiting_proposals( $page->ID ) as $old ) {
+			if ( $old['id'] !== $id ) {
+				Job_Queue::delete( $old['id'] );
+				$replaced[] = $old['id'];
+			}
+		}
+
+		return [ 'request' => $id, 'state' => 'ready', 'dropped' => $dropped, 'replaced' => $replaced ];
+	}
+
+	/** This account's proposals for a page that are ready and not inserted yet. @return array[] */
+	private static function waiting_proposals( int $page_id ): array {
+		return array_values( array_filter( Job_Queue::find( [ 'post_id' => $page_id, 'author' => get_current_user_id(), 'states' => [ 'ready' ] ] ), static function ( $job ) {
+			return ! empty( $job['proposal'] );
+		} ) );
 	}
 
 	private static function rest( string $method, string $route, array $params = [] ) {
@@ -312,6 +330,15 @@ class Mcp_Tools {
 	}
 
 	private static function decline( array $args ) {
+		$job = Job_Queue::get( (int) $args['id'] );
+
+		// A proposal this account offered and nobody inserted yet is withdrawn (0.147.0): it leaves the page's panel.
+		if ( $job && ! empty( $job['proposal'] ) && 'ready' === $job['state'] && (int) $job['author'] === get_current_user_id() ) {
+			Job_Queue::delete( $job['id'] );
+
+			return [ 'withdrawn' => $job['id'] ];
+		}
+
 		return self::rest( 'POST', '/' . (int) $args['id'] . '/decline', [ 'note' => (string) $args['note'] ] );
 	}
 }

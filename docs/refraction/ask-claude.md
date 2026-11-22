@@ -104,3 +104,6 @@ Tests point the SDK at a local fake API with the constant `REFRACTION_CLAUDE_BAS
 - **Form Canvas** (`rfb-form-canvas`) is offered on ordinary pages (it was left out with the form fields), so a proposal can place a Form Builder form, with **Answers filled in on this page**.
 - Tests: `php scripts/test-ask-claude.php`.
 
+### Replacing and withdrawing proposals (0.147.0)
+
+`propose_to_page` deletes this account's earlier proposals for the same page that are still ready (not inserted) and lists them under `replaced`; `decline_request` on such a proposal withdraws it (`{"withdrawn": id}`). Other requests are declined as before.

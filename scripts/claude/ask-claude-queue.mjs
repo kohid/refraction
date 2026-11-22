@@ -17,7 +17,7 @@
  * REFRACTION_REST_PASSWORD (an Application Password of a user with the role "Claude Code builder (Refraction)").
  * Without the user and password no credentials are sent, for a proxy that adds them. Exit code 1 on any failure.
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -89,7 +89,22 @@ async function shoot( url, dir ) {
 		fail( 'screenshots need Playwright (npm i -D playwright), or open the preview link yourself' );
 	}
 
-	const browser = await chromium.launch();
+	// Playwright's own browser, or else a Chromium already on the machine (CHROMIUM_PATH, or Claude Code's cloud
+	// containers' /opt/pw-browsers/chromium) when this Playwright's download is not there.
+	let browser;
+
+	try {
+		browser = await chromium.launch();
+	} catch ( error ) {
+		const path = process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium';
+
+		if ( ! existsSync( path ) ) {
+			throw error;
+		}
+
+		browser = await chromium.launch( { executablePath: path, args: [ '--no-sandbox' ] } );
+	}
+
 	const out = [];
 
 	try {
