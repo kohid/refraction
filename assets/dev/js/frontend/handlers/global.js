@@ -37,6 +37,12 @@ class GlobalHandler extends refractionModules.frontend.handlers.Base {
 
 	onInit( ...args ) {
 		super.onInit( ...args );
+
+		// On the first screen when the page opened (Settings > Performance, 0.146.0): shown at once, no animation.
+		if ( this.$element.hasClass( 'rf-intro-skip' ) ) {
+			return;
+		}
+
 		if ( this.getAnimation() ) {
 			const observer = refractionModules.utils.Scroll.scrollObserver( {
 				callback: ( event ) => {

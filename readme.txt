@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.145.0
+Stable tag: 0.146.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.146.0 =
+* Faster first screen: elements with an entrance animation were printed hidden until the page's scripts had loaded, so a hero heading or picture with an animation appeared late (what speed tests measure as Largest Contentful Paint). New Settings > Performance > Animations On The First Screen, on by default: what is on screen when the page opens shows at once, without its animation; everything below still animates as it comes into view. Pin Board reveals and Dynamic Container entrances follow it. Every visitor (and every speed test) gets the same page; without JavaScript nothing stays hidden.
+* Google Fonts load with font-display: swap by default (text shows at once in a fallback font while the font loads). A choice already saved in Settings is kept.
 
 = 0.145.0 =
 * Pin Board: the lines now meet the notes exactly, at the edge of the tilted card, and stay there while notes are revealed, hovered or dragged (they were measured from the moving, tilted outline and could end in the air).

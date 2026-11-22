@@ -304,7 +304,7 @@ class Settings extends Settings_Page {
 								'label' => esc_html__( 'Google Fonts Load', 'refraction' ),
 								'field_args' => [
 									'type' => 'select',
-									'std' => 'auto',
+									'std' => 'swap',
 									'options' => [
 										'auto' => esc_html__( 'Default', 'refraction' ),
 										'block' => esc_html__( 'Blocking', 'refraction' ),
@@ -387,6 +387,18 @@ class Settings extends Settings_Page {
 										'0' => esc_html__( 'Disable', 'refraction' ),
 									],
 									'desc' => esc_html__( 'Improve initial page load performance by lazy loading all background images except the first one.', 'refraction' ),
+								],
+							],
+							'first_screen_animations' => [
+								'label' => esc_html__( 'Animations On The First Screen', 'refraction' ),
+								'field_args' => [
+									'type' => 'select',
+									'std' => '1',
+									'options' => [
+										'1' => esc_html__( 'Show at once (faster)', 'refraction' ),
+										'0' => esc_html__( 'Animate as set', 'refraction' ),
+									],
+									'desc' => esc_html__( 'Elements with an entrance animation are hidden until they animate. Show at once: what is on the screen when the page opens shows straight away, without its animation (the page is seen sooner, and speed tests measure it so); everything further down still animates as it comes into view. Pin Board reveals and Dynamic Container entrances too. Every visitor gets the same page.', 'refraction' ),
 								],
 							],
 							'local_google_fonts' => [

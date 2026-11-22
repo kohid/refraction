@@ -842,8 +842,9 @@ abstract class Element_Base extends Controls_Stack {
 			$is_static_render_mode = Plugin::$instance->frontend->is_static_render_mode();
 
 			if ( ! $is_static_render_mode ) {
-				// Hide the element until the animation begins.
-				$this->add_render_attribute( '_wrapper', 'class', 'refraction-invisible' );
+				// Hide the element until the animation begins; with First Screen on (0.146.0) it is printed visible and only
+				// hidden (by a short inline script) when it is below the first screen.
+				$this->add_render_attribute( '_wrapper', 'class', \Refraction\Modules\FirstScreen\Module::is_enabled() ? 'rf-intro' : 'refraction-invisible' );
 			}
 		}
 
