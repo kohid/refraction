@@ -41,6 +41,7 @@ class Shortcodes {
 		add_action( 'wp_ajax_' . self::ACTION_TOKEN, [ $this, 'fresh_token' ] );
 		add_action( 'wp_ajax_nopriv_' . self::ACTION_ADDRESS, [ $this, 'address_search' ] );
 		add_action( 'wp_ajax_' . self::ACTION_ADDRESS, [ $this, 'address_search' ] );
+		add_action( 'wp_ajax_' . self::ACTION_EMAIL_PREVIEW, [ $this, 'email_preview' ] );
 	}
 
 	/**
@@ -145,6 +146,51 @@ class Shortcodes {
 		return (string) apply_filters( 'refraction/form_builder/availability', $state, $definition );
 	}
 
+	// ---------------------------------------------------------------- after sending
+
+	/**
+	 * What the visitor sees after sending (0.147.0): a check, the heading, the message, the reference in its own box
+	 * (with a Copy button and a note) and a link to send another. Styled by the Form Canvas widget, which also shows it
+	 * in the editor with a sample reference.
+	 *
+	 * @param array  $definition The collection.
+	 * @param string $reference  The record's reference ('' when the form gives none).
+	 * @param string $again      Where "send another" goes ('' for no link).
+	 */
+	public static function done_html( array $definition, string $reference, string $again = '' ): string {
+		$settings = $definition['settings'];
+		$message = nl2br( esc_html( (string) $definition['success_message'] ) );
+		$inline = false !== strpos( $message, '{reference}' );
+		$number = '<strong class="rfb-reference">' . esc_html( $reference ) . '</strong>';
+		$message = str_replace( '{reference}', '' !== $reference ? $number : '', $message );
+		$heading = (string) ( $settings['done_heading'] ?? '' );
+		// rfb-alert-success stays for older custom CSS and scripts; .rfb-done sets the look.
+		$html = '<div class="rfb-done rfb-alert rfb-alert-success" role="status">'
+			. '<span class="rfb-done__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
+			. ( '' !== $heading ? '<p class="rfb-done__heading">' . esc_html( $heading ) . '</p>' : '' )
+			. ( '' !== trim( wp_strip_all_tags( $message ) ) || $inline ? '<div class="rfb-done__message">' . apply_filters( 'refraction/form_builder/success_html', $message, $definition ) . '</div>' : '' );
+
+		if ( '' !== $reference && ( ! $inline || ! empty( $settings['done_ref_box'] ) ) ) {
+			$label = (string) ( $settings['done_ref_label'] ?? '' );
+			$note = (string) ( $settings['done_note'] ?? '' );
+			$html .= '<div class="rfb-done__ref">'
+				. ( '' !== $label ? '<span class="rfb-done__ref-label">' . esc_html( $label ) . '</span>' : '' )
+				. '<span class="rfb-done__ref-row">' . $number
+				. ( ! empty( $settings['done_copy'] ) ? '<button type="button" class="rfb-done__copy" data-rfb-copy="' . esc_attr( $reference ) . '" data-rfb-copied="' . esc_attr__( 'Copied', 'refraction' ) . '">' . esc_html__( 'Copy', 'refraction' ) . '</button>' : '' )
+				. '</span>'
+				. ( '' !== $note ? '<span class="rfb-done__ref-note">' . esc_html( $note ) . '</span>' : '' )
+				. '</div>';
+		}
+
+		$again_text = (string) ( $settings['done_again'] ?? '' );
+
+		if ( '' !== $again_text && '' !== $again ) {
+			$html .= '<a class="rfb-done__again" href="' . esc_url( $again ) . '">' . esc_html( $again_text ) . '</a>';
+		}
+
+		return $html . '</div>';
+	}
+
 	// ---------------------------------------------------------------- form
 
 	public function form( $atts ): string {
@@ -180,17 +226,9 @@ class Shortcodes {
 			// The booking reference (0.90.0) comes back in the address; only a well-formed one is shown.
 			$reference = isset( $_GET['rfb_ref'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['rfb_ref'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$reference = Settings::is_reference( $reference ) ? $reference : '';
-			$message = esc_html( $definition['success_message'] );
+			$again = remove_query_arg( [ 'rfb_done', 'rfb_ref' ] ) . '#' . $anchor;
 
-			if ( '' !== $reference ) {
-				$message = false !== strpos( $message, '{reference}' )
-					? str_replace( '{reference}', '<strong class="rfb-reference">' . esc_html( $reference ) . '</strong>', $message )
-					: $message . '<br>' . sprintf( /* translators: %s: booking reference. */ esc_html__( 'Your reference: %s', 'refraction' ), '<strong class="rfb-reference">' . esc_html( $reference ) . '</strong>' );
-			} else {
-				$message = str_replace( '{reference}', '', $message );
-			}
-
-			return $wrap . '<div class="rfb-alert rfb-alert-success" role="status">' . apply_filters( 'refraction/form_builder/success_html', $message, $definition ) . '</div></div>';
+			return $wrap . self::done_html( $definition, $reference, $again ) . '</div>';
 		}
 
 		$availability = $this->availability( $definition );
@@ -220,6 +258,7 @@ class Shortcodes {
 		$ctx = [ 'hidden' => $this->hidden_values( $definition ), 'type_styles' => $definition['type_styles'], 'money' => $settings, 'collection' => $slug ];
 		$i18n = self::step_i18n() + [
 			'required' => __( 'This field is required.', 'refraction' ),
+			'pickOne' => __( 'Please choose at least one.', 'refraction' ),
 			'countrySearch' => __( 'Search countries', 'refraction' ),
 			'pickerClear' => __( 'Clear', 'refraction' ),
 			'pickerToday' => __( 'Today', 'refraction' ),
@@ -581,10 +620,61 @@ class Shortcodes {
 		return $reference;
 	}
 
-	const REFERENCE_META = '_rfb_reference';
+	const REFERENCE_META = Records::META_REFERENCE;
+
+	const ACTION_EMAIL_PREVIEW = 'refraction_rfb_email_preview';
+
+	/** The visitor's message when the form sets none. */
+	public static function default_confirm_template(): string {
+		return __( "Thank you. We received your request.\n\nReference: {reference}\n\n{summary}\n\nWe will be in touch to confirm.", 'refraction' );
+	}
+
+	/**
+	 * The emails as they would be sent, from the form's settings in the editor's panel (not yet saved) (0.147.0): the
+	 * answers of the form's latest record, or sample answers when it has none. For the form's editors only.
+	 */
+	public function email_preview(): void {
+		$post_id = isset( $_POST['post'] ) ? absint( $_POST['post'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Checked below.
+
+		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) || ! check_ajax_referer( self::ACTION_EMAIL_PREVIEW, 'nonce', false ) ) {
+			wp_send_json_error( null, 403 );
+		}
+
+		$panel = json_decode( wp_unslash( (string) ( $_POST['settings'] ?? '' ) ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each value is cleaned by Settings::clean().
+		$from = \Refraction\Modules\FormBuilder\Documents\Form_Document::settings_from( is_array( $panel ) ? $panel : [] );
+		$settings = Settings::clean( $from['settings'] );
+		$slug = (string) get_post_meta( $post_id, Editor_Forms::META_COLLECTION, true );
+		$definition = '' !== $slug ? $this->collections->get( $slug ) : null;
+		$answers = [];
+
+		if ( $definition ) {
+			$latest = $this->records->query( $definition, [ 'per_page' => 1 ] );
+			$values = $latest['items'] ? $latest['items'][0]['values'] : [];
+			$answers = self::answers( $definition, $values );
+
+			if ( ! array_filter( array_column( $answers, 1 ) ) ) {
+				foreach ( $answers as $key => $row ) {
+					$answers[ $key ][1] = '[' . $row[0] . ']';
+				}
+			}
+		}
+
+		$reference = '' !== $settings['reference_prefix'] ? Settings::new_reference( $settings['reference_prefix'], Schema::now(), 4821 ) : '';
+		$singular = '' !== (string) ( $from['singular'] ?? '' ) ? (string) $from['singular'] : ( $definition ? $definition['singular'] : __( 'Record', 'refraction' ) );
+
+		if ( 'office' === ( $_POST['who'] ?? '' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Checked above.
+			/* translators: %s: record type, such as Booking. */
+			$mail = Email::office( $settings, sprintf( __( 'New %s', 'refraction' ), $singular ), $reference, $answers, admin_url( 'admin.php?page=' . Admin_Page::SLUG ) );
+		} else {
+			$template = '' !== $settings['confirm_message'] ? $settings['confirm_message'] : self::default_confirm_template();
+			$mail = Email::visitor( $settings, $template, $reference, $answers );
+		}
+
+		wp_send_json_success( [ 'html' => $mail['html'] ? $mail['body'] : '<pre style="white-space:pre-wrap;font:14px/1.6 monospace;padding:24px;margin:0">' . esc_html( $mail['body'] ) . '</pre>' ] );
+	}
 
 	/** Every answer as [ key => [ label, text ] ], in form order (hidden fields left out), for the emails. */
-	private function answers( array $definition, array $values ): array {
+	public static function answers( array $definition, array $values ): array {
 		$cfg = Money::config( $definition['settings'] );
 		$answers = [];
 
@@ -612,7 +702,7 @@ class Shortcodes {
 		}
 
 		$answers = $this->answers( $definition, $values );
-		$template = '' !== $settings['confirm_message'] ? $settings['confirm_message'] : __( "Thank you. We received your request.\n\nReference: {reference}\n\n{summary}\n\nWe will be in touch to confirm.", 'refraction' );
+		$template = '' !== $settings['confirm_message'] ? $settings['confirm_message'] : self::default_confirm_template();
 		$subject = '' !== $settings['confirm_subject'] ? $settings['confirm_subject'] : sprintf( /* translators: %s: site name. */ __( 'Your request at %s', 'refraction' ), get_bloginfo( 'name' ) );
 		$subject = preg_replace( '/[\r\n]+/', ' ', Settings::fill_message( $subject, $reference, $answers ) );
 		$headers = [];
@@ -624,7 +714,13 @@ class Shortcodes {
 			$headers[] = 'Reply-To: ' . $office;
 		}
 
-		wp_mail( $to, $subject, Settings::fill_message( $template, $reference, $answers ), $headers );
+		$mail = Email::visitor( $settings, $template, $reference, $answers );
+
+		if ( $mail['html'] ) {
+			$headers[] = 'Content-Type: text/html; charset=UTF-8';
+		}
+
+		wp_mail( $to, $subject, $mail['body'], $headers );
 	}
 
 	/** Email the people named in the Advanced tab: every answer, plus a link to the record in the admin. */
@@ -635,17 +731,14 @@ class Shortcodes {
 			return;
 		}
 
-		$lines = '' !== $reference ? [ __( 'Reference', 'refraction' ) . ': ' . $reference ] : [];
-
-		foreach ( $this->answers( $definition, $values ) as $row ) {
-			$lines[] = $row[0] . ': ' . $row[1];
-		}
-
 		$title = Schema::title( $definition, $values, $id );
 		$subject = '' !== $settings['notify_subject'] ? Settings::fill_message( $settings['notify_subject'], $reference, $this->answers( $definition, $values ) ) : sprintf( /* translators: 1: record type, 2: title. */ __( 'New %1$s: %2$s', 'refraction' ), $definition['singular'], ( '' !== $reference ? $reference . ' ' : '' ) . $title );
 		$subject = preg_replace( '/[\r\n]+/', ' ', $subject );
-		$body = implode( "\n", $lines ) . "\n\n" . add_query_arg( [ 'view' => 'record', 'collection' => $definition['slug'], 'record' => $id ], admin_url( 'admin.php?page=' . Admin_Page::SLUG ) );
-		$headers = [];
+		$link = add_query_arg( [ 'view' => 'record', 'collection' => $definition['slug'], 'record' => $id ], admin_url( 'admin.php?page=' . Admin_Page::SLUG ) );
+		/* translators: 1: record type, such as Booking. */
+		$mail = Email::office( $settings, sprintf( __( 'New %s', 'refraction' ), $definition['singular'] ), $reference, $this->answers( $definition, $values ), $link );
+		$body = $mail['body'];
+		$headers = $mail['html'] ? [ 'Content-Type: text/html; charset=UTF-8' ] : [];
 		$reply_to = $settings['reply_to_field'] ? (string) ( $values[ $settings['reply_to_field'] ] ?? '' ) : '';
 
 		if ( '' !== $reply_to && false !== filter_var( $reply_to, FILTER_VALIDATE_EMAIL ) ) {

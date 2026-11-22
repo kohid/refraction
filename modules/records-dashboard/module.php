@@ -50,6 +50,7 @@ class Module extends BaseModule {
 			wp_enqueue_script( $this->get_name(), $this->get_js_assets_url( $this->get_name() ), [
 				'nested-elements',
 			], REFRACTION_VERSION, true );
+			wp_add_inline_script( $this->get_name(), 'window.refractionRecordsFields = ' . wp_json_encode( Classes\Records_View::fields_by_collection() ) . ';', 'before' );
 		} );
 	}
 

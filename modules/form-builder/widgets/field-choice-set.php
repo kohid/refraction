@@ -271,7 +271,7 @@ class Field_Choice_Set extends Widget_Nested_Base implements Form_Field {
 		$error = (string) ( $state['errors'][ $field['key'] ] ?? '' );
 
 		echo '<div class="rfb-field rfb-w-full rfb-t-choice_set' . ( '' !== $error ? ' has-error' : '' ) . '" data-rfb-key="' . esc_attr( $field['key'] ) . '" data-rfb-type="choice_set" data-rfb-priced' . $cond . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . Field_Renderer::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . Field_Renderer::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . ( $field['required'] && $field['multiple'] ? ' data-rfb-need-one' : '' ) . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . Field_Renderer::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . Field_Renderer::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">';
 
 		foreach ( $field['children'] as $i => $card ) {

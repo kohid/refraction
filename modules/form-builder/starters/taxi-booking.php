@@ -239,7 +239,10 @@ return [
 	'settings' => [
 		'rfb_singular' => $t( 'Booking' ),
 		'rfb_description' => $t( 'Transfers, corporate travel, golf, weddings, minibus hire and Inverness tours.' ),
-		'rfb_success_message' => $t( 'Thank you. Your booking request {reference} is with us. We will confirm it by email or phone shortly.' ),
+		'rfb_success_message' => $t( 'Thank you. Your booking request is with us. We will confirm it by email or phone shortly.' ),
+		'rfb_done_heading' => $t( 'Booking request received' ),
+		'rfb_done_note' => $t( 'Quote it if you call or email us about your booking.' ),
+		'rfb_done_again' => $t( 'Make another booking' ),
 		'rfb_public_form' => 'yes',
 		'rfb_statuses' => [
 			[ '_id' => $id(), 'label' => $t( 'Requested' ), 'color' => 'warning' ],

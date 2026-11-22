@@ -117,6 +117,7 @@ class Form_Document extends Library_Document {
 
 		$this->register_form_controls();
 		$this->register_submit_controls();
+		$this->register_done_controls();
 		$this->register_notify_controls();
 		$this->register_access_controls();
 		$this->register_currency_controls();
@@ -185,6 +186,50 @@ class Form_Document extends Library_Document {
 		$this->end_controls_section();
 	}
 
+	/** What the visitor sees after sending (0.147.0); the Form Canvas widget styles it and can preview it. */
+	private function register_done_controls(): void {
+		$d = Settings::defaults();
+		$this->start_controls_section( 'rfb_done', [ 'label' => esc_html__( 'After sending', 'refraction' ), 'tab' => Controls_Manager::TAB_SETTINGS ] );
+		$this->add_control( 'rfb_done_heading', [
+			'label' => esc_html__( 'Heading', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Booking received', 'refraction' ),
+			'description' => esc_html__( 'Above the "Message after sending" (Form section). Empty: no heading.', 'refraction' ),
+		] );
+		$this->add_control( 'rfb_done_ref_box', [
+			'label' => esc_html__( 'Reference in its own box', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'description' => esc_html__( 'Needs a reference prefix (Notifications). Off: the reference shows only where {reference} is in the message.', 'refraction' ),
+		] );
+		$box = [ 'rfb_done_ref_box' => 'yes' ];
+		$this->add_control( 'rfb_done_ref_label', [
+			'label' => esc_html__( 'Reference label', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'default' => $d['done_ref_label'],
+			'condition' => $box,
+		] );
+		$this->add_control( 'rfb_done_note', [
+			'label' => esc_html__( 'Note under the reference', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Keep it for any question about your booking.', 'refraction' ),
+			'condition' => $box,
+		] );
+		$this->add_control( 'rfb_done_copy', [ 'label' => esc_html__( 'Copy button', 'refraction' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes', 'condition' => $box ] );
+		$this->add_control( 'rfb_done_again', [
+			'label' => esc_html__( 'Link to send another', 'refraction' ),
+			'type' => Controls_Manager::TEXT,
+			'placeholder' => esc_html__( 'Make another booking', 'refraction' ),
+			'description' => esc_html__( 'Empty: no link.', 'refraction' ),
+		] );
+		$this->add_control( 'rfb_done_hint', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'To see it and style it: Form Canvas widget > "Show the message after sending" and its Style tab.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+		$this->end_controls_section();
+	}
+
 	private function register_notify_controls(): void {
 		$this->start_controls_section( 'rfb_notify', [ 'label' => esc_html__( 'Notifications', 'refraction' ), 'tab' => Controls_Manager::TAB_SETTINGS ] );
 		$this->add_control( 'rfb_notify_enabled', [ 'label' => esc_html__( 'Email me new records', 'refraction' ), 'type' => Controls_Manager::SWITCHER ] );
@@ -210,6 +255,24 @@ class Form_Document extends Library_Document {
 			'rows' => 8,
 			'condition' => [ 'rfb_confirm_enabled' => 'yes' ],
 			'description' => esc_html__( 'Plain text. {reference}, {summary} (every answer) and {field_key} for one answer. Replies go to the first address under "Send to".', 'refraction' ),
+		] );
+
+		// The emails' design (0.147.0), for the visitor's copy and the office's.
+		$this->add_control( 'rfb_email_style', [
+			'label' => esc_html__( 'Email design', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'html',
+			'separator' => 'before',
+			'options' => [ 'html' => esc_html__( 'Designed (logo, reference, answers in a table)', 'refraction' ), 'plain' => esc_html__( 'Plain text', 'refraction' ) ],
+		] );
+		$html = [ 'rfb_email_style' => 'html' ];
+		$this->add_control( 'rfb_email_accent', [ 'label' => esc_html__( 'Accent color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'condition' => $html, 'description' => esc_html__( 'Empty: the form\'s main color.', 'refraction' ) ] );
+		$this->add_control( 'rfb_email_logo', [ 'label' => esc_html__( 'Logo', 'refraction' ), 'type' => Controls_Manager::MEDIA, 'condition' => $html, 'description' => esc_html__( 'Empty: the site name.', 'refraction' ) ] );
+		$this->add_control( 'rfb_email_footer', [ 'label' => esc_html__( 'Footer', 'refraction' ), 'type' => Controls_Manager::TEXTAREA, 'rows' => 3, 'condition' => $html, 'placeholder' => esc_html__( 'Address, phone, opening hours...', 'refraction' ) ] );
+		$this->add_control( 'rfb_email_preview', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => '<div class="rfb-email-preview-buttons"><button type="button" class="refraction-button rfb-email-preview" data-who="visitor">' . esc_html__( 'Preview the visitor\'s email', 'refraction' ) . '</button> <button type="button" class="refraction-button rfb-email-preview" data-who="office">' . esc_html__( 'Preview the office email', 'refraction' ) . '</button></div>',
+			'content_classes' => 'refraction-descriptor',
 		] );
 		$this->end_controls_section();
 	}
@@ -287,7 +350,11 @@ class Form_Document extends Library_Document {
 
 	/** The definition this page saves into: form-wide values from the cog, fields from the widgets (filled in by Editor_Forms). */
 	public function form_settings(): array {
-		$s = (array) $this->get_settings();
+		return self::settings_from( (array) $this->get_settings() );
+	}
+
+	/** The definition from the cog's values, also for the email preview (the panel's values, before saving). */
+	public static function settings_from( array $s ): array {
 		$yes = static function ( $value ): bool {
 			return 'yes' === $value || true === $value;
 		};
@@ -312,6 +379,16 @@ class Form_Document extends Library_Document {
 				'confirm_field' => $s['rfb_confirm_field'] ?? '',
 				'confirm_subject' => $s['rfb_confirm_subject'] ?? '',
 				'confirm_message' => $s['rfb_confirm_message'] ?? '',
+				'done_heading' => $s['rfb_done_heading'] ?? '',
+				'done_ref_label' => $s['rfb_done_ref_label'] ?? Settings::defaults()['done_ref_label'],
+				'done_ref_box' => $yes( $s['rfb_done_ref_box'] ?? 'yes' ),
+				'done_note' => $s['rfb_done_note'] ?? '',
+				'done_copy' => $yes( $s['rfb_done_copy'] ?? 'yes' ),
+				'done_again' => $s['rfb_done_again'] ?? '',
+				'email_style' => $s['rfb_email_style'] ?? 'html',
+				'email_accent' => '' !== (string) ( $s['rfb_email_accent'] ?? '' ) ? $s['rfb_email_accent'] : ( $s['rfb_c_primary'] ?? '' ),
+				'email_logo' => $url( $s['rfb_email_logo'] ?? '' ),
+				'email_footer' => $s['rfb_email_footer'] ?? '',
 				'require_login' => $yes( $s['rfb_require_login'] ?? '' ),
 				'opens' => substr( (string) ( $s['rfb_opens'] ?? '' ), 0, 16 ),
 				'closes' => substr( (string) ( $s['rfb_closes'] ?? '' ), 0, 16 ),

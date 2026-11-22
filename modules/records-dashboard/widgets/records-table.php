@@ -217,7 +217,7 @@ class Records_Table extends Widget_Base {
 			'fields' => $repeater->get_controls(),
 			'title_field' => '{{{ col_label }}}',
 			'default' => [
-				[ 'col_label' => esc_html__( 'Reference', 'refraction' ), 'col_type' => 'reference', 'col_field' => '_title' ],
+				[ 'col_label' => esc_html__( 'Reference', 'refraction' ), 'col_type' => 'reference', 'col_field' => '' ],
 				[ 'col_label' => esc_html__( 'Booked', 'refraction' ), 'col_type' => 'created' ],
 				[ 'col_label' => esc_html__( 'Status', 'refraction' ), 'col_type' => 'badge', 'col_field' => '_status' ],
 			],
@@ -411,7 +411,7 @@ class Records_Table extends Widget_Base {
 		$type = (string) ( $col['col_type'] ?? 'text' );
 		$key = (string) ( $col['col_field'] ?? '' );
 
-		if ( 'created' === $type || ( 'reference' === $type && in_array( $key, [ '', '_title' ], true ) ) || '_created' === $key ) {
+		if ( 'created' === $type || ( 'reference' === $type && in_array( $key, [ '', '_title', '_reference' ], true ) ) || in_array( $key, [ '_created', '_reference' ], true ) ) {
 			return '_created';
 		}
 

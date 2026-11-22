@@ -58,6 +58,11 @@ loads again on `refraction:record-changed` for its collection.
 Export CSV writes the table's columns as plain text for every record matching the filters (up to 5000), with a
 byte-order mark for spreadsheets; a cell starting with `=`, `+`, `-` or `@` gets a leading `'`.
 
+### Reference and field choices (0.147.0)
+
+- Field `_reference` ("Reference number", record meta `_rfb_reference`): a Reference column with no field shows it, or the record title when the form gives no reference. A reference typed in the search (`IT-251113-4821`) finds its record.
+- Once the Collection is chosen, `assets/js/editor/collection-fields.js` narrows every field select of Records Table and Record Details to that collection's fields, by their own label (`window.refractionRecordsFields`, from `Records_View::fields_by_collection()`).
+
 ## Record Details (`refraction-record-details`)
 
 | Setting | What it does |

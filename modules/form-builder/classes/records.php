@@ -17,6 +17,8 @@ class Records {
 	const META_STATUS = '_rfb_status';
 	const META_DATA = '_rfb_data';
 	const META_FIELD = '_rfb_f_';
+	/** The record's reference such as IT-251113-4821 (0.90.0), made when the form has a reference prefix. */
+	const META_REFERENCE = '_rfb_reference';
 
 	public function register_post_type(): void {
 		register_post_type(
@@ -161,8 +163,17 @@ class Records {
 			'order' => 'asc' === strtolower( (string) ( $args['order'] ?? '' ) ) ? 'ASC' : 'DESC',
 		];
 
+		$reference_search = '';
+
 		if ( ! empty( $args['search'] ) ) {
-			$query_args['s'] = (string) $args['search'];
+			// A reference typed in the search finds its record (0.147.0): it is kept in meta, not in the searched text.
+			$typed = strtoupper( trim( (string) $args['search'] ) );
+
+			if ( Settings::is_reference( $typed ) ) {
+				$reference_search = $typed;
+			} else {
+				$query_args['s'] = (string) $args['search'];
+			}
 		}
 
 		// From / to (Y-m-d): records created on those days, both included (Records Table, 0.129.0).
@@ -192,6 +203,10 @@ class Records {
 			}
 		}
 
+		if ( '' !== $reference_search ) {
+			$meta[] = [ 'key' => self::META_REFERENCE, 'value' => $reference_search ];
+		}
+
 		$query_args['meta_query'] = array_merge( [ 'relation' => 'AND' ], $meta );
 
 		$orderby = (string) ( $args['orderby'] ?? '' );
@@ -204,6 +219,9 @@ class Records {
 		} elseif ( 'status' === $orderby ) {
 			$query_args['meta_key'] = self::META_STATUS;
 			$query_args['orderby'] = 'meta_value';
+		} elseif ( 'reference' === $orderby ) {
+			// References are made in date order: newest first sorts like the date booked, records without one last.
+			$query_args['orderby'] = 'date';
 		} else {
 			$query_args['orderby'] = 'date' === $orderby || '' === $orderby ? 'date' : 'ID';
 		}
@@ -286,6 +304,7 @@ class Records {
 			'id' => $post->ID,
 			'title' => $post->post_title,
 			'status' => (string) get_post_meta( $post->ID, self::META_STATUS, true ),
+			'reference' => (string) get_post_meta( $post->ID, self::META_REFERENCE, true ),
 			'values' => is_array( $values ) ? $values : [],
 			'created' => $post->post_date,
 			'modified' => $post->post_modified,

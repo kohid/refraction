@@ -188,7 +188,9 @@ class Field_Renderer {
 		} elseif ( 'name' === $type ) {
 			self::name( $field, is_array( $value ) ? $value : [], $name, $id, $label_class, $described_attr );
 		} elseif ( in_array( $type, [ 'radio', 'checkbox' ], true ) ) {
-			echo '<fieldset class="rfb-choice"' . $described_attr . '><legend class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			// Required (0.147.0): a radio list is checked by the browser; a checkbox list needs one ticked (frontend.js).
+			$need_one = $field['required'] && 'checkbox' === $type ? ' data-rfb-need-one' : '';
+			echo '<fieldset class="rfb-choice"' . $need_one . $described_attr . '><legend class="' . esc_attr( $label_class ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$value = null === $value ? ( 'checkbox' === $type ? [] : $field['default'] ) : $value;
 			$picked = array_map( 'strval', (array) $value );
 			$suffix = 'radio' === $type ? '' : '[]';
@@ -202,7 +204,7 @@ class Field_Renderer {
 				$extra = $field['option_extras'][ $option['value'] ] ?? null;
 				// The label stays right after the input: the Summary reads it from there.
 				$off = $extra && ! empty( $extra['off'] ) ? ' data-rfb-off="' . esc_attr( (string) wp_json_encode( $extra['off'] ) ) . '"' : '';
-				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"' . $off . '><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . self::option_price( $field, $extra, $money ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . ( '' !== $off ? '<span class="rfb-opt-off" hidden>' . esc_html( '' !== $extra['off_text'] ? $extra['off_text'] : __( 'Not available', 'refraction' ) ) . '</span>' : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<label class="rfb-check' . ( $extra && $extra['icon'] ? ' has-icon' : '' ) . ( $extra && '' !== $extra['badge'] ? ' has-badge' : '' ) . '" for="' . esc_attr( $option_id ) . '"' . $off . '><input type="' . esc_attr( $type ) . '" id="' . esc_attr( $option_id ) . '" name="' . esc_attr( $name . $suffix ) . '" value="' . esc_attr( $option['value'] ) . '"' . self::number_attr( $option ) . checked( in_array( $option['value'], $picked, true ), true, false ) . ( $field['required'] && 'radio' === $type ? ' required' : '' ) . ( $extra && '' !== $extra['text'] ? ' aria-describedby="' . esc_attr( $option_id . '-text' ) . '"' : '' ) . '><span class="rfb-opt-label">' . esc_html( $option['label'] ) . self::option_price( $field, $extra, $money ) . '</span>' . ( $extra ? self::option_extra( $extra, $option_id, 'images' === ( $field['choice_look'] ?? '' ) ) : '' ) . ( '' !== $off ? '<span class="rfb-opt-off" hidden>' . esc_html( '' !== $extra['off_text'] ? $extra['off_text'] : __( 'Not available', 'refraction' ) ) . '</span>' : '' ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '</div></fieldset>';
@@ -695,7 +697,7 @@ class Field_Renderer {
 		$kind = $field['multiple'] ? 'checkbox' : 'radio';
 		$described = '' !== $field['description'] ? ' aria-describedby="' . esc_attr( $id . '-desc' ) . '"' : '';
 
-		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<fieldset class="rfb-choice rfb-cards' . ( $field['multiple'] ? ' is-multiple' : '' ) . '"' . ( $field['required'] && $field['multiple'] ? ' data-rfb-need-one' : '' ) . $described . '><legend class="rfb-label' . ( $field['required'] ? ' is-required' : '' ) . ( $field['hide_label'] ? ' screen-reader-text' : '' ) . '"' . self::mark( $field ) . '>' . esc_html( $field['label'] ) . '</legend>' . self::description( $field, $id ) . '<div class="rfb-cc-list" style="--rfb-cc-gap:' . (int) $field['card_gap'] . 'px">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		foreach ( $field['children'] as $i => $card ) {
 			$card_id = $id . '-' . $i;

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Records_View {
 
 	/** Record parts every collection has, offered beside its own fields. */
-	const SPECIAL = [ '_title', '_created', '_modified', '_status' ];
+	const SPECIAL = [ '_title', '_reference', '_created', '_modified', '_status' ];
 
 	/** Status colours of the Builder, as the tables show them. */
 	const COLORS = [
@@ -55,6 +55,26 @@ class Records_View {
 	}
 
 	/**
+	 * Each collection's own fields, slug => [ key => label ] (0.147.0): the editor script keeps a widget's field
+	 * choices to the collection it shows (assets/js/editor/collection-fields.js).
+	 *
+	 * @return array<string,array<string,string>>
+	 */
+	public static function fields_by_collection(): array {
+		$map = [];
+
+		foreach ( self::collections()->all() as $slug => $definition ) {
+			$map[ $slug ] = [];
+
+			foreach ( Schema::value_fields( $definition ) as $field ) {
+				$map[ $slug ][ $field['key'] ] = '' !== $field['label'] ? $field['label'] : $field['key'];
+			}
+		}
+
+		return $map;
+	}
+
+	/**
 	 * Every field of every collection (the panel cannot know the collection chosen a moment ago), plus the record's
 	 * own parts. A key used by more than one collection is listed once.
 	 *
@@ -63,7 +83,8 @@ class Records_View {
 	public static function field_options( bool $empty = true ): array {
 		$options = $empty ? [ '' => esc_html__( '— None —', 'refraction' ) ] : [];
 		$options += [
-			'_title' => esc_html__( 'Record title (reference)', 'refraction' ),
+			'_reference' => esc_html__( 'Reference number', 'refraction' ),
+			'_title' => esc_html__( 'Record title', 'refraction' ),
 			'_created' => esc_html__( 'Date booked (created)', 'refraction' ),
 			'_modified' => esc_html__( 'Last changed', 'refraction' ),
 			'_status' => esc_html__( 'Status', 'refraction' ),
@@ -147,6 +168,9 @@ class Records_View {
 				return '';
 			case '_title':
 				return (string) $record['title'];
+			case '_reference':
+				// The reference the form gave the record (0.147.0); records made before it had one show nothing.
+				return (string) ( $record['reference'] ?? '' );
 			case '_created':
 			case '_modified':
 				return self::when( (string) $record[ ltrim( $key, '_' ) ] );
@@ -312,7 +336,8 @@ class Records_View {
 
 		switch ( $type ) {
 			case 'reference':
-				$main = self::text( $definition, $record, '' !== $key ? $key : '_title' );
+				// No field chosen: the reference number, or the record title when the form gives no reference.
+				$main = self::text( $definition, $record, '' !== $key ? $key : ( '' !== (string) ( $record['reference'] ?? '' ) ? '_reference' : '_title' ) );
 				$sub = '' !== (string) ( $col['sub'] ?? '' ) ? $sub : self::text( $definition, $record, '_created' );
 
 				return self::stack( $main, $sub, 'rf-rec-ref' );
@@ -348,7 +373,7 @@ class Records_View {
 		$cols = array_values( array_filter( (array) ( $config['cols'] ?? [] ), 'is_array' ) );
 
 		return $cols ? $cols : [
-			[ 't' => 'reference', 'label' => __( 'Reference', 'refraction' ), 'f' => '_title' ],
+			[ 't' => 'reference', 'label' => __( 'Reference', 'refraction' ), 'f' => '' ],
 			[ 't' => 'created', 'label' => __( 'Booked', 'refraction' ) ],
 			[ 't' => 'badge', 'label' => __( 'Status', 'refraction' ), 'f' => '_status' ],
 		];
@@ -357,7 +382,7 @@ class Records_View {
 	/** Query arguments a table may ask for, kept in range. */
 	public static function query_args( array $config, array $raw ): array {
 		$orderby = (string) ( $raw['orderby'] ?? ( $config['ob'] ?? '' ) );
-		$orderby = '_created' === $orderby || '' === $orderby ? 'date' : ( '_status' === $orderby ? 'status' : $orderby );
+		$orderby = '_created' === $orderby || '' === $orderby ? 'date' : ( '_status' === $orderby ? 'status' : ( '_reference' === $orderby ? 'reference' : $orderby ) );
 
 		return [
 			'search' => sanitize_text_field( (string) ( $raw['search'] ?? '' ) ),

@@ -503,6 +503,132 @@ $rfb-widths: (
 		color: #1a7f4b;
 	}
 
+	// After sending (0.147.0): the confirmation, styled by Form Canvas > Style > Message after sending.
+	.rfb-done {
+		display: flex;
+		flex-direction: column;
+		align-items: var(--rfb-done-align, center);
+		gap: 12px;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: var(--rfb-done-max, 560px);
+		margin: 0 auto 16px;
+		padding: 32px 28px;
+		border: 1px solid color-mix(in srgb, var(--rfb-ink) 8%, transparent);
+		border-radius: calc(var(--rfb-radius) + 8px);
+		background: var(--rfb-form-bg, #fff);
+		box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+		color: var(--rfb-ink);
+		font-size: 15px;
+		font-weight: 400;
+		text-align: var(--rfb-done-text-align, center);
+	}
+
+	.rfb-done__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--rfb-done-icon-box, 56px);
+		height: var(--rfb-done-icon-box, 56px);
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--rfb-done-accent, #1a7f4b) 12%, transparent);
+		color: var(--rfb-done-accent, #1a7f4b);
+		font-size: var(--rfb-done-icon, 28px);
+	}
+
+	.rfb-done__heading {
+		margin: 0;
+		font-size: 22px;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+
+	.rfb-done__message {
+		margin: 0;
+		color: var(--rfb-muted);
+		font-size: 15px;
+		line-height: 1.6;
+
+		.rfb-reference {
+			color: var(--rfb-ink);
+			letter-spacing: 0.04em;
+		}
+	}
+
+	.rfb-done__ref {
+		display: flex;
+		flex-direction: column;
+		align-items: var(--rfb-done-align, center);
+		gap: 6px;
+		box-sizing: border-box;
+		width: 100%;
+		margin-top: 4px;
+		padding: 16px 18px;
+		border: 1px dashed color-mix(in srgb, var(--rfb-done-accent, var(--rfb-primary)) 45%, transparent);
+		border-radius: var(--rfb-radius);
+		background: color-mix(in srgb, var(--rfb-done-accent, var(--rfb-primary)) 6%, transparent);
+	}
+
+	.rfb-done__ref-label {
+		color: var(--rfb-muted);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+	}
+
+	.rfb-done__ref-row {
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: var(--rfb-done-align, center);
+		gap: 10px;
+
+		.rfb-reference {
+			color: var(--rfb-ink);
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 24px;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+		}
+	}
+
+	.rfb-done__copy {
+		padding: 6px 12px;
+		border: 1px solid color-mix(in srgb, var(--rfb-ink) 15%, transparent);
+		border-radius: 999px;
+		background: #fff;
+		color: var(--rfb-ink);
+		cursor: pointer;
+		font: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.2;
+
+		&:hover,
+		&:focus-visible {
+			border-color: var(--rfb-done-accent, var(--rfb-primary));
+			outline: 0;
+		}
+
+		&.is-copied {
+			border-color: var(--rfb-done-accent, #1a7f4b);
+			color: var(--rfb-done-accent, #1a7f4b);
+		}
+	}
+
+	.rfb-done__ref-note {
+		color: var(--rfb-muted);
+		font-size: 13px;
+	}
+
+	.rfb-done__again {
+		color: var(--rfb-primary);
+		font-size: 14px;
+		font-weight: 600;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
 	.rfb-alert-error {
 		background: $rfb-danger-light;
 		color: #c01744;
@@ -1281,33 +1407,115 @@ $rfb-widths: (
 			display: block;
 		}
 
+		// Style > Sidebar on phones (0.147.0) sets these variables and the rfb-sm-* classes on the widget.
 		.rfb-steps-side {
-			margin-bottom: 20px;
-			padding: 12px;
+			margin-bottom: var(--rfb-sm-space, 20px);
+			padding: var(--rfb-sm-pad, 12px);
+			border: var(--rfb-sm-border-w, 0px) solid var(--rfb-sm-border, transparent);
+			border-radius: var(--rfb-sm-radius, calc(var(--rfb-radius) + 6px));
+			background: var(--rfb-sm-bg, var(--rfb-side-bg, color-mix(in srgb, var(--rfb-ink) 4%, #fff)));
 
 			.rfb-side-heading {
 				margin: 0 0 10px;
-				font-size: 18px;
+				font-size: var(--rfb-sm-heading, 18px);
 			}
 
 			ol {
 				display: flex;
-				gap: 6px;
+				justify-content: safe var(--rfb-sm-justify, flex-start);
+				gap: var(--rfb-sm-gap, 6px);
 				overflow-x: auto;
+				scroll-snap-type: x proximity;
 			}
 
 			li {
 				flex: none;
 				padding: 0;
+				scroll-snap-align: center;
 
 				&::after {
 					display: none;
 				}
 			}
 
+			.rfb-side-step {
+				padding: var(--rfb-sm-step-pad, 8px);
+			}
+
+			.rfb-side-num {
+				width: var(--rfb-sm-num, 30px);
+				height: var(--rfb-sm-num, 30px);
+			}
+
+			.rfb-side-text strong {
+				font-size: var(--rfb-sm-title, 15px);
+				white-space: nowrap;
+			}
+
 			.rfb-side-text span {
 				display: none;
 			}
+
+			li.is-current .rfb-side-step {
+				background: var(--rfb-sm-current-bg, var(--rfb-form-bg, #fff));
+			}
+		}
+
+		// The scroll bar is hidden unless asked for: the row still scrolls with a swipe.
+		.rfb-steps-side ol {
+			scrollbar-width: none;
+		}
+
+		.rfb-sm-bar-show .rfb-steps-side ol {
+			scrollbar-width: thin;
+		}
+
+		.rfb-sm-wrap .rfb-steps-side ol {
+			flex-wrap: wrap;
+			overflow: visible;
+		}
+
+		.rfb-sm-fit .rfb-steps-side {
+			ol {
+				overflow: visible;
+			}
+
+			li {
+				flex: 1 1 0;
+				min-width: 0;
+			}
+
+			.rfb-side-step {
+				flex-direction: column;
+				align-items: center;
+				gap: 4px;
+				text-align: center;
+			}
+
+			.rfb-side-text {
+				align-items: center;
+				padding-top: 0;
+			}
+
+			.rfb-side-text strong {
+				font-size: var(--rfb-sm-title, 12px);
+				line-height: 1.25;
+				white-space: normal;
+				overflow-wrap: anywhere;
+			}
+		}
+
+		.rfb-sm-numbers .rfb-steps-side li:not(.is-current) .rfb-side-text {
+			display: none;
+		}
+
+		.rfb-sm-head-hide .rfb-steps-side .rfb-side-heading {
+			display: none;
+		}
+
+		.rfb-sm-desc-show:is(.rfb-sm-scroll, .rfb-sm-wrap) .rfb-steps-side .rfb-side-text span {
+			display: block;
+			white-space: nowrap;
 		}
 	}
 

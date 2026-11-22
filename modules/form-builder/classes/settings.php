@@ -36,6 +36,18 @@ class Settings {
 			'confirm_field' => '',
 			'confirm_subject' => '',
 			'confirm_message' => '',
+			// After sending (0.147.0): the confirmation's heading, the reference box and a link to send another.
+			'done_heading' => '',
+			'done_ref_label' => Schema::t( 'Your reference' ),
+			'done_ref_box' => true,
+			'done_note' => '',
+			'done_copy' => true,
+			'done_again' => '',
+			// The emails (0.147.0): designed (HTML) or plain text, with an accent color, a logo and a footer.
+			'email_style' => 'html',
+			'email_accent' => '',
+			'email_logo' => '',
+			'email_footer' => '',
 		] + Money::defaults();
 	}
 
@@ -75,6 +87,16 @@ class Settings {
 			'confirm_field' => Schema::key( $raw['confirm_field'] ?? '' ),
 			'confirm_subject' => Schema::text( $raw['confirm_subject'] ?? '', 160 ),
 			'confirm_message' => Schema::textarea_text( $raw['confirm_message'] ?? '', 4000 ),
+			'done_heading' => Schema::text( $raw['done_heading'] ?? '', 120 ),
+			'done_ref_label' => array_key_exists( 'done_ref_label', $raw ) ? Schema::text( $raw['done_ref_label'], 60 ) : $d['done_ref_label'],
+			'done_ref_box' => ! array_key_exists( 'done_ref_box', $raw ) || ! empty( $raw['done_ref_box'] ),
+			'done_note' => Schema::text( $raw['done_note'] ?? '', 240 ),
+			'done_copy' => ! array_key_exists( 'done_copy', $raw ) || ! empty( $raw['done_copy'] ),
+			'done_again' => Schema::text( $raw['done_again'] ?? '', 60 ),
+			'email_style' => 'plain' === ( $raw['email_style'] ?? '' ) ? 'plain' : 'html',
+			'email_accent' => (string) sanitize_hex_color( (string) ( $raw['email_accent'] ?? '' ) ),
+			'email_logo' => self::url( $raw['email_logo'] ?? '' ),
+			'email_footer' => Schema::textarea_text( $raw['email_footer'] ?? '', 600 ),
 		] + Money::clean( $raw );
 	}
 
