@@ -141,6 +141,7 @@ class Modules_Manager {
 			'timeline',
 			'connector',
 			'connector-steps',
+			'pin-board',
 			'woocommerce',
 			'form-builder',
 			'records-dashboard',
