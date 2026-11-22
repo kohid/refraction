@@ -1,0 +1,176 @@
+// Pin Board (widgets/pin-board.php): notes pinned to a board. The layout writes, per screen size: --rf-pb-display (flex
+// for the zigzag, grid), --rf-pb-cols-css, --rf-pb-note-w, --rf-pb-odd / --rf-pb-even (where the notes stand in the
+// zigzag) and --rf-pb-mt (how far a note rises beside the one before). Each note has its own --rf-pb-r (tilt) and
+// --rf-pb-pin-color. The dashed lines between the notes are drawn by pin-board.js in svg.rf-pb__links.
+
+.rf-pb {
+	--rf-pb-paper: #e4e4e7;
+	--rf-pb-paper-gap: 34px;
+
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
+	padding: 48px 32px;
+	border-radius: 24px;
+	background-color: #f5f5f6;
+}
+
+// ---------------------------------------------------------------- the paper
+.rf-pb-paper-lined .rf-pb {
+	background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rf-pb-paper-gap) - 1px), var(--rf-pb-paper) calc(var(--rf-pb-paper-gap) - 1px), var(--rf-pb-paper) var(--rf-pb-paper-gap));
+}
+
+.rf-pb-paper-grid .rf-pb {
+	background-image:
+		linear-gradient(to bottom, var(--rf-pb-paper) 1px, transparent 1px),
+		linear-gradient(to right, var(--rf-pb-paper) 1px, transparent 1px);
+	background-size: var(--rf-pb-paper-gap) var(--rf-pb-paper-gap);
+}
+
+.rf-pb-paper-dots .rf-pb {
+	background-image: radial-gradient(circle, var(--rf-pb-paper) 1.6px, transparent 2px);
+	background-size: var(--rf-pb-paper-gap) var(--rf-pb-paper-gap);
+}
+
+// ---------------------------------------------------------------- the lines between the notes
+.rf-pb__links {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+	pointer-events: none;
+
+	path {
+		fill: none;
+		stroke: var(--rf-pb-link, #9ca3af);
+		stroke-linecap: round;
+	}
+}
+
+// ---------------------------------------------------------------- the notes
+.rf-pb__notes {
+	position: relative;
+	z-index: 1;
+	display: var(--rf-pb-display, flex);
+	flex-direction: column;
+	grid-template-columns: var(--rf-pb-cols-css, none);
+	gap: var(--rf-pb-gap, 36px);
+}
+
+.rf-pb__note {
+	position: relative;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-self: var(--rf-pb-odd, flex-start);
+	width: var(--rf-pb-note-w, 44%);
+	min-width: 0;
+	max-width: 100%;
+	padding: 34px 14px 16px;
+	border-radius: var(--rf-pb-card-r, 24px);
+	background: var(--rf-pb-card, #fff);
+	box-shadow: 0 18px 40px -8px rgba(17, 24, 39, 0.18);
+	rotate: calc(var(--rf-pb-r, 0deg) * var(--rf-pb-k, 1));
+	transition: rotate 0.35s ease, translate 0.35s ease, box-shadow 0.35s ease;
+
+	> .e-con {
+		flex: 1 1 auto;
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+// Zigzag: left, right, left... each rising beside the one before (not the first).
+.rf-pb__note:nth-child(even) {
+	align-self: var(--rf-pb-even, flex-end);
+}
+
+.rf-pb__note + .rf-pb__note {
+	margin-top: var(--rf-pb-mt, 0px);
+}
+
+.rf-pb__note.rf-pb__note--left {
+	align-self: flex-start;
+}
+
+.rf-pb__note.rf-pb__note--center {
+	align-self: center;
+}
+
+.rf-pb__note.rf-pb__note--right {
+	align-self: flex-end;
+}
+
+// In the grid every note fills its cell.
+.rf-pb__note.rf-pb__note--left,
+.rf-pb__note.rf-pb__note--center,
+.rf-pb__note.rf-pb__note--right {
+	justify-self: stretch;
+}
+
+// The note under the pointer comes to the front.
+.rf-pb__note:hover {
+	z-index: 2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.rf-pb-hover-lift .rf-pb__note:hover,
+	.rf-pb-hover-straighten .rf-pb__note:hover {
+		translate: 0 -6px;
+		box-shadow: 0 26px 50px -10px rgba(17, 24, 39, 0.24);
+	}
+
+	.rf-pb-hover-straighten .rf-pb__note:hover {
+		rotate: 0deg;
+	}
+}
+
+// ---------------------------------------------------------------- pins
+.rf-pb__pin {
+	position: absolute;
+	top: calc(var(--rf-pb-pin, 44px) * -0.38);
+	left: var(--rf-pb-pin-x, 50%);
+	z-index: 3;
+	width: var(--rf-pb-pin, 44px);
+	height: calc(var(--rf-pb-pin, 44px) * 1.08);
+	color: var(--rf-pb-pin-color, #f2643b);
+	translate: -50% 0;
+	pointer-events: none;
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		filter: drop-shadow(0 4px 6px color-mix(in srgb, var(--rf-pb-pin-color, #f2643b) 45%, transparent));
+	}
+}
+
+.rf-pb__pin-shadow {
+	fill: rgba(17, 24, 39, 0.18);
+	filter: blur(2px);
+}
+
+.rf-pb__pin--flat {
+	top: calc(var(--rf-pb-pin, 44px) * -0.1);
+	width: calc(var(--rf-pb-pin, 44px) * 0.5);
+	height: calc(var(--rf-pb-pin, 44px) * 0.5);
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--rf-pb-pin-color, #f2643b) 55%, #fff) 0, var(--rf-pb-pin-color, #f2643b) 55%, color-mix(in srgb, var(--rf-pb-pin-color, #f2643b) 70%, #000) 100%);
+	box-shadow: 0 3px 6px rgba(17, 24, 39, 0.3);
+}
+
+.rf-pb__pin--tape {
+	top: calc(var(--rf-pb-pin, 44px) * -0.3);
+	width: calc(var(--rf-pb-pin, 44px) * 2.2);
+	height: calc(var(--rf-pb-pin, 44px) * 0.6);
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--rf-pb-pin-color, #f2643b) 35%, rgba(255, 255, 255, 0.6));
+	box-shadow: 0 1px 3px rgba(17, 24, 39, 0.12);
+	rotate: -3deg;
+	opacity: 0.9;
+}

@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.142.0
+Stable tag: 0.143.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.143.0 =
+* New widget: Pin Board. Notes pinned to a board (five to start, Add Note for more), each a white card with a pin holding a container to design (its number, a title, a few words), tilted a little, with dashed curves from each note to the next. A zigzag (one note per row, left and right in turn, rising beside the one before) or a grid, per screen size; phones start with wider notes, less overlap and a gentler tilt. Pins: pushpin, flat pin, tape or none, each note its own colour or orange, blue and purple in turn; the board as lined paper, grid paper, dots or plain; notes lift or straighten on hover.
 
 = 0.142.0 =
 * New widget: Connector. Steps in order (four to start, Add Step for more), each a container to design, with an arrow from each step to the next: in a row on wide screens, one under another on phones with the arrows pointing down (per screen size). The arrows follow the steps when they are added, moved or removed. Arrow line: dotted, dashed, solid or none; head: chevron, triangle, double chevron, arrow in a circle, dot, your icon or none; colour, thickness, head size, space from the steps, place along the step, and an animation (the line flowing to the next step, or the head nudging forward).
