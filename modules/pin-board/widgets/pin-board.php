@@ -267,11 +267,11 @@ class Pin_Board extends Widget_Nested_Base {
 			'toggle' => false,
 			'description' => esc_html__( 'Per screen size (the device icon). Free: drag a note by its white frame or its pin, and its width by the handle on its right edge; the place is kept for this screen size. Dragging a note in the zigzag or the grid turns this screen size to Free, the notes staying where they are.', 'refraction' ),
 			'selectors_dictionary' => [
-				'zigzag' => '--rf-pb-display: flex; --rf-pb-cols-css: none; --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: flex-start; --rf-pb-even: flex-end; --rf-pb-mt: calc(-1 * var(--rf-pb-overlap, 48px)); --rf-pb-zigzag: 1; --rf-pb-free: 0; --rf-pb-jself: auto; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-foot-row: auto;',
-				'grid' => '--rf-pb-display: grid; --rf-pb-cols-css: repeat(var(--rf-pb-cols, 3), minmax(0, 1fr)); --rf-pb-note-w: 100%; --rf-pb-odd: stretch; --rf-pb-even: stretch; --rf-pb-mt: 0px; --rf-pb-zigzag: 0; --rf-pb-free: 0; --rf-pb-jself: stretch; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-foot-row: auto;',
+				'zigzag' => '--rf-pb-display: flex; --rf-pb-cols-css: none; --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: flex-start; --rf-pb-even: flex-end; --rf-pb-mt: calc(-1 * var(--rf-pb-overlap, 48px)); --rf-pb-zigzag: 1; --rf-pb-free: 0; --rf-pb-jself: auto; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-note-col: auto; --rf-pb-foot-row: auto;',
+				'grid' => '--rf-pb-display: grid; --rf-pb-cols-css: repeat(var(--rf-pb-cols, 3), minmax(0, 1fr)); --rf-pb-note-w: 100%; --rf-pb-odd: stretch; --rf-pb-even: stretch; --rf-pb-mt: 0px; --rf-pb-zigzag: 0; --rf-pb-free: 0; --rf-pb-jself: stretch; --rf-pb-row-gap: var(--rf-pb-gap, 36px); --rf-pb-note-row: auto; --rf-pb-note-col: auto; --rf-pb-foot-row: auto;',
 				// The notes share one grid cell, each moved by its own margins (--rf-pb-x, --rf-pb-y): the board grows to the
 				// lowest note.
-				'free' => '--rf-pb-display: grid; --rf-pb-cols-css: minmax(0, 1fr); --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: start; --rf-pb-even: start; --rf-pb-mt: 0px; --rf-pb-zigzag: 1; --rf-pb-free: 1; --rf-pb-jself: start; --rf-pb-row-gap: 0px; --rf-pb-note-row: 2; --rf-pb-foot-row: 3;',
+				'free' => '--rf-pb-display: grid; --rf-pb-cols-css: minmax(0, 1fr); --rf-pb-note-w: var(--rf-pb-w, 44%); --rf-pb-odd: start; --rf-pb-even: start; --rf-pb-mt: 0px; --rf-pb-zigzag: 1; --rf-pb-free: 1; --rf-pb-jself: start; --rf-pb-row-gap: 0px; --rf-pb-note-row: 2; --rf-pb-note-col: 1; --rf-pb-foot-row: 3;',
 			],
 			'selectors' => [ $root => '{{VALUE}}' ],
 		] );

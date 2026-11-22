@@ -151,6 +151,7 @@
 // In the Free layout every note is in the same cell (the second row).
 .rf-pb__notes > .rf-pb__note {
 	grid-row: var(--rf-pb-note-row, auto);
+	grid-column: var(--rf-pb-note-col, auto);
 }
 
 // Zigzag: left, right, left... (by its place among the notes), each rising beside the one before.

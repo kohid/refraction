@@ -442,9 +442,11 @@ export default class PinBoard extends Base {
 			this.onSettings = ( model ) => {
 				const changed = Object.keys( model.changed || {} );
 
+				// After the settings command: a row added from inside it would get no container (the nested hooks only
+				// answer an insert run on its own).
 				[ 'heading', 'footer' ].forEach( ( role ) => {
 					if ( changed.includes( 'show_' + role ) ) {
-						this.toggleRole( role, 'yes' === model.get( 'show_' + role ) );
+						window.setTimeout( () => this.toggleRole( role, 'yes' === model.get( 'show_' + role ) ), 0 );
 					}
 				} );
 
@@ -494,6 +496,11 @@ export default class PinBoard extends Base {
 	}
 
 	onPointerDown( event ) {
+		// Edit Mode starts this script again when the widget is drawn again: only one of them takes a drag.
+		if ( event.rfPbTaken ) {
+			return;
+		}
+
 		const note = event.target.closest( '.rf-pb__note' );
 		const list = this.board()?.querySelector( ':scope > .rf-pb__notes' );
 
@@ -508,6 +515,7 @@ export default class PinBoard extends Base {
 			return;
 		}
 
+		event.rfPbTaken = true;
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -582,26 +590,19 @@ export default class PinBoard extends Base {
 		const key = ( name ) => ( 'desktop' === mode ? name : `${ name }_${ mode }` );
 		const round = ( v ) => Math.round( v * 10 ) / 10;
 		const rowOf = ( note ) => rows.find( ( r ) => note.classList.contains( 'refraction-repeater-item-' + r.id ) );
-		const notes = free ? [ dragged ] : this.notes();
-		const history = run.internal( 'document/history/start-log', { type: 'change', title: 'Pin Board' } );
-
-		if ( ! free ) {
-			run.run( 'document/elements/settings', { container: this.widget, settings: { [ key( 'layout' ) ]: 'free' } } );
-		}
-
-		notes.forEach( ( note ) => {
-			const row = rowOf( note );
-
-			if ( ! row ) {
-				return;
-			}
-
+		// Every place measured first: changing the layout or a note moves the others.
+		const places = ( free ? [ dragged ] : this.notes() ).map( ( note ) => {
 			let w = ( note === dragged && width ? width : note.offsetWidth ) / W * 100;
 			w = Math.max( 10, Math.min( 100, w ) );
 			let x = ( note.offsetLeft + ( note === dragged ? dx : 0 ) ) / W * 100;
 			x = Math.max( 0, Math.min( 100 - w, x ) );
 			const y = Math.max( 0, note.offsetTop - top + ( note === dragged ? dy : 0 ) );
 
+			return { row: rowOf( note ), x, y, w };
+		} ).filter( ( place ) => place.row );
+		const history = run.internal( 'document/history/start-log', { type: 'change', title: 'Pin Board' } );
+
+		places.forEach( ( { row, x, y, w } ) => {
 			run.run( 'document/elements/settings', {
 				container: row,
 				settings: {
@@ -611,6 +612,10 @@ export default class PinBoard extends Base {
 				},
 			} );
 		} );
+
+		if ( ! free ) {
+			run.run( 'document/elements/settings', { container: this.widget, settings: { [ key( 'layout' ) ]: 'free' } } );
+		}
 
 		run.internal( 'document/history/end-log', { id: history } );
 		this.schedule();

@@ -119,7 +119,7 @@ const measure = ( p, wid ) => p.evaluate( ( w ) => {
 		const b = path.getPointAtLength( len );
 		return { a: [ Math.round( a.x ), Math.round( a.y ) ], b: [ Math.round( b.x ), Math.round( b.y ) ], dash: path.getAttribute( 'stroke-dasharray' ) };
 	} );
-	return { notes, paths, inner: Math.round( rb.width - parseFloat( cs.paddingLeft ) - parseFloat( cs.paddingRight ) ), padL: Math.round( parseFloat( cs.paddingLeft ) ), bg: cs.backgroundImage.slice( 0, 26 ), overflow: document.documentElement.scrollWidth - window.innerWidth };
+	return { notes, paths, inner: Math.round( rb.width - parseFloat( cs.paddingLeft ) - parseFloat( cs.paddingRight ) ), padL: Math.round( parseFloat( cs.paddingLeft ) ), bg: getComputedStyle( root, '::before' ).backgroundImage.slice( 0, 26 ), overflow: document.documentElement.scrollWidth - window.innerWidth };
 }, wid );
 const deg = ( v ) => parseFloat( v ) || 0;
 const near = ( a, b, tol = 3 ) => Math.abs( a - b ) <= tol;
