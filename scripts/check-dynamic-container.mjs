@@ -158,6 +158,16 @@ async function main() {
 		await ctx.close();
 
 		// ------------------------------------------------------------ the Entrance
+		// Settings > Performance > Animations On The First Screen (on by default, 0.146.0): a list on screen when the page
+		// opens shows at once.
+		( { pg, ctx } = await at( anim.url, 1280 ) );
+		const first = await pg.evaluate( () => {
+			const list = document.querySelector( '.rf-dc' );
+			return { armed: list.classList.contains( 'is-armed' ), parts: list.querySelectorAll( '.rf-dc-a' ).length, opacity: [ ...list.children ].map( ( el ) => getComputedStyle( el ).opacity ).join() };
+		} );
+		check( 'entrance', 'on the first screen (the default) the list shows at once, without its entrance', ! first.armed && 0 === first.parts && '1,1,1,1' === first.opacity, JSON.stringify( first ) );
+		await ctx.close();
+		wp( [ 'option', 'update', 'refraction_first_screen_animations', '0' ] );
 		( { pg, ctx } = await at( anim.url, 1280 ) );
 		const during = await pg.evaluate( () => {
 			const list = document.querySelector( '.rf-dc' );
@@ -175,6 +185,7 @@ async function main() {
 			return { left: list.querySelectorAll( '.rf-dc-a' ).length, armed: list.classList.contains( 'is-armed' ), opacity: [ ...list.children ].map( ( el ) => getComputedStyle( el ).opacity ).join(), transform: getComputedStyle( list.children[ 1 ] ).transform };
 		} );
 		check( 'entrance', 'then everything is in place and the entrance classes are gone (hover animations work as before)', 0 === after.left && ! after.armed && '1,1,1,1' === after.opacity && 'none' === after.transform, JSON.stringify( after ) );
+		wp( [ 'option', 'delete', 'refraction_first_screen_animations' ] );
 		const linked = await pg.evaluate( () => {
 			const el = document.querySelector( '.rf-dc' ).children[ 1 ];
 			const cover = el.querySelector( ':scope > .refraction-container-link' );
