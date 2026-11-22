@@ -140,6 +140,19 @@ export default class DynamicContainer extends Base {
 			return;
 		}
 
+		// Settings > Performance > Animations On The First Screen (0.146.0): on screen when the page opens, the items
+		// show at once (no entrance to wait for).
+		const first = ! this.built;
+		this.built = true;
+
+		if ( first && ! this.isEdit && document.body.classList.contains( 'rf-first-screen' ) ) {
+			const r = list.getBoundingClientRect();
+
+			if ( r.height > 0 && r.top < window.innerHeight && r.bottom > 0 ) {
+				return;
+			}
+		}
+
 		this.parts = [];
 		this.total = this.arm();
 		this.shown = false;

@@ -142,6 +142,7 @@ class Modules_Manager {
 			'connector',
 			'connector-steps',
 			'pin-board',
+			'first-screen',
 			'woocommerce',
 			'form-builder',
 			'records-dashboard',

@@ -415,7 +415,29 @@ export default class PinBoard extends Base {
 		this.shown = new WeakSet();
 		this.shownLines = new Set();
 
-		const targets = this.slots().filter( ( slot ) => slot.classList.contains( 'rf-pb__note' ) || 'yes' === s.reveal_parts );
+		let targets = this.slots().filter( ( slot ) => slot.classList.contains( 'rf-pb__note' ) || 'yes' === s.reveal_parts );
+
+		// Settings > Performance > Animations On The First Screen (0.146.0): what is on screen when the page opens is
+		// shown at once (with the lines between those notes); the rest reveals as it comes into view.
+		if ( ! this.isEdit && ! this.firstDone && document.body.classList.contains( 'rf-first-screen' ) ) {
+			const h = window.innerHeight;
+			const onScreen = ( el ) => {
+				const r = el.getBoundingClientRect();
+
+				return r.height > 0 && r.top < h && r.bottom > 0;
+			};
+			const notes = this.notes();
+
+			targets.filter( onScreen ).forEach( ( slot ) => this.shown.add( slot ) );
+			notes.forEach( ( note, n ) => {
+				if ( n > 0 && this.shown.has( note ) && this.shown.has( notes[ n - 1 ] ) ) {
+					this.shownLines.add( n - 1 );
+				}
+			} );
+			targets = targets.filter( ( slot ) => ! this.shown.has( slot ) );
+		}
+
+		this.firstDone = true;
 		targets.forEach( ( slot ) => slot.classList.add( 'is-pending' ) );
 
 		const stagger = Math.max( 0, Number( s.reveal_stagger ?? 180 ) );
