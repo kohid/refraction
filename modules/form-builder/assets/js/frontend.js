@@ -720,6 +720,9 @@
 	/**
 	 * A required list of tick boxes (or cards that take more than one) needs one ticked (0.147.0): the browser checks a
 	 * single box only, so the first box carries the message while none is ticked, and Next / Send stop on it.
+	 *
+	 * @param {HTMLElement}     set  The fieldset with data-rfb-need-one.
+	 * @param {HTMLFormElement} form Its form (for the texts).
 	 */
 	function initNeedOne( set, form ) {
 		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
@@ -3304,9 +3307,11 @@
 			const number = button.parentElement.querySelector( '.rfb-reference' );
 
 			if ( number ) {
+				const selection = button.ownerDocument.defaultView.getSelection();
+
 				range.selectNodeContents( number );
-				window.getSelection().removeAllRanges();
-				window.getSelection().addRange( range );
+				selection.removeAllRanges();
+				selection.addRange( range );
 			}
 
 			done();

@@ -5,9 +5,11 @@ export default class NestedViewBase extends refraction.modules.elements.views.Ba
 		const { elements_placeholder_selector: customSelector, child_container_placeholder_selector: childContainerSelector } = this.model.config.defaults;
 
 		if ( childView !== undefined && childView._index !== undefined && childContainerSelector ) {
-			// This widget's own slot, not one of a widget of the same kind inside a slide.
-			return containerView.$el.find( `${ childContainerSelector }:nth-child(${ childView._index + 1 })` )
-				.filter( ( i, el ) => el.parentElement.closest( '.refraction-element' ) === containerView.el );
+			// This widget's own slots (not those of a widget of the same kind inside a slide), counted among themselves:
+			// the widget can draw other things beside them, such as the Steps widget's progress bar (0.147.0).
+			return containerView.$el.find( childContainerSelector )
+				.filter( ( i, el ) => el.parentElement.closest( '.refraction-element' ) === containerView.el )
+				.eq( childView._index );
 		}
 
 		if ( customSelector ) {

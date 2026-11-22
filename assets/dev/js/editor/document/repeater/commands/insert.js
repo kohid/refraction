@@ -1,4 +1,5 @@
 import {
+	repeaterSlots,
 	shouldUseAtomicRepeaters,
 	widgetNodes,
 } from 'refraction/modules/nested-elements/assets/js/editor/utils';
@@ -87,8 +88,11 @@ export class Insert extends $e.modules.editor.document.CommandHistoryBase {
 
 					node.innerHTML = html;
 
-					const nodeToInsert = node.querySelector( domConfig.node ),
-						targetNode = targetContainer.children[ options.at ] || null;
+					// Counted among the item slots when the widget draws other things beside them (the Steps widget's
+					// progress bar, 0.147.0), so the new one goes after the slot before it.
+					const slots = repeaterSlots( container, targetContainer ),
+						nodeToInsert = node.querySelector( domConfig.node ),
+						targetNode = slots.list[ options.at ] || ( slots.own && slots.list.length ? slots.list[ slots.list.length - 1 ].nextSibling : null );
 
 					targetContainer.insertBefore( nodeToInsert, targetNode );
 				} else {

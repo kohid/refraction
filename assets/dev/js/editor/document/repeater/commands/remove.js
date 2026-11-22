@@ -1,4 +1,5 @@
 import {
+	repeaterSlots,
 	widgetNodes,
 	shouldUseAtomicRepeaters,
 } from 'refraction/modules/nested-elements/assets/js/editor/utils.js';
@@ -72,7 +73,7 @@ export class Remove extends $e.modules.editor.document.CommandHistoryBase {
 			if ( shouldUseAtomicRepeaters( widgetType ) && ! isRestored ) {
 				const widgetContainer = container.view.$el[ 0 ];
 				widgetNodes( widgetType ).targetContainer.forEach( ( item ) => {
-					widgetContainer.querySelector( item ).children[ index ].remove();
+					repeaterSlots( container, widgetContainer.querySelector( item ) ).list[ index ]?.remove();
 				} );
 			} else {
 				// Trigger render on widget but with the settings of the control.

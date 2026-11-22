@@ -176,7 +176,8 @@ async function main() {
 		check( 'editor', 'adding a step adds a step box and removing it removes the box', built.counts && built.counts[ 0 ] === 3 && built.counts[ 1 ] === 2, JSON.stringify( built.counts ) );
 		await page.waitForTimeout( 3500 );
 		const preview = page.frameLocator( '#refraction-preview-iframe' );
-		check( 'editor', 'the preview shows both steps with their titles and the group and repeater boxes with their fields', ( await preview.locator( '.rfb-step-slot' ).count() ) === 2 && ( await preview.locator( '.rfb-step-title' ).allTextContents() ).join( '|' ) === 'About you|Your booking' && ( await preview.locator( '.rfb-group .rfb-label' ).allTextContents() ).join( '|' ).includes( 'Street' ) && ( await preview.locator( '.rfb-repeater .rfb-label' ).allTextContents() ).includes( 'Guest name' ) );
+		const seen = { slots: await preview.locator( '.rfb-step-slot' ).count(), titles: ( await preview.locator( '.rfb-step-title' ).allTextContents() ).join( '|' ), group: ( await preview.locator( '.rfb-group .rfb-label' ).allTextContents() ).join( '|' ), rep: await preview.locator( '.rfb-repeater .rfb-label' ).allTextContents() };
+		check( 'editor', 'the preview shows both steps with their titles and the group and repeater boxes with their fields', 2 === seen.slots && 'About you|Your booking' === seen.titles && seen.group.includes( 'Street' ) && seen.rep.includes( 'Guest name' ), JSON.stringify( seen ) );
 		await page.screenshot( { path: join( SHOTS, 'editor.png' ) } );
 
 		// Advanced tab: conditional visibility section
