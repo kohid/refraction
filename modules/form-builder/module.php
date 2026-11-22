@@ -98,6 +98,8 @@ class Module extends BaseModule {
 		add_filter( 'refraction/document/config', static function ( $config, $post_id ) {
 			if ( Plugin::$instance->documents->get( (int) $post_id ) instanceof Form_Document ) {
 				$config['rfbFieldKeys'] = (object) (array) get_post_meta( (int) $post_id, Editor_Forms::META_KEYS, true );
+				// The email preview buttons in the form's settings (0.147.0).
+				$config['rfbEmailNonce'] = wp_create_nonce( Classes\Shortcodes::ACTION_EMAIL_PREVIEW );
 			}
 
 			return $config;
@@ -128,6 +130,27 @@ class Module extends BaseModule {
 		$fill = str_replace( [ '"', ']', '[' ], '', $fill );
 
 		return '' === $slug ? '' : do_shortcode( '[refraction_form collection="' . esc_attr( $slug ) . '"' . ( '' !== $fill ? ' fill="' . esc_attr( $fill ) . '"' : '' ) . ']' );
+	}
+
+	/**
+	 * The form's message after sending, with a sample reference (0.147.0), for the Form Canvas widget in the editor: in
+	 * the same wrapper as the form, so the form's own look applies.
+	 */
+	public static function done_preview_html( string $slug ): string {
+		$module = Plugin::$instance->modules_manager->get_modules( 'form-builder' );
+		$definition = $module ? $module->get_collections()->get( Classes\Schema::slug( $slug ) ) : null;
+
+		if ( ! $definition ) {
+			return '';
+		}
+
+		Classes\Shortcodes::enqueue();
+		$style = $definition['style'];
+		$prefix = (string) $definition['settings']['reference_prefix'];
+		$reference = '' !== $prefix ? Classes\Settings::new_reference( $prefix, Classes\Schema::now(), 4821 ) : '';
+
+		return '<div class="rfb-front rfb-form-wrap ' . esc_attr( Classes\Style::classes( $style ) ) . '" style="' . esc_attr( Classes\Style::inline( $style ) ) . '">'
+			. Classes\Shortcodes::done_html( $definition, $reference, '#' ) . '</div>';
 	}
 
 	/** @param \Refraction\Widget_Base $widget The Shortcode widget. */

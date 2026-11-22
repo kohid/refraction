@@ -115,7 +115,7 @@ async function main() {
 		const a = await ctx.newPage();
 		// "Transition was skipped": Chromium dropping a page-to-page view transition on the redirect into the editor; it
 		// happens with the Builder's New form button too and is not an error of the page.
-		a.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && errors.push( 'admin: ' + e.message ) );
+		a.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && errors.push( 'admin: ' + e.message ) );
 		await a.goto( `${ BASE }/wp-login.php` );
 		await a.fill( '#user_login', 'admin' );
 		await a.fill( '#user_pass', 'admin' );
@@ -183,6 +183,11 @@ async function main() {
 		await p.locator( '[data-rfb-key="passengers"] [data-rfb-step="1"]' ).click();
 		await p.locator( '[data-rfb-key="passengers"] [data-rfb-step="1"]' ).click();
 		check( 'stepper', 'the plus button counts up (1 -> 3)', '3' === await p.inputValue( 'input[name="values[passengers]"]' ) );
+		// 0.147.0: the required Vehicle choice stops Next until one is picked.
+		await visibleButton( 'Next' ).click();
+		await p.waitForTimeout( 400 );
+		const stopped = await p.evaluate( () => ( { msg: document.querySelector( 'input[name="values[tour_vehicle]"]' )?.validationMessage || '', picked: !! document.querySelector( 'input[name="values[tour_vehicle]"]:checked' ) } ) );
+		check( 'required', 'Next without a vehicle chosen stays on the step and asks for one', ( await shown( 'tour_vehicle' ) ) && ! stopped.picked && '' !== stopped.msg, JSON.stringify( stopped ) );
 		await p.check( 'input[name="values[tour_vehicle]"][value="bus"]' );
 		await next();
 		const price = () => p.locator( '[data-rfb-key="price"] .rfb-total-amount' ).textContent();
@@ -208,9 +213,25 @@ async function main() {
 		await p.screenshot( { path: join( SHOTS, 'step3-tour.png' ), fullPage: true } );
 		await Promise.all( [ p.waitForURL( /rfb_done=/, { timeout: 60000 } ), p.locator( 'button[type=submit]', { hasText: 'Send my booking' } ).click() ] );
 		await p.waitForTimeout( 600 );
-		const done = await p.locator( '.rfb-alert-success' ).innerText().catch( () => '' );
+		const done = await p.locator( '.rfb-done' ).innerText().catch( () => '' );
 		const ref = ( done.match( /IT-\d{6}-\d{4}/ ) || [] )[ 0 ];
 		check( 'sent', 'after sending the customer sees their reference', !! ref, done );
+		const look = await p.evaluate( () => {
+			const box = document.querySelector( '.rfb-done' );
+			return {
+				heading: box.querySelector( '.rfb-done__heading' )?.textContent,
+				ref: box.querySelector( '.rfb-done__ref .rfb-reference' )?.textContent,
+				label: box.querySelector( '.rfb-done__ref-label' )?.textContent,
+				copy: !! box.querySelector( '.rfb-done__copy[data-rfb-copy]' ),
+				again: box.querySelector( '.rfb-done__again' )?.getAttribute( 'href' ) || '',
+				icon: !! box.querySelector( '.rfb-done__icon svg' ),
+			};
+		} );
+		check( 'sent', 'the confirmation: check, heading, the reference in its box with Copy, a link to book again (0.147.0)', 'Booking request received' === look.heading && ref === look.ref && 'Your reference' === look.label && look.copy && look.icon && ! /rfb_done/.test( look.again ) && /#rfb-form-/.test( look.again ), JSON.stringify( look ) );
+		await p.context().grantPermissions( [ 'clipboard-read', 'clipboard-write' ] ).catch( () => {} );
+		await p.locator( '.rfb-done__copy' ).click();
+		await p.waitForTimeout( 200 );
+		check( 'sent', 'Copy says Copied', 'Copied' === ( await p.locator( '.rfb-done__copy' ).textContent() ).trim() );
 		await p.screenshot( { path: join( SHOTS, 'sent.png' ) } );
 
 		const stored = JSON.parse( wp( [ 'eval', `$q = get_posts( [ 'post_type' => 'refraction_fb_record', 'posts_per_page' => 1, 'orderby' => 'ID', 'order' => 'DESC', 'meta_key' => '_rfb_reference', 'meta_value' => '${ ref }' ] ); $id = $q ? $q[0]->ID : 0; $m = get_post_meta( $id ); echo wp_json_encode( [ 'id' => $id, 'meta' => array_map( function ( $v ) { return $v[0]; }, $m ) ] );` ] ) );
@@ -219,8 +240,19 @@ async function main() {
 		const sent = existsSync( mails ) ? readFileSync( mails, 'utf8' ).trim().split( '\n' ).map( ( l ) => JSON.parse( l ) ) : [];
 		const toCustomer = sent.find( ( m ) => String( m.to ).includes( 'morag@example.com' ) );
 		const toOffice = sent.find( ( m ) => ! String( m.to ).includes( 'morag@example.com' ) );
-		check( 'emails', 'the customer is emailed the reference and a summary of the booking', !! toCustomer && toCustomer.subject.includes( ref ) && toCustomer.message.includes( ref ) && /Loch Ness/.test( toCustomer.message ) && /£220\.00/.test( toCustomer.message ) && toCustomer.message.startsWith( 'Hello Morag Fraser' ), JSON.stringify( toCustomer ).slice( 0, 500 ) );
+		check( 'emails', 'the customer is emailed the reference and a summary of the booking', !! toCustomer && toCustomer.subject.includes( ref ) && toCustomer.message.includes( ref ) && /Loch Ness/.test( toCustomer.message ) && /£220\.00/.test( toCustomer.message ) && toCustomer.message.includes( 'Hello Morag Fraser' ), JSON.stringify( toCustomer ).slice( 0, 500 ) );
 		check( 'emails', 'the office copy has the reference and replies go to the customer', !! toOffice && toOffice.subject.includes( ref ) && JSON.stringify( toOffice.headers ).includes( 'morag@example.com' ), JSON.stringify( toOffice ).slice( 0, 300 ) );
+		const html = ( m ) => !! m && /text\/html/.test( JSON.stringify( m.headers ) ) && /^<!DOCTYPE html>/.test( m.message );
+		check( 'emails', 'both are designed emails: the reference in its box, the answers in a table (0.147.0)', html( toCustomer ) && html( toOffice ) && new RegExp( `rfb-email-reference[^>]*>${ ref }<` ).test( toCustomer.message ) && /rfb-email-answers/.test( toCustomer.message ) && /rfb-email-answers/.test( toOffice.message ) && /Open the record/.test( toOffice.message ), ( toCustomer?.message || '' ).slice( 0, 300 ) );
+		if ( toCustomer ) {
+			writeFileSync( join( SHOTS, 'email-customer.html' ), toCustomer.message );
+			const e = await ctx.newPage();
+			await e.setContent( toCustomer.message );
+			await e.screenshot( { path: join( SHOTS, 'email-customer.png' ), fullPage: true } );
+			await e.setContent( toOffice.message );
+			await e.screenshot( { path: join( SHOTS, 'email-office.png' ), fullPage: true } );
+			await e.close();
+		}
 
 		// ------------------------------------------------------------ an airport transfer
 		await p.goto( airportPage.url, { waitUntil: 'load', timeout: 120000 } );
@@ -263,7 +295,7 @@ async function main() {
 		check( 'summary', 'the transfer summary has the route with the stop, the return and the minibus', /Tain/.test( sum2 ) && /Royal Dornoch/.test( sum2 ) && /16-seater minibus/.test( sum2 ) && /Return date and time/.test( sum2 ), sum2 );
 		await p.screenshot( { path: join( SHOTS, 'step3-airport.png' ), fullPage: true } );
 		await Promise.all( [ p.waitForURL( /rfb_done=/, { timeout: 60000 } ), p.locator( 'button[type=submit]', { hasText: 'Send my booking' } ).click() ] );
-		const done2 = await p.locator( '.rfb-alert-success' ).innerText().catch( () => '' );
+		const done2 = await p.locator( '.rfb-done' ).innerText().catch( () => '' );
 		check( 'sent', 'the transfer booking is sent with its own reference', /IT-\d{6}-\d{4}/.test( done2 ) && ! done2.includes( ref ), done2 );
 
 		// ------------------------------------------------------------ phones

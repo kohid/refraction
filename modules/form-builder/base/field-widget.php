@@ -607,9 +607,28 @@ abstract class Field_Widget extends Widget_Base implements Form_Field {
 				'type' => Controls_Manager::SLIDER,
 				'size_units' => [ 'px', 'em', '%' ],
 				'range' => [ 'px' => [ 'min' => 0, 'max' => 80 ], 'em' => [ 'min' => 0, 'max' => 5 ], '%' => [ 'min' => 0, 'max' => 20 ] ],
-				'selectors' => [ '{{WRAPPER}} .rfb-name-row' => 'column-gap: {{SIZE}}{{UNIT}};' ],
+				'selectors' => [ '{{WRAPPER}} .rfb-name-row' => 'column-gap: {{SIZE}}{{UNIT}}; --rfb-name-gap: {{SIZE}}{{UNIT}};' ],
 				'description' => esc_html__( 'Between all the name boxes side by side (also prefix and middle name).', 'refraction' ),
 			] );
+			// Each box's share of the row, per screen size (0.147.0): 50% + 50% sit side by side (the space between is
+			// taken off), 100% puts a box on its own line. Empty: the boxes share the row as before.
+			$parts = [
+				'first' => esc_html__( 'First name width', 'refraction' ),
+				'last' => esc_html__( 'Last name width', 'refraction' ),
+				'prefix' => esc_html__( 'Prefix width', 'refraction' ),
+				'middle' => esc_html__( 'Middle name width', 'refraction' ),
+			];
+
+			foreach ( $parts as $part => $label ) {
+				$this->add_responsive_control( 'name_w_' . $part, [
+					'label' => $label,
+					'type' => Controls_Manager::SLIDER,
+					'size_units' => [ '%' ],
+					'range' => [ '%' => [ 'min' => 10, 'max' => 100 ] ],
+					'selectors' => [ '{{WRAPPER}} .rfb-name-row > .rfb-name-' . $part => 'flex: 0 1 calc({{SIZE}}% - var(--rfb-name-gap, 12px) * (1 - {{SIZE}} / 100)); max-width: 100%;' ],
+				] );
+			}
+
 			$this->add_responsive_control( 'name_row_gap', [
 				'label' => esc_html__( 'Space when they wrap', 'refraction' ),
 				'type' => Controls_Manager::SLIDER,

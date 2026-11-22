@@ -717,6 +717,28 @@
 		bad.reportValidity();
 	}
 
+	/**
+	 * A required list of tick boxes (or cards that take more than one) needs one ticked (0.147.0): the browser checks a
+	 * single box only, so the first box carries the message while none is ticked, and Next / Send stop on it.
+	 *
+	 * @param {HTMLElement}     set  The fieldset with data-rfb-need-one.
+	 * @param {HTMLFormElement} form Its form (for the texts).
+	 */
+	function initNeedOne( set, form ) {
+		const i18n = form.dataset.rfbI18n ? JSON.parse( form.dataset.rfbI18n ) : {};
+		const boxes = () => Array.from( set.querySelectorAll( 'input[type=checkbox]' ) ).filter( ( box ) => ! box.disabled && ! box.closest( '.rfb-cc-content' ) );
+		const sync = () => {
+			const all = boxes();
+			const none = ! all.some( ( box ) => box.checked );
+
+			all.forEach( ( box, i ) => box.setCustomValidity( none && 0 === i ? ( i18n.pickOne || 'Please choose at least one.' ) : '' ) );
+		};
+
+		set.addEventListener( 'change', sync );
+		form.addEventListener( 'reset', () => window.setTimeout( sync ) );
+		sync();
+	}
+
 	function initAccordion( host ) {
 		const items = Array.from( host.querySelectorAll( ':scope > .rfb-acc-item' ) );
 
@@ -1169,6 +1191,14 @@
 					li.querySelector( 'button' ).disabled = i > reached + 1;
 					li.querySelector( 'button' ).setAttribute( 'aria-current', i === current ? 'step' : 'false' );
 				} );
+
+				// On a phone the steps are a row that can scroll (0.147.0): the current one is brought into it, without
+				// moving the page.
+				const now = ol.children[ current ];
+
+				if ( now && ol.scrollWidth > ol.clientWidth ) {
+					ol.scrollTo( { left: ol.scrollLeft + now.getBoundingClientRect().left - ol.getBoundingClientRect().left - ( ( ol.clientWidth - now.offsetWidth ) / 2 ), behavior: 'smooth' } );
+				}
 			},
 		};
 	}
@@ -3017,6 +3047,7 @@
 		form.querySelectorAll( '[data-rfb-accordion]' ).forEach( initAccordion );
 		form.querySelectorAll( '[data-rfb-tabs]' ).forEach( initTabs );
 		form.querySelectorAll( '.rfb-cards' ).forEach( initCards );
+		form.querySelectorAll( '[data-rfb-need-one]' ).forEach( ( set ) => initNeedOne( set, form ) );
 		form.querySelectorAll( '[data-rfb-count]' ).forEach( initStepper );
 		enhance( form );
 		form.querySelectorAll( 'input[data-rfb-closed], input[data-rfb-hours]' ).forEach( ( input ) => initWhen( input, form ) );
@@ -3249,6 +3280,43 @@
 	} else {
 		window.addEventListener( 'refraction/frontend/init', editorHooks );
 	}
+
+	// After sending (0.147.0): Copy puts the reference on the clipboard and says so for a moment.
+	document.addEventListener( 'click', ( event ) => {
+		const button = event.target.closest && event.target.closest( '[data-rfb-copy]' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		const done = () => {
+			const text = button.textContent;
+
+			button.textContent = button.dataset.rfbCopied || 'Copied';
+			button.classList.add( 'is-copied' );
+			window.setTimeout( () => {
+				button.textContent = text;
+				button.classList.remove( 'is-copied' );
+			}, 1800 );
+		};
+
+		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+			navigator.clipboard.writeText( button.dataset.rfbCopy ).then( done, done );
+		} else {
+			const range = document.createRange();
+			const number = button.parentElement.querySelector( '.rfb-reference' );
+
+			if ( number ) {
+				const selection = button.ownerDocument.defaultView.getSelection();
+
+				range.selectNodeContents( number );
+				selection.removeAllRanges();
+				selection.addRange( range );
+			}
+
+			done();
+		}
+	} );
 
 	// Optimisation plugins can load this script after the page is ready (deferred or delayed scripts).
 	if ( 'loading' === document.readyState ) {

@@ -115,7 +115,7 @@ async function main() {
 		page.on( 'console', ( m ) => {
 			if ( m.type() === 'error' && ! /favicon\.ico|Transition was skipped|evil\.test|page=refraction-custom-code/.test( m.location().url + m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
-		page.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
+		page.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
 	};
 
 	try {

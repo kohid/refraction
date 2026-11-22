@@ -4,7 +4,7 @@ Tags: page builder, drag-and-drop, editor, landing page
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.146.0
+Stable tag: 0.147.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,15 @@ Embeds you add yourself. These are not requested unless you place the widget on 
 Other things you may notice that are not Refraction's own services: the editor loads Google Fonts when you pick a Google font, and some documentation "learn more" links point to third-party websites. They are only requested when you use them.
 
 == Changelog ==
+
+= 0.147.0 =
+* Form Builder: a required Choice (a list of options, with or without pictures) now stops Next and Send until one is picked; a required list of tick boxes, or choice cards that take more than one, needs one ticked.
+* Name field: Style > Name parts has a width per box (first, last, prefix, middle) per screen size: 50% each sits side by side, 100% puts a box on its own line.
+* Steps: Style > Sidebar on phones (on top) styles the steps where they move above the form on a phone: one row that scrolls (scroll bar hidden by default, the current step brought into view), wrap onto more lines, share the width, or numbers with the current title; alignment, background, current step, border, corners, padding, spacing, number, title and heading sizes, heading and descriptions on or off.
+* After sending: the form's settings have a new "After sending" section (heading, reference label, a note, a Copy button, a link to send another). The confirmation shows a check, the heading, the message and the reference in its own box; Form Canvas can show it in the editor ("Show the message after sending") and styles it under Style > Message after sending.
+* Emails: the visitor's copy and the office notice are designed HTML emails by default (logo or site name, heading, the reference in a box, the answers in a table, a button to the record, a footer), with an accent color; "Plain text" keeps the old emails. "Preview the visitor's email" and "Preview the office email" in the form's settings show them with the settings in the panel.
+* Editor: adding a step to the Steps widget put its box one place too early in the preview (the progress bar was counted as a step), so after adding and removing a step the preview could show the wrong title; steps, slides and other nested items are now counted among their own boxes.
+* Records Table and Record Details: a "Reference number" field; the reference column shows the reference (the record title when the form gives none) and typing a reference in the search finds its record. Once a collection is chosen, every field setting lists only that collection's fields, by their own names.
 
 = 0.146.0 =
 * Faster first screen: elements with an entrance animation were printed hidden until the page's scripts had loaded, so a hero heading or picture with an animation appeared late (what speed tests measure as Largest Contentful Paint). New Settings > Performance > Animations On The First Screen, on by default: what is on screen when the page opens shows at once, without its animation; everything below still animates as it comes into view. Pin Board reveals and Dynamic Container entrances follow it. Every visitor (and every speed test) gets the same page; without JavaScript nothing stays hidden.

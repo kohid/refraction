@@ -69,3 +69,20 @@ export function sortViewsByModels( container ) {
 
 	return updatedViews;
 }
+
+/**
+ * The item slots of a widget's repeater in its target container (0.147.0): those matching the widget's
+ * child_container_placeholder_selector when some do, else every child of the target. The widget can draw other things
+ * beside its slots (the Steps widget's progress bar): an item's place counts only the slots.
+ *
+ * @param {Container}   container The widget's container.
+ * @param {HTMLElement} target    The target container element.
+ * @return {{list: HTMLElement[], own: boolean}} The slots, and whether they were told apart from other children.
+ */
+export function repeaterSlots( container, target ) {
+	const children = target ? Array.from( target.children ) : [];
+	const selector = container?.view?.model?.config?.defaults?.child_container_placeholder_selector;
+	const slots = selector ? children.filter( ( child ) => child.matches( selector ) ) : [];
+
+	return slots.length ? { list: slots, own: true } : { list: children, own: false };
+}

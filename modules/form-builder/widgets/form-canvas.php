@@ -141,6 +141,14 @@ class Form_Canvas extends Widget_Base {
 			'description' => esc_html__( 'The form opens with these answers given; visitors can still change them. A link can do the same: ?fill_service=airport.', 'refraction' ),
 		] );
 
+		// After sending (0.147.0): the editor shows the confirmation in place of the form, with a sample reference.
+		$this->add_control( 'done_preview', [
+			'label' => esc_html__( 'Show the message after sending', 'refraction' ),
+			'type' => Controls_Manager::SWITCHER,
+			'separator' => 'before',
+			'description' => esc_html__( 'Editor only: shows what visitors see once they have sent the form, with a sample reference, so you can style it (Style > Message after sending). Its texts are in the form\'s settings, under "After sending".', 'refraction' ),
+		] );
+
 		$this->end_controls_section();
 
 		$this->start_controls_section( 'section_style_canvas', [
@@ -285,6 +293,102 @@ class Form_Canvas extends Widget_Base {
 		] );
 
 		$this->end_controls_section();
+		$this->register_done_style();
+	}
+
+	/** Style > Message after sending (0.147.0). */
+	private function register_done_style(): void {
+		$this->start_controls_section( 'section_style_done', [ 'label' => esc_html__( 'Message after sending', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		$this->add_control( 'done_style_hint', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'Turn on "Show the message after sending" (Content tab) to see it here.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+			'condition' => [ 'done_preview!' => 'yes' ],
+		] );
+		$done = '{{WRAPPER}} .rfb-done';
+		$this->add_responsive_control( 'done_align', [
+			'label' => esc_html__( 'Alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'flex-start' => [ 'title' => esc_html__( 'Left', 'refraction' ), 'icon' => 'eicon-text-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'eicon-text-align-center' ],
+			],
+			'selectors_dictionary' => [ 'flex-start' => '--rfb-done-align: flex-start; --rfb-done-text-align: left;', 'center' => '--rfb-done-align: center; --rfb-done-text-align: center;' ],
+			'selectors' => [ $done => '{{VALUE}}' ],
+		] );
+		$this->add_responsive_control( 'done_width', [
+			'label' => esc_html__( 'Max width', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range' => [ 'px' => [ 'min' => 240, 'max' => 1200 ], '%' => [ 'min' => 20, 'max' => 100 ] ],
+			'selectors' => [ $done => '--rfb-done-max: {{SIZE}}{{UNIT}};' ],
+		] );
+		$this->add_control( 'done_accent', [ 'label' => esc_html__( 'Accent (check and reference box)', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $done => '--rfb-done-accent: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Background::get_type(), [ 'name' => 'done_bg', 'types' => [ 'classic', 'gradient' ], 'selector' => $done ] );
+		$this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'done_border', 'selector' => $done ] );
+		$this->add_responsive_control( 'done_radius', [
+			'label' => esc_html__( 'Corner radius', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+			'selectors' => [ $done => 'border-radius: {{SIZE}}px;' ],
+		] );
+		$this->add_responsive_control( 'done_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'selectors' => [ $done => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), [ 'name' => 'done_shadow', 'selector' => $done ] );
+
+		$this->add_control( 'done_icon_heading', [ 'label' => esc_html__( 'Check', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'done_icon_show', [
+			'label' => esc_html__( 'Check mark', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'yes',
+			'options' => [ 'yes' => esc_html__( 'Show', 'refraction' ), 'no' => esc_html__( 'Hide', 'refraction' ) ],
+			'selectors_dictionary' => [ 'no' => 'display: none;', 'yes' => 'display: inline-flex;' ],
+			'selectors' => [ '{{WRAPPER}} .rfb-done__icon' => '{{VALUE}}' ],
+		] );
+		$this->add_responsive_control( 'done_icon_size', [
+			'label' => esc_html__( 'Size', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 12, 'max' => 80 ] ],
+			'selectors' => [ $done => '--rfb-done-icon: {{SIZE}}px; --rfb-done-icon-box: calc({{SIZE}}px * 2);' ],
+			'condition' => [ 'done_icon_show' => 'yes' ],
+		] );
+		$this->add_control( 'done_icon_bg', [ 'label' => esc_html__( 'Circle color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__icon' => 'background: {{VALUE}};' ], 'condition' => [ 'done_icon_show' => 'yes' ] ] );
+
+		$this->add_control( 'done_text_heading', [ 'label' => esc_html__( 'Heading and message', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'done_heading_color', [ 'label' => esc_html__( 'Heading color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__heading' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'done_heading_typography', 'label' => esc_html__( 'Heading typography', 'refraction' ), 'selector' => '{{WRAPPER}} .rfb-done__heading' ] );
+		$this->add_control( 'done_message_color', [ 'label' => esc_html__( 'Message color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__message' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'done_message_typography', 'label' => esc_html__( 'Message typography', 'refraction' ), 'selector' => '{{WRAPPER}} .rfb-done__message' ] );
+
+		$this->add_control( 'done_ref_heading', [ 'label' => esc_html__( 'Reference box', 'refraction' ), 'type' => Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$ref = '{{WRAPPER}} .rfb-done__ref';
+		$this->add_control( 'done_ref_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ $ref => 'background: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Border::get_type(), [ 'name' => 'done_ref_border', 'selector' => $ref ] );
+		$this->add_responsive_control( 'done_ref_radius', [
+			'label' => esc_html__( 'Corner radius', 'refraction' ),
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'selectors' => [ $ref => 'border-radius: {{SIZE}}px;' ],
+		] );
+		$this->add_responsive_control( 'done_ref_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px' ],
+			'selectors' => [ $ref => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_control( 'done_ref_label_color', [ 'label' => esc_html__( 'Label color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__ref-label' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'done_ref_label_typography', 'label' => esc_html__( 'Label typography', 'refraction' ), 'selector' => '{{WRAPPER}} .rfb-done__ref-label' ] );
+		$this->add_control( 'done_ref_color', [ 'label' => esc_html__( 'Number color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done .rfb-reference' => 'color: {{VALUE}};' ] ] );
+		$this->add_group_control( Group_Control_Typography::get_type(), [ 'name' => 'done_ref_typography', 'label' => esc_html__( 'Number typography', 'refraction' ), 'selector' => '{{WRAPPER}} .rfb-done__ref-row .rfb-reference' ] );
+		$this->add_control( 'done_copy_color', [ 'label' => esc_html__( 'Copy button text', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__copy' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'done_copy_bg', [ 'label' => esc_html__( 'Copy button background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__copy' => 'background: {{VALUE}};' ] ] );
+		$this->add_control( 'done_note_color', [ 'label' => esc_html__( 'Note color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .rfb-done__ref-note' => 'color: {{VALUE}};' ] ] );
+		$this->add_control( 'done_again_color', [ 'label' => esc_html__( '"Send another" link color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} .rfb-done__again' => 'color: {{VALUE}};' ] ] );
+		$this->end_controls_section();
 	}
 
 	protected function render() {
@@ -316,7 +420,11 @@ class Form_Canvas extends Widget_Base {
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-			<?php echo Module::form_html( $slug, self::fill_text( (array) ( $settings['fill'] ?? [] ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The form shortcode escapes its output. ?>
+			<?php if ( $editing && 'yes' === ( $settings['done_preview'] ?? '' ) ) : ?>
+				<?php echo Module::done_preview_html( $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped where it is built. ?>
+			<?php else : ?>
+				<?php echo Module::form_html( $slug, self::fill_text( (array) ( $settings['fill'] ?? [] ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The form shortcode escapes its output. ?>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

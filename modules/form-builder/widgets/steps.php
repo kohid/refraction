@@ -315,7 +315,7 @@ class Steps extends Widget_Nested_Base {
 		$this->end_controls_section();
 
 		// Progress, sidebar and accordion colors (0.98.0), as variables the script's markup reads.
-		$this->start_controls_section( 'section_style_progress', [ 'label' => esc_html__( 'Progress, sidebar and accordion', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
+		$this->start_controls_section( 'section_style_progress', [ 'label' => esc_html__( 'Progress and sidebar', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE ] );
 		$var = static fn( string $name ): array => [ '{{WRAPPER}}' => $name . ': {{VALUE}};' ];
 		$this->add_control( 'pg_active', [ 'label' => esc_html__( 'Done and current color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-pg-active' ) ] );
 		$this->add_control( 'pg_track', [ 'label' => esc_html__( 'Still to do color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-pg-track' ) ] );
@@ -329,7 +329,95 @@ class Steps extends Widget_Nested_Base {
 			'selectors' => [ '{{WRAPPER}}' => '--rfb-side-w: {{SIZE}}{{UNIT}};' ],
 			'condition' => [ 'step_layout' => 'sidebar' ],
 		] );
-		$this->add_control( 'acc_done', [ 'label' => esc_html__( 'Completed color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => $var( '--rfb-acc-done' ), 'condition' => [ 'step_layout' => 'accordion' ] ] );
+		$this->end_controls_section();
+
+		// The sidebar on a phone, where it moves above the step as a row (0.147.0). Values go to variables and classes
+		// the phone layout reads, so they only change the phone view.
+		$side = [ 'step_layout' => 'sidebar' ];
+		$this->start_controls_section( 'section_style_side_phone', [ 'label' => esc_html__( 'Sidebar on phones (on top)', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => $side ] );
+		$this->add_control( 'side_m_note', [
+			'type' => Controls_Manager::RAW_HTML,
+			'raw' => esc_html__( 'On screens up to 767px wide the sidebar moves above the step. These settings change only that view: switch the editor to the phone view to see them.', 'refraction' ),
+			'content_classes' => 'refraction-descriptor',
+		] );
+		$this->add_control( 'side_m_layout', [
+			'label' => esc_html__( 'Steps', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'scroll',
+			'options' => [
+				'scroll' => esc_html__( 'One row that scrolls', 'refraction' ),
+				'wrap' => esc_html__( 'Wrap onto more lines', 'refraction' ),
+				'fit' => esc_html__( 'Share the width (title under the number)', 'refraction' ),
+				'numbers' => esc_html__( 'Numbers, with the current title', 'refraction' ),
+			],
+			'prefix_class' => 'rfb-sm-',
+		] );
+		$this->add_control( 'side_m_bar', [
+			'label' => esc_html__( 'Scroll bar', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'hide',
+			'options' => [ 'hide' => esc_html__( 'Hidden (swipe to scroll)', 'refraction' ), 'show' => esc_html__( 'Shown', 'refraction' ) ],
+			'prefix_class' => 'rfb-sm-bar-',
+			'condition' => [ 'side_m_layout' => 'scroll' ],
+		] );
+		$this->add_control( 'side_m_align', [
+			'label' => esc_html__( 'Alignment', 'refraction' ),
+			'type' => Controls_Manager::CHOOSE,
+			'options' => [
+				'flex-start' => [ 'title' => esc_html__( 'Start', 'refraction' ), 'icon' => 'eicon-text-align-left' ],
+				'center' => [ 'title' => esc_html__( 'Center', 'refraction' ), 'icon' => 'eicon-text-align-center' ],
+				'flex-end' => [ 'title' => esc_html__( 'End', 'refraction' ), 'icon' => 'eicon-text-align-right' ],
+			],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-sm-justify: {{VALUE}};' ],
+			'condition' => [ 'side_m_layout!' => 'fit' ],
+		] );
+		$this->add_control( 'side_m_heading', [
+			'label' => esc_html__( 'Heading', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'show',
+			'options' => [ 'show' => esc_html__( 'Show', 'refraction' ), 'hide' => esc_html__( 'Hide', 'refraction' ) ],
+			'prefix_class' => 'rfb-sm-head-',
+		] );
+		$this->add_control( 'side_m_desc', [
+			'label' => esc_html__( 'Step descriptions', 'refraction' ),
+			'type' => Controls_Manager::SELECT,
+			'default' => 'hide',
+			'options' => [ 'show' => esc_html__( 'Show', 'refraction' ), 'hide' => esc_html__( 'Hide', 'refraction' ) ],
+			'prefix_class' => 'rfb-sm-desc-',
+			'condition' => [ 'side_m_layout' => [ 'scroll', 'wrap' ] ],
+		] );
+		$this->add_control( 'side_m_bg', [ 'label' => esc_html__( 'Background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => $var( '--rfb-sm-bg' ) ] );
+		$this->add_control( 'side_m_current_bg', [ 'label' => esc_html__( 'Current step background', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-sm-current-bg' ) ] );
+		$this->add_control( 'side_m_border', [ 'label' => esc_html__( 'Border color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-sm-border' ) ] );
+		$px = static fn( string $name, string $label, int $max, array $extra = [] ): array => [
+			'label' => $label,
+			'type' => Controls_Manager::SLIDER,
+			'range' => [ 'px' => [ 'min' => 0, 'max' => $max ] ],
+			'selectors' => [ '{{WRAPPER}}' => $name . ': {{SIZE}}px;' ],
+		] + $extra;
+		$this->add_control( 'side_m_border_width', $px( '--rfb-sm-border-w', esc_html__( 'Border width', 'refraction' ), 8 ) );
+		$this->add_control( 'side_m_radius', $px( '--rfb-sm-radius', esc_html__( 'Corner radius', 'refraction' ), 40 ) );
+		$this->add_control( 'side_m_padding', [
+			'label' => esc_html__( 'Padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px' ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-sm-pad: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_control( 'side_m_space', $px( '--rfb-sm-space', esc_html__( 'Space below', 'refraction' ), 80 ) );
+		$this->add_control( 'side_m_gap', $px( '--rfb-sm-gap', esc_html__( 'Space between steps', 'refraction' ), 40, [ 'separator' => 'before' ] ) );
+		$this->add_control( 'side_m_step_padding', [
+			'label' => esc_html__( 'Step padding', 'refraction' ),
+			'type' => Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px' ],
+			'selectors' => [ '{{WRAPPER}}' => '--rfb-sm-step-pad: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_control( 'side_m_num', $px( '--rfb-sm-num', esc_html__( 'Number size', 'refraction' ), 60 ) );
+		$this->add_control( 'side_m_title', $px( '--rfb-sm-title', esc_html__( 'Title size', 'refraction' ), 30 ) );
+		$this->add_control( 'side_m_heading_size', $px( '--rfb-sm-heading', esc_html__( 'Heading size', 'refraction' ), 40, [ 'condition' => [ 'side_m_heading' => 'show' ] ] ) );
+		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_style_accordion', [ 'label' => esc_html__( 'Accordion', 'refraction' ), 'tab' => Controls_Manager::TAB_STYLE, 'condition' => [ 'step_layout' => 'accordion' ] ] );
+		$this->add_control( 'acc_done', [ 'label' => esc_html__( 'Completed color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-acc-done' ), 'condition' => [ 'step_layout' => 'accordion' ] ] );
 		$this->add_control( 'acc_now', [ 'label' => esc_html__( 'In progress color', 'refraction' ), 'type' => Controls_Manager::COLOR, 'selectors' => $var( '--rfb-acc-now' ), 'condition' => [ 'step_layout' => 'accordion' ] ] );
 		$this->end_controls_section();
 

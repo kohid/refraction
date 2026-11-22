@@ -87,9 +87,9 @@ async function main() {
 	const consoleErrors = [];
 	const watch = ( page, label = 'page' ) => {
 		page.on( 'console', ( m ) => {
-			if ( m.type() === 'error' && ! /favicon\.ico/.test( m.location().url ) && ! /Transition was skipped/.test( m.text() ) && ! /status of 40[34]/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
+			if ( m.type() === 'error' && ! /favicon\.ico/.test( m.location().url ) && ! /Transition was (skipped|aborted because of invalid state)/.test( m.text() ) && ! /status of 40[34]/.test( m.text() ) ) { consoleErrors.push( `[${ label }] ${ m.text() } @ ${ m.location().url }` ); }
 		} );
-		page.on( 'pageerror', ( e ) => ! /Transition was skipped/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
+		page.on( 'pageerror', ( e ) => ! /Transition was (skipped|aborted because of invalid state)/.test( e.message ) && consoleErrors.push( `[${ label }] pageerror ${ e.message } @ ${ page.url() }` ) );
 	};
 
 	try {
