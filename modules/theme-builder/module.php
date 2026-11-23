@@ -109,6 +109,7 @@ class Module extends BaseModule {
 		add_action( 'refraction/document/after_save', [ $this, 'store_saved_conditions' ], 10, 2 );
 		add_filter( 'template_include', [ $this, 'use_canvas_for_template_preview' ], 20 );
 		add_action( 'before_delete_post', [ $this, 'forget_deleted_template' ] );
+		add_action( 'added_post_meta', [ $this, 'default_conditions_for_new_template' ], 10, 4 );
 		add_action( 'refraction/editor/before_enqueue_scripts', [ $this, 'enqueue_editor_assets' ] );
 		add_action( 'refraction/editor-one/menu/register', [ $this, 'register_menu' ] );
 
@@ -215,6 +216,45 @@ class Module extends BaseModule {
 		$canvas = $page_templates ? $page_templates->get_template_path( PageTemplatesModule::TEMPLATE_CANVAS ) : '';
 
 		return $canvas ? $canvas : $template;
+	}
+
+	/**
+	 * A new Error 404 or Search Results template is used at once (0.147.0): it starts with "Entire site", which for
+	 * these types means every 404 page or every search results page (Location_Scope keeps them there). Other types
+	 * wait for their conditions, as a header on every page is a choice to make.
+	 *
+	 * @param int    $meta_id
+	 * @param int    $post_id
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function default_conditions_for_new_template( $meta_id, $post_id, $key, $value ): void {
+		if ( \Refraction\Core\Base\Document::TYPE_META_KEY !== $key ) {
+			return;
+		}
+
+		if ( ! in_array( $value, [ Error_404::get_type(), Search_Results::get_type() ], true ) || Source_Local::CPT !== get_post_type( (int) $post_id ) || $this->get_store()->get_rules( (int) $post_id ) ) {
+			return;
+		}
+
+		$this->save_template_rules( (int) $post_id, (string) $value, [ 'include/general' ] );
+	}
+
+	/**
+	 * Stores a template's display conditions from outside the editor (the Theme Builder list, a new template's
+	 * default) (0.147.0): in the rules store, and in the copy the editor's page settings read, so the editor shows them
+	 * and its next save keeps them.
+	 *
+	 * @return string[] The rules stored.
+	 */
+	public function save_template_rules( int $post_id, string $location, array $rules ): array {
+		$rules = $this->get_store()->save_rules( $post_id, $location, $rules );
+		$page = get_post_meta( $post_id, \Refraction\Core\Base\Document::PAGE_META_KEY, true );
+		$page = is_array( $page ) ? $page : [];
+		$page[ Theme_Document::CONDITIONS_SETTING ] = $rules;
+		update_post_meta( $post_id, \Refraction\Core\Base\Document::PAGE_META_KEY, wp_slash( $page ) );
+
+		return $rules;
 	}
 
 	public function forget_deleted_template( $post_id ): void {

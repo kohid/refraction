@@ -66,6 +66,7 @@ export const BASE_ENTRIES = {
 	'floating-elements-modal': 'assets/dev/js/admin/floating-elements/new-floating-elements.js',
 	'assets-manager': 'modules/assets-manager/assets/js/assets-manager.js',
 	'theme-builder-editor': 'modules/theme-builder/assets/js/index.js',
+	'theme-builder-admin': 'modules/theme-builder/assets/js/admin.js',
 	'woocommerce-frontend': 'modules/woocommerce/assets/js/woocommerce-frontend.js',
 	'loop-builder-editor': 'modules/loop-builder/assets/js/editor.js',
 	'loop-builder-frontend': 'modules/loop-builder/assets/js/frontend.js',

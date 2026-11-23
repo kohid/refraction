@@ -49,6 +49,12 @@ Code: `Rule`, `Conditions\*` (one class per rule family, `Conditions_Manager::re
 (matching, readable text), `Resolver` (picks the winner), `Environment` / `Wp_Environment` (the request).
 Results per request are cached by `Locations_Manager`.
 
+### From the list (0.147.0)
+
+Each row of Refraction > Theme Builder has **Set where it appears** (no Include rule yet) or **Edit conditions**: the editor's picker (`assets/js/conditions-editor.js`, shared with the Display Conditions control) in a dialog (`assets/js/admin.js`). Save posts to `wp_ajax_refraction_theme_builder_save_conditions` (administrators, nonce), which stores the rules with `Module::save_template_rules()` (the rules store and the `_refraction_page_settings` copy the editor reads) and returns the row's new cell. `Theme_Document` also reads its conditions from the store when it is built, so the editor never shows an older copy.
+
+A new **Error 404** or **Search Results** template starts with `include/general` (`Module::default_conditions_for_new_template()`, on the template type meta being added): for these types that means every 404 page or every search results page. Headers, footers, single and archive templates still start with no rule.
+
 ## Single, Archive, Search Results and Error 404
 
 These templates replace the main content of a page; the site header and footer stay around them.
@@ -144,6 +150,8 @@ Filters: `refraction/theme_builder/is_active_request`, `refraction/theme_builder
   per-URL, but visitor rules are per user, so pages with visitor rules should not be page-cached across roles).
 
 ## Tests
+
+- `node scripts/check-theme-builder-list.mjs --site DIR --port N`: the new 404 default, the list's conditions dialog (cancel, entire site except a page, save, row, site, editor).
 
 * `php scripts/test-theme-builder-engine.php` pure logic (parsing, specificity, exclude wins, tie-breaks, text); no
   WordPress needed.
