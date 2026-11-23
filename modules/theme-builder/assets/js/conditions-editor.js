@@ -50,7 +50,7 @@ function targetKind( target ) {
  * @return {{setValue: Function, getValue: Function}} The picker.
  */
 export function createConditionsEditor( { mount, config, value = [], onChange = () => {} } ) {
-	// Names compared as text: "404 page" is named 404, which can arrive as a number (0.148.0).
+	// Names compared as text: "404 page" is named 404, which can arrive as a number (0.149.0).
 	const findGroup = ( name ) => config.conditions.find( ( group ) => String( group.name ) === String( name ) );
 
 	// Split a rule string into an editable row. Unknown shapes are left out.

@@ -118,7 +118,7 @@ async function main() {
 		const row404 = await admin.locator( '.column-conditions' ).nth( 1 ).innerText();
 		check( 'list', 'the 404 tab shows the template on "Entire site" with "Edit conditions"', /Entire site/.test( row404 ) && /Edit conditions/.test( row404 ) && ! /Not displayed/.test( row404 ), row404 );
 
-		// 0.148.0: "404 page" can be picked (its name, 404, used to reach the picker as a number and never matched).
+		// 0.149.0: "404 page" can be picked (its name, 404, used to reach the picker as a number and never matched).
 		await admin.locator( 'button.rtb-cond-edit' ).first().click();
 		await admin.waitForSelector( 'dialog.rtb-dialog[open] .rtb-cond' );
 		await admin.locator( 'dialog.rtb-dialog .rtb-cond__row select' ).first().selectOption( '404' );
