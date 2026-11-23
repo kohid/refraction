@@ -47,6 +47,7 @@ Other things you may notice that are not Refraction's own services: the editor l
 == Changelog ==
 
 = 0.148.0 =
+* Display conditions: "404 page" could not be chosen (in the editor, the Theme Builder list and Custom Code): the choice went back to "Entire site". It now stays and is saved.
 * Theme Builder: a new Error 404 or Search Results template starts on "Entire site" (every 404 page, every search results page), so it shows without a further step; before, it stayed "Not displayed anywhere" until a condition was added in the editor.
 * Theme Builder list: every template has "Set where it appears" / "Edit conditions", which opens the same display conditions as the editor (include, exclude, narrow down, search a page, term or author) in a window; Save shows the new conditions in the row and the site uses them at once. Headers, footers, single, archive, search results, 404, popups and shop templates alike.
 * MCP server: a newer propose_to_page for a page replaces this account's earlier proposals for it that were not inserted, and decline_request withdraws such a proposal, so the page's Ask Claude panel never offers an outdated version.

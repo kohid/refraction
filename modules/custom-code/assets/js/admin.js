@@ -66,7 +66,7 @@ function initCodeEditor() {
 
 /* ------------------------------------------------------------------ conditions */
 
-const findGroup = ( name ) => rulesConfig.conditions.find( ( group ) => group.name === name );
+const findGroup = ( name ) => rulesConfig.conditions.find( ( group ) => String( group.name ) === String( name ) );
 
 function parseRule( rule ) {
 	const parts = String( rule ).split( '/' );
@@ -225,7 +225,7 @@ function initConditions() {
 			row.target = null;
 			commit();
 			draw();
-		} }, rulesConfig.conditions.map( ( item ) => h( 'option', { value: item.name, text: item.label, selected: item.name === row.name } ) ) ) );
+		} }, rulesConfig.conditions.map( ( item ) => h( 'option', { value: item.name, text: item.label, selected: String( item.name ) === String( row.name ) } ) ) ) );
 
 		if ( group && group.subs.length > 1 ) {
 			card.append( h( 'select', { 'aria-label': __( 'Narrow down', 'refraction' ), onchange: ( e ) => {
