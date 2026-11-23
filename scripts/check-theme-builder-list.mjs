@@ -118,6 +118,22 @@ async function main() {
 		const row404 = await admin.locator( '.column-conditions' ).nth( 1 ).innerText();
 		check( 'list', 'the 404 tab shows the template on "Entire site" with "Edit conditions"', /Entire site/.test( row404 ) && /Edit conditions/.test( row404 ) && ! /Not displayed/.test( row404 ), row404 );
 
+		// 0.148.0: "404 page" can be picked (its name, 404, used to reach the picker as a number and never matched).
+		await admin.locator( 'button.rtb-cond-edit' ).first().click();
+		await admin.waitForSelector( 'dialog.rtb-dialog[open] .rtb-cond' );
+		await admin.locator( 'dialog.rtb-dialog .rtb-cond__row select' ).first().selectOption( '404' );
+		const picked = await admin.evaluate( () => ( { value: document.querySelector( 'dialog.rtb-dialog .rtb-cond__row select' ).value, notice: !! document.querySelector( 'dialog.rtb-dialog .rtb-cond__notice' ) } ) );
+		check( 'dialog', '"404 page" can be picked in Where, and it counts as an Include', '404' === picked.value && ! picked.notice, JSON.stringify( picked ) );
+		await admin.locator( 'dialog.rtb-dialog .rtb-dialog__foot button', { hasText: 'Save conditions' } ).click();
+		await admin.waitForFunction( () => ! document.querySelector( 'dialog.rtb-dialog' ), null, { timeout: 15000 } );
+		check( 'dialog', 'saved as include/404, and the row says "404 page"', 'include/404' === rules( notFound ).join() && /404 page/.test( await admin.locator( '.column-conditions' ).nth( 1 ).innerText() ), JSON.stringify( rules( notFound ) ) );
+		await admin.locator( 'button.rtb-cond-edit' ).first().click();
+		await admin.waitForSelector( 'dialog.rtb-dialog[open] .rtb-cond' );
+		check( 'dialog', 'opened again, the row still shows "404 page"', '404' === await admin.locator( 'dialog.rtb-dialog .rtb-cond__row select' ).first().inputValue() );
+		await admin.locator( 'dialog.rtb-dialog .rtb-dialog__foot button', { hasText: 'Cancel' } ).click();
+		const lost = await visitor.goto( `${ BASE }/another-missing-page/` );
+		check( '404', 'with "404 page" the broken link still shows the template', 404 === lost.status() && /Lost in the Highlands/.test( await visitor.content() ) );
+
 		await admin.goto( `${ BASE }/wp-admin/admin.php?page=refraction-theme-builder&tab=header` );
 		const cell = admin.locator( 'tr', { hasText: 'Glen header' } ).locator( '.column-conditions' );
 		check( 'list', 'a header without rules says "Not displayed anywhere" and offers "Set where it appears"', /Not displayed anywhere/.test( await cell.innerText() ) && 1 === await cell.locator( 'button.rtb-cond-edit.is-primary', { hasText: 'Set where it appears' } ).count() );

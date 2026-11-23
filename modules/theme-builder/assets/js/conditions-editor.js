@@ -50,7 +50,8 @@ function targetKind( target ) {
  * @return {{setValue: Function, getValue: Function}} The picker.
  */
 export function createConditionsEditor( { mount, config, value = [], onChange = () => {} } ) {
-	const findGroup = ( name ) => config.conditions.find( ( group ) => group.name === name );
+	// Names compared as text: "404 page" is named 404, which can arrive as a number (0.148.0).
+	const findGroup = ( name ) => config.conditions.find( ( group ) => String( group.name ) === String( name ) );
 
 	// Split a rule string into an editable row. Unknown shapes are left out.
 	const parseRule = ( rule ) => {
@@ -305,7 +306,7 @@ export function createConditionsEditor( { mount, config, value = [], onChange = 
 				row.sub = '';
 				row.target = null;
 			} )(),
-		}, config.conditions.map( ( item ) => h( 'option', { value: item.name, text: item.label, selected: item.name === row.name } ) ) ) );
+		}, config.conditions.map( ( item ) => h( 'option', { value: item.name, text: item.label, selected: String( item.name ) === String( row.name ) } ) ) ) );
 
 		if ( group && group.subs.length > 1 ) {
 			card.append( h( 'select', {

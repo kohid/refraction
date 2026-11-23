@@ -286,7 +286,8 @@ class Module extends BaseModule {
 			$condition = $manager->get_condition( $name );
 
 			$groups[] = [
-				'name' => $name,
+				// A string: PHP turns the key "404" into a number, which the pickers' menus would not match (0.148.0).
+				'name' => (string) $name,
 				'label' => $condition->get_label(),
 				'audience' => $condition->is_audience(),
 				'subs' => $condition->get_sub_conditions(),
