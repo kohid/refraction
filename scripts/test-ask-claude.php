@@ -181,7 +181,7 @@ t( 'box shadows and visual choices (shape dividers) are kept', 40.0 === ( $shado
 t( 'settings left out are reported for Claude: unknown names, and values that do not fit', in_array( 'unknown', $sx->ignored, true ) && in_array( 'bad_shadow (value)', $sx->ignored, true ) && [] === $sx->dropped );
 $nested = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'items' => [ [ 'item_title' => 'Q one', 'evil' => 'x' ] ] ], [ 'items' => [ 'type' => 'nested-elements-repeater', 'fields' => [ 'item_title' => [ 'type' => 'text', 'name' => 'item_title' ] ] ] ] );
 t( 'nested items: titles kept, unknown fields dropped', 'Q one' === ( $nested['items'][0]['item_title'] ?? '' ) && ! isset( $nested['items'][0]['evil'] ) );
-// 0.147.0: a nested row's hidden `role` (a Pin Board's heading or footer row) is kept as a key; other hidden controls are not.
+// 0.148.0: a nested row's hidden `role` (a Pin Board's heading or footer row) is kept as a key; other hidden controls are not.
 $roles = ( new L( function () { return null; }, function () { return ''; } ) )->settings( [ 'items' => [ [ 'item_title' => 'Heading', 'role' => 'heading', 'secret' => 'x' ], [ 'item_title' => 'Note', 'role' => '<b>bad</b>' ] ] ], [ 'items' => [ 'type' => 'nested-elements-repeater', 'fields' => [ 'item_title' => [ 'type' => 'text', 'name' => 'item_title' ], 'role' => [ 'type' => 'hidden', 'name' => 'role' ], 'secret' => [ 'type' => 'hidden', 'name' => 'secret' ] ] ] ] );
 t( 'nested items: the hidden row role is kept as a key, other hidden controls are not', 'heading' === ( $roles['items'][0]['role'] ?? '' ) && ! isset( $roles['items'][0]['secret'] ) && 'bbadb' === ( $roles['items'][1]['role'] ?? '' ) );
 

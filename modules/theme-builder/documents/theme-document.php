@@ -25,7 +25,7 @@ abstract class Theme_Document extends Library_Document {
 
 	/**
 	 * Display conditions live in the rules store (post meta _refraction_conditions), which the Theme Builder list also
-	 * writes (0.147.0): the document always reads them from there, so the editor never shows (and saves back) an older
+	 * writes (0.148.0): the document always reads them from there, so the editor never shows (and saves back) an older
 	 * copy kept in the page settings.
 	 */
 	public function __construct( array $data = [] ) {

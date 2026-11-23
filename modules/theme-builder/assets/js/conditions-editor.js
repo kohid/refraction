@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 
 /**
  * The display conditions picker, shared by the editor's Display Conditions control and the Theme Builder list
- * (0.147.0): rows of Include / Exclude, where, a narrower choice and, when it needs one, a post, term or user.
+ * (0.148.0): rows of Include / Exclude, where, a narrower choice and, when it needs one, a post, term or user.
  *
  * Value: an array of rule strings such as `include/general` or `exclude/singular/page/7` (grammar in
  * docs/refraction/theme-builder.md). Rows that still miss a required target (for example "Specific author" without

@@ -24,7 +24,7 @@ class Layout_Sanitizer {
 	const NO_VALUE = [ 'section', 'tab', 'tabs', 'heading', 'divider', 'raw_html', 'button', 'deprecated_notice', 'alert', 'notice', 'hidden', 'wp_widget', 'code' ];
 
 	/**
-	 * Hidden controls that hold data a layout needs (0.147.0): a nested widget's row `role` (a Pin Board's heading or
+	 * Hidden controls that hold data a layout needs (0.148.0): a nested widget's row `role` (a Pin Board's heading or
 	 * footer row: without it the row becomes one more note). Kept as a plain key.
 	 */
 	const KEEP_HIDDEN = [ 'role' ];

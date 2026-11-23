@@ -49,7 +49,7 @@ Code: `Rule`, `Conditions\*` (one class per rule family, `Conditions_Manager::re
 (matching, readable text), `Resolver` (picks the winner), `Environment` / `Wp_Environment` (the request).
 Results per request are cached by `Locations_Manager`.
 
-### From the list (0.147.0)
+### From the list (0.148.0)
 
 Each row of Refraction > Theme Builder has **Set where it appears** (no Include rule yet) or **Edit conditions**: the editor's picker (`assets/js/conditions-editor.js`, shared with the Display Conditions control) in a dialog (`assets/js/admin.js`). Save posts to `wp_ajax_refraction_theme_builder_save_conditions` (administrators, nonce), which stores the rules with `Module::save_template_rules()` (the rules store and the `_refraction_page_settings` copy the editor reads) and returns the row's new cell. `Theme_Document` also reads its conditions from the store when it is built, so the editor never shows an older copy.
 

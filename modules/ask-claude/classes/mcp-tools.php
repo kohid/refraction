@@ -280,7 +280,7 @@ class Mcp_Tools {
 		$page_settings = 'page' === $mode ? Prompt_Builder::clean_page( self::specs( $page->ID ), $args['page_settings'] ?? [] )[0] : [];
 		Job_Queue::move( Job_Queue::get( $id ), 'result', [ 'elements' => $elements, 'summary' => sanitize_textarea_field( (string) $args['summary'] ), 'dropped' => $dropped, 'page_settings' => $page_settings ] );
 
-		// A newer proposal for the page replaces the ones this account offered before that nobody inserted yet (0.147.0),
+		// A newer proposal for the page replaces the ones this account offered before that nobody inserted yet (0.148.0),
 		// so the panel never offers an outdated version.
 		$replaced = [];
 
@@ -332,7 +332,7 @@ class Mcp_Tools {
 	private static function decline( array $args ) {
 		$job = Job_Queue::get( (int) $args['id'] );
 
-		// A proposal this account offered and nobody inserted yet is withdrawn (0.147.0): it leaves the page's panel.
+		// A proposal this account offered and nobody inserted yet is withdrawn (0.148.0): it leaves the page's panel.
 		if ( $job && ! empty( $job['proposal'] ) && 'ready' === $job['state'] && (int) $job['author'] === get_current_user_id() ) {
 			Job_Queue::delete( $job['id'] );
 

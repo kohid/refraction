@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { createConditionsEditor, h } from './conditions-editor';
 
 /**
- * Refraction > Theme Builder (0.147.0): "Display conditions" on each template of the list opens the same picker as
+ * Refraction > Theme Builder (0.148.0): "Display conditions" on each template of the list opens the same picker as
  * the editor, in a dialog; Save stores the rules for that template and the list shows them.
  */
 const config = window.refractionThemeBuilderAdmin || null;

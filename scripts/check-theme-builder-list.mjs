@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Theme Builder list (0.147.0), SQLite test site, Chromium:
+ * Theme Builder list (0.148.0), SQLite test site, Chromium:
  * - a new Error 404 template starts on "Entire site" and shows on a broken link (a new header does not: it waits);
  * - Refraction > Theme Builder: each template has "Display conditions" (Set where it appears / Edit conditions): the
  *   editor's picker in a dialog; "Show on entire site", a narrower choice and Save store the rules, the row shows

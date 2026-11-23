@@ -267,7 +267,7 @@ async function main() {
 		const proposal = JSON.parse( mcp( 'call', 'propose_to_page', JSON.stringify( { page_id: Number( home.id ), mode: 'section', summary: 'A proposed section.', elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'Proposed over MCP' } } ] } ) ) );
 		await p.waitForSelector( '[data-ask-claude="job"][data-state="ready"]', { timeout: 15000 } ).catch( () => null );
 		check( 'mcp', 'propose_to_page shows up ready in the page\'s Ask Claude panel', 'ready' === proposal.state && /proposed section/i.test( await p.textContent( '[data-ask-claude="job"][data-state="ready"]' ).catch( () => '' ) ) );
-		// 0.147.0: a newer proposal for the page replaces the older one nobody inserted; decline_request withdraws one.
+		// 0.148.0: a newer proposal for the page replaces the older one nobody inserted; decline_request withdraws one.
 		const newer = JSON.parse( mcp( 'call', 'propose_to_page', JSON.stringify( { page_id: Number( home.id ), mode: 'section', summary: 'A newer proposed section.', elements: [ { elType: 'widget', widgetType: 'heading', settings: { title: 'Proposed again' } } ] } ) ) );
 		const waiting = () => JSON.parse( wp( [ 'eval', `echo wp_json_encode( array_map( function ( $j ) { return $j['id']; }, \\Refraction\\Modules\\AskClaude\\Classes\\Job_Queue::find( [ 'post_id' => ${ Number( home.id ) }, 'states' => [ 'ready' ] ] ) ) );` ] ) );
 		const afterNewer = waiting();

@@ -90,7 +90,7 @@ class Admin_Page {
 
 		wp_enqueue_style( 'refraction-theme-builder-admin', REFRACTION_ASSETS_URL . 'css/modules/theme-builder/admin' . $min . '.css', [], REFRACTION_VERSION );
 
-		// "Display conditions" on each template (0.147.0): the editor's picker, in a dialog.
+		// "Display conditions" on each template (0.148.0): the editor's picker, in a dialog.
 		$module = Plugin::$instance->modules_manager->get_modules( 'theme-builder' );
 
 		if ( $module && current_user_can( 'manage_options' ) ) {

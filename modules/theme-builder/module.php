@@ -219,7 +219,7 @@ class Module extends BaseModule {
 	}
 
 	/**
-	 * A new Error 404 or Search Results template is used at once (0.147.0): it starts with "Entire site", which for
+	 * A new Error 404 or Search Results template is used at once (0.148.0): it starts with "Entire site", which for
 	 * these types means every 404 page or every search results page (Location_Scope keeps them there). Other types
 	 * wait for their conditions, as a header on every page is a choice to make.
 	 *
@@ -242,7 +242,7 @@ class Module extends BaseModule {
 
 	/**
 	 * Stores a template's display conditions from outside the editor (the Theme Builder list, a new template's
-	 * default) (0.147.0): in the rules store, and in the copy the editor's page settings read, so the editor shows them
+	 * default) (0.148.0): in the rules store, and in the copy the editor's page settings read, so the editor shows them
 	 * and its next save keeps them.
 	 *
 	 * @return string[] The rules stored.
