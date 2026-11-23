@@ -23,6 +23,20 @@ abstract class Theme_Document extends Library_Document {
 	/** The location this document fills: `header` or `footer`. */
 	abstract public function get_location(): string;
 
+	/**
+	 * Display conditions live in the rules store (post meta _refraction_conditions), which the Theme Builder list also
+	 * writes (0.147.0): the document always reads them from there, so the editor never shows (and saves back) an older
+	 * copy kept in the page settings.
+	 */
+	public function __construct( array $data = [] ) {
+		if ( ! empty( $data['post_id'] ) ) {
+			$data['settings'] = (array) ( $data['settings'] ?? [] );
+			$data['settings'][ self::CONDITIONS_SETTING ] = ( new \Refraction\Modules\ThemeBuilder\Classes\Conditions_Store() )->get_rules( (int) $data['post_id'] );
+		}
+
+		parent::__construct( $data );
+	}
+
 	public static function get_properties() {
 		$properties = parent::get_properties();
 

@@ -17,6 +17,7 @@ class Admin_Page {
 
 	const SLUG = 'refraction-theme-builder';
 	const DELETE_ACTION = 'refraction_theme_builder_delete';
+	const CONDITIONS_ACTION = 'refraction_theme_builder_save_conditions';
 
 	private Conditions_Store $store;
 	private Conditions_Manager $conditions;
@@ -26,6 +27,7 @@ class Admin_Page {
 		$this->conditions = $conditions;
 
 		add_action( 'admin_post_' . self::DELETE_ACTION, [ $this, 'handle_delete' ] );
+		add_action( 'wp_ajax_' . self::CONDITIONS_ACTION, [ $this, 'handle_conditions' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
 
@@ -87,6 +89,19 @@ class Admin_Page {
 		$min = \Refraction\Utils::is_script_debug() ? '' : '.min';
 
 		wp_enqueue_style( 'refraction-theme-builder-admin', REFRACTION_ASSETS_URL . 'css/modules/theme-builder/admin' . $min . '.css', [], REFRACTION_VERSION );
+
+		// "Display conditions" on each template (0.147.0): the editor's picker, in a dialog.
+		$module = Plugin::$instance->modules_manager->get_modules( 'theme-builder' );
+
+		if ( $module && current_user_can( 'manage_options' ) ) {
+			wp_enqueue_script( 'refraction-theme-builder-admin', REFRACTION_ASSETS_URL . 'js/theme-builder-admin' . $min . '.js', [], REFRACTION_VERSION, true );
+			wp_set_script_translations( 'refraction-theme-builder-admin', 'refraction' );
+			wp_localize_script( 'refraction-theme-builder-admin', 'refractionThemeBuilderAdmin', [
+				'conditions' => $module->get_conditions_config(),
+				'saveAction' => self::CONDITIONS_ACTION,
+				'saveNonce' => wp_create_nonce( self::CONDITIONS_ACTION ),
+			] );
+		}
 	}
 
 	private function query_templates( string $type ): array {
@@ -211,8 +226,6 @@ class Admin_Page {
 		$rules = $this->store->get_rules( $post->ID );
 		$title = '' !== $post->post_title ? $post->post_title : esc_html__( '(no title)', 'refraction' );
 		$is_live = 'publish' === $post->post_status;
-		$lines = $this->conditions->describe( $rules );
-		$has_include = (bool) array_filter( $rules, fn( $rule ) => 0 === strpos( $rule, 'include/' ) );
 		$status = get_post_status_object( $post->post_status );
 
 		?>
@@ -250,13 +263,7 @@ class Admin_Page {
 			</td>
 			<?php if ( $has_conditions ) : ?>
 			<td class="column-conditions">
-				<?php if ( ! $has_include ) : ?>
-					<span class="rtb-chip is-none"><?php echo esc_html__( 'Not displayed anywhere', 'refraction' ); ?></span>
-				<?php endif; ?>
-				<?php foreach ( $lines as $index => $line ) : ?>
-					<?php $is_exclude = 0 === strpos( $rules[ $index ] ?? '', 'exclude/' ); ?>
-					<span class="rtb-chip<?php echo $is_exclude ? ' is-exclude' : ''; ?>"><?php echo esc_html( $line ); ?></span>
-				<?php endforeach; ?>
+				<?php echo $this->conditions_cell( $post, $rules ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped where it is built. ?>
 			</td>
 			<?php endif; ?>
 			<td class="column-status">
@@ -268,6 +275,49 @@ class Admin_Page {
 			<td class="column-modified"><?php echo esc_html( mysql2date( get_option( 'date_format' ), $post->post_modified ) ); ?></td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * The "Appears on" cell: the rules as chips, and for administrators the button that opens the conditions picker
+	 * (assets/js/admin.js); also sent back after the picker saves.
+	 */
+	private function conditions_cell( \WP_Post $post, array $rules ): string {
+		$lines = $this->conditions->describe( $rules );
+		$has_include = (bool) array_filter( $rules, fn( $rule ) => 0 === strpos( $rule, 'include/' ) );
+		$html = $has_include ? '' : '<span class="rtb-chip is-none">' . esc_html__( 'Not displayed anywhere', 'refraction' ) . '</span>';
+
+		foreach ( $lines as $index => $line ) {
+			$is_exclude = 0 === strpos( $rules[ $index ] ?? '', 'exclude/' );
+			$html .= '<span class="rtb-chip' . ( $is_exclude ? ' is-exclude' : '' ) . '">' . esc_html( $line ) . '</span>';
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$label = $has_include ? __( 'Edit conditions', 'refraction' ) : __( 'Set where it appears', 'refraction' );
+			$html .= '<button type="button" class="rtb-cond-edit' . ( $has_include ? '' : ' is-primary' ) . '" data-rtb-conditions="' . esc_attr( (string) $post->ID ) . '" data-rtb-title="' . esc_attr( $post->post_title ) . '" data-rtb-rules="' . esc_attr( (string) wp_json_encode( array_values( $rules ) ) ) . '">' . esc_html( $label ) . '</button>';
+		}
+
+		return $html;
+	}
+
+	/** Saves a template's display conditions from the list (administrators only), and returns its new cell. */
+	public function handle_conditions(): void {
+		$post_id = isset( $_POST['post'] ) ? absint( $_POST['post'] ) : 0;
+
+		if ( ! check_ajax_referer( self::CONDITIONS_ACTION, '_nonce', false ) || ! current_user_can( 'manage_options' ) || ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to change where this template appears.', 'refraction' ) ], 403 );
+		}
+
+		$post = get_post( $post_id );
+		$document = $post ? Plugin::$instance->documents->get( $post_id ) : null;
+
+		if ( ! $document instanceof Theme_Document ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'This is not a Theme Builder template.', 'refraction' ) ], 400 );
+		}
+
+		$raw = isset( $_POST['rules'] ) ? (array) wp_unslash( $_POST['rules'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Rule::sanitize_list() in save_rules().
+		$rules = Plugin::$instance->modules_manager->get_modules( 'theme-builder' )->save_template_rules( $post_id, $document->get_location(), array_map( 'strval', $raw ) );
+
+		wp_send_json_success( [ 'rules' => $rules, 'html' => $this->conditions_cell( $post, $rules ) ] );
 	}
 
 	public function handle_delete(): void {
